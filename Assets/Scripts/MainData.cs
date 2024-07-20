@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.U2D;
 
 public enum SpriteSheetIndex
 {
@@ -132,4 +133,11 @@ public struct EnemyData
     [HideInInspector]
     public float currentNumberToSpawn;
     
+}
+
+[Serializable]
+public struct CentreLight
+{
+    public Light2DBase light;
+    public Collider2D collider;
 }
