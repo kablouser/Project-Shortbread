@@ -95,17 +95,20 @@ public struct UnitEntity
     public SpriteRenderer spriteRenderer;
     public AnimationComponent animation;
     public AttackComponent attack;
+    public float MoveSpeed;
 
     public UnitEntity(
         GameObject go,
         in AnimationComponent animation,
-        in AttackComponent attack)
+        in AttackComponent attack,
+        float MoveSpeed)
     {
         transform = go.transform;
         rigidbody = go.GetComponent<Rigidbody2D>();
         spriteRenderer = go.GetComponent<SpriteRenderer>();
         this.animation = animation;
         this.attack = attack;
+        this.MoveSpeed = MoveSpeed;
     }
 
     public bool IsValid()
@@ -114,4 +117,19 @@ public struct UnitEntity
             rigidbody != null &&
             spriteRenderer != null;
     }
+}
+
+[Serializable]
+public struct EnemyData
+{
+    public GameObject enemyPrefab;
+    public AnimationComponent animationComponent;
+    public AttackComponent attackComponent;
+    public float moveSpeed;
+
+    // Number of enemies to spawn per second over the game time.
+    public AnimationCurve spawnRate;
+    [HideInInspector]
+    public float currentNumberToSpawn;
+    
 }

@@ -77,7 +77,7 @@ public class MainEditorWindow : EditorWindow
             if (playerGO != null)
             {
                 Undo.RecordObject(mainScript, "Set Player GameObject");
-                mainScript.player = new UnitEntity(playerGO, mainScript.player.animation, mainScript.player.attack);
+                mainScript.player = new UnitEntity(playerGO, mainScript.player.animation, mainScript.player.attack, 10f);
             }
         }
 
