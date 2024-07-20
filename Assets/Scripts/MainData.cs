@@ -68,10 +68,23 @@ public struct AnimationEvent
     public AnimationEventFlags flags;
 }
 
+public enum ProjectileType
+{
+    Default,
+}
+
 [Serializable]
 public struct AttackComponent
 {
-    public bool isFire;
+    public bool isAttacking;
+    // if true melee, false shoots projectile
+    public bool isMelee;
+    public ProjectileType projectile;
+    // can start attack at 0
+    public float attackCooldown;
+
+    public uint ammoLeft;
+    public float reloadCooldown;
 }
 
 [Serializable]
@@ -82,4 +95,23 @@ public struct UnitEntity
     public SpriteRenderer spriteRenderer;
     public AnimationComponent animation;
     public AttackComponent attack;
+
+    public UnitEntity(
+        GameObject go,
+        in AnimationComponent animation,
+        in AttackComponent attack)
+    {
+        transform = go.transform;
+        rigidbody = go.GetComponent<Rigidbody2D>();
+        spriteRenderer = go.GetComponent<SpriteRenderer>();
+        this.animation = animation;
+        this.attack = attack;
+    }
+
+    public bool IsValid()
+    {
+        return transform != null &&
+            rigidbody != null &&
+            spriteRenderer != null;
+    }
 }

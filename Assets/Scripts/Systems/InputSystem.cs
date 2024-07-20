@@ -11,7 +11,7 @@ public static class InputSystem
 
     public static void Update(MainScript main)
     {
-        main.player.attack.isFire = Input.GetButton(FIRE1);
+        main.player.attack.isAttacking = Input.GetButton(FIRE1);
     }
 
     public static void FixedUpdate(MainScript main)

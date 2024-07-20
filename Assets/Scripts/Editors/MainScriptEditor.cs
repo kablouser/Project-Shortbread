@@ -7,10 +7,8 @@ public class MainScriptEditor : Editor
 {
     public override void OnInspectorGUI()
     {
-        if (GUILayout.Button("Open Main Editor"))
-        {
+        if (!EditorWindow.HasOpenInstances<MainEditorWindow>() && GUILayout.Button("Open Main Editor"))
             MainEditorWindow.OpenWindow();
-        }
 
         base.OnInspectorGUI();
     }

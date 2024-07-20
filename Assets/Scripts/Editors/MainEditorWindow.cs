@@ -27,14 +27,21 @@ public class MainEditorWindow : EditorWindow
         Repaint();
     }
 
-    public void SceneView_duringSceneGui(SceneView sceneView)
+    public bool CacheMainScript()
     {
         if (mainScript == null)
         {
             mainScript = FindObjectOfType<MainScript>();
             if (mainScript == null)
-                return;
+                return false;
         }
+        return true;
+    }
+
+    public void SceneView_duringSceneGui(SceneView sceneView)
+    {
+        if (!CacheMainScript())
+            return;
 
         if (sceneView.drawGizmos || alwaysDrawGizmos)
         {
@@ -44,12 +51,54 @@ public class MainEditorWindow : EditorWindow
 
     public void OnGUI()
     {
+        if (!CacheMainScript())
+            return;
+
         bool bSceneViewDirty = false;
 
         if (alwaysDrawGizmos != GUILayout.Toggle(alwaysDrawGizmos, "Draw Gizmos"))
         {
             alwaysDrawGizmos = !alwaysDrawGizmos;
             bSceneViewDirty = true;
+        }
+
+        //Player GO
+        {
+            if (!mainScript.player.IsValid())
+            {
+                EditorGUILayout.HelpBox("Player not setup", MessageType.Error);
+            }
+            GameObject playerGO = null;
+            if (mainScript.player.transform)
+            {
+                playerGO = mainScript.player.transform.gameObject;
+            }
+            playerGO = (GameObject)EditorGUILayout.ObjectField("Player", playerGO, typeof(GameObject), true);
+            if (playerGO != null)
+            {
+                Undo.RecordObject(mainScript, "Set Player GameObject");
+                mainScript.player = new UnitEntity(playerGO, mainScript.player.animation, mainScript.player.attack);
+            }
+        }
+
+        if (!mainScript.animationSystem.IsValid())
+        {
+            EditorGUILayout.HelpBox("AnimationSystem arrays not correct", MessageType.Error);
+            if (GUILayout.Button("Correct AnimationSystem arrays"))
+            {
+                Undo.RecordObject(mainScript, "Correct AnimationSystem arrays");
+                mainScript.animationSystem.Validate();
+            }
+        }
+
+        if (!mainScript.attackSystem.IsValid())
+        {
+            EditorGUILayout.HelpBox("AttackSystem arrays not correct", MessageType.Error);
+            if (GUILayout.Button("Correct AttackSystem arrays"))
+            {
+                Undo.RecordObject(mainScript, "Correct AttackSystem arrays");
+                mainScript.attackSystem.Validate();
+            }
         }
 
         if (bSceneViewDirty)

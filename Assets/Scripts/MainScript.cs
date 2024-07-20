@@ -10,6 +10,7 @@ public class MainScript : MonoBehaviour
 {
     public Camera mainCamera;
     public AnimationSystem animationSystem;
+    public AttackSystem attackSystem;
     public NavigationGrid navigationGrid;
     public UnitEntity player;
     public VersionedPool<UnitEntity> enemies;

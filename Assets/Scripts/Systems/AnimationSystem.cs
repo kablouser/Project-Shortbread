@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Unity.Collections;
 
 [Serializable]
 public struct AnimationSystem
@@ -13,6 +12,21 @@ public struct AnimationSystem
     public AnimationClip[] animationClips;
 
     public List<AnimationEvent> animationEvents;
+
+#if UNITY_EDITOR
+    public bool IsValid()
+    {
+        return
+            Enum.GetNames(typeof(SpriteSheetIndex)).Length == spriteSheets.Length &&
+            Enum.GetNames(typeof(AnimationClipIndex)).Length == animationClips.Length;
+    }
+
+    public void Validate()
+    {
+        Extensions.FillWithEnumNames<SpriteSheetIndex, SpriteSheet>(ref spriteSheets, (ref SpriteSheet ss, string name) => ss.name = name);
+        Extensions.FillWithEnumNames<AnimationClipIndex, AnimationClip>(ref animationClips, (ref AnimationClip ac, string name) => ac.name = name);
+    }
+#endif
 
     public void Update(MainScript main)
     {
@@ -79,7 +93,7 @@ public struct AnimationSystem
 #endif
         }
 
-        unit.animation.currentIndex = Mathf.Clamp(unit.animation.currentIndex, 0, frameCount);
+        unit.animation.currentIndex = Mathf.Clamp(unit.animation.currentIndex, 0, frameCount - 1);
         int currentIndexInClip = clip.startIndex + unit.animation.currentIndex;
         unit.spriteRenderer.sprite = spriteSheet[currentIndexInClip];
 
