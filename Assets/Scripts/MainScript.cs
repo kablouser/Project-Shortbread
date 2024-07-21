@@ -165,6 +165,7 @@ public class MainScript : MonoBehaviour
                 }
             }
         }
+
         attackSystem.Update(this);
     }
 
