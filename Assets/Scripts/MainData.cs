@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.U2D;
+using UnityEngine.UI;
+using UnityEngine.Rendering.Universal;
 
 public enum SpriteSheetIndex
 {
@@ -140,8 +142,19 @@ public struct EnemyData
 [Serializable]
 public struct CentreLight
 {
-    public Light2DBase light;
-    public Collider2D collider;
+    public Light2D light;
+    public CircleCollider2D collider;
+
+    public Slider uiPowerBar;
+
+    public float maxLightRadius;
+    public float minLightRadius;
+    public float maxLightIntensity;
+    public float minLightIntensity;
+    public float powerLossPerSecond;
+    public float maxPower;
+
+    public float currentPower;
 }
 
 [Serializable]

@@ -16,8 +16,8 @@ public class MainScript : MonoBehaviour
     [Header("Game Settings")]
     public float timeToSurvive = 900f;
 
-    [HideInInspector]
     public float currentTime = 0f;
+
     public Vector2 mapBoundsMax = Vector2.zero;
     public Vector2 mapBoundsMin = Vector2.zero;
     public float centreRadius = 1f;
@@ -26,6 +26,8 @@ public class MainScript : MonoBehaviour
     public List<TriggerEvent> triggerEnterEvents;
 
     public PlayerControls playerControls;
+
+    public bool isGameOver = false;
 
     public void Awake()
     {
@@ -45,6 +47,11 @@ public class MainScript : MonoBehaviour
         // stress test at lowest FPS possible
         //Application.targetFrameRate = Mathf.FloorToInt(1f / Time.maximumDeltaTime);
 #endif
+
+        // Light Bar Setup
+        centreLight.currentPower = centreLight.maxPower;
+        centreLight.uiPowerBar.maxValue = centreLight.maxPower;
+        centreLight.uiPowerBar.value = centreLight.maxPower;
     }
 
     public void OnValidate()
@@ -68,6 +75,11 @@ public class MainScript : MonoBehaviour
 
     public void Update()
     {
+        if(isGameOver)
+        {
+            return;
+        }
+
         foreach(var e in triggerEnterEvents)
         {
             switch(e.id.type)
@@ -166,11 +178,38 @@ public class MainScript : MonoBehaviour
             }
         }
 
+        // Light Shield
+        {
+            centreLight.currentPower -= centreLight.powerLossPerSecond * Time.deltaTime;
+
+            float lightPercentLeft = centreLight.currentPower / centreLight.maxPower;
+            float lightRadius = centreLight.minLightRadius + ((centreLight.maxLightRadius - centreLight.minLightRadius) * lightPercentLeft);
+
+            centreLight.uiPowerBar.value = centreLight.currentPower;
+            centreLight.light.intensity = centreLight.minLightIntensity + ((centreLight.maxLightIntensity - centreLight.minLightIntensity) * lightPercentLeft);
+            centreLight.light.pointLightInnerRadius = lightRadius / 2;
+            centreLight.light.pointLightOuterRadius = lightRadius;
+            centreLight.collider.radius = lightRadius / 2;
+
+            if (centreLight.currentPower <= 0f)
+            {
+                isGameOver = true;
+                print("GAME OVER");
+            }
+
+            // Update 
+        }
+
         attackSystem.Update(this);
     }
 
     public void FixedUpdate()
     {
+        if(isGameOver)
+        {
+            return;
+        }
+
         inputSystem.FixedUpdate(this);
         
         // Enemy Movement
