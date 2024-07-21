@@ -85,6 +85,10 @@ public struct AttackComponent
     public uint ammoLeft;
     public float reloadCooldown;
 
+    // freeze during melee attacks, deal damage at end
+    public float meleeAttackTime;
+    public ID singleTarget;
+
     public bool Reload(in ProjectileAttackPreset preset)
     {
         if (ammoLeft < preset.fullMagazineAmmo)
@@ -99,6 +103,13 @@ public struct AttackComponent
 }
 
 [Serializable]
+public struct HealthComponent
+{
+    public int current;
+    public int max;
+}
+
+[Serializable]
 public struct UnitEntity
 {
     public Transform transform;
@@ -108,15 +119,20 @@ public struct UnitEntity
     public AnimationComponent animation;
     public AttackComponent attack;
     public float moveSpeed;
+    public HealthComponent health;
 
     public UnitEntity(
         GameObject go,
-        in UnitEntity template)
+        in UnitEntity template,
+        ID id)
     {
         this = template;
         transform = go.transform;
         rigidbody = go.GetComponent<Rigidbody2D>();
         spriteRenderer = go.GetComponent<SpriteRenderer>();
+        go.GetComponent<IDComponent>().id = id;
+
+        rigidbody.constraints &= ~RigidbodyConstraints2D.FreezePosition;
     }
 
     public bool IsValid()
@@ -155,11 +171,4 @@ public struct CentreLight
     public float maxPower;
 
     public float currentPower;
-}
-
-[Serializable]
-public struct TriggerEvent
-{
-    public ID id;
-    public Collider2D collider;
 }

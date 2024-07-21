@@ -23,8 +23,6 @@ public class MainScript : MonoBehaviour
     public float centreRadius = 1f;
     public float spawnOutsideCameraDistance = 0.1f;
 
-    public List<TriggerEvent> triggerEnterEvents;
-
     public PlayerControls playerControls;
 
     public bool isGameOver = false;
@@ -79,18 +77,6 @@ public class MainScript : MonoBehaviour
         {
             return;
         }
-
-        foreach(var e in triggerEnterEvents)
-        {
-            switch(e.id.type)
-            {
-                default: break;
-                case IDType.ProjectileDefault:
-                    attackSystem.ProcessTriggerEnterEvent(e);
-                    break;
-            }
-        }
-        triggerEnterEvents.Clear();
 
         mainCamera.transform.position = player.rigidbody.position;
         inputSystem.Update(this);
@@ -170,10 +156,22 @@ public class MainScript : MonoBehaviour
                             break;
                     }
 
-                    enemies.Spawn(new UnitEntity
-                        (
-                        Instantiate(enemiesSpawnRates[i].enemyPrefab, spawnPosition, Quaternion.identity),
-                        enemiesSpawnRates[i].presetUnit));
+                    ID id = enemies.Spawn();
+                    ref UnitEntity enemy = ref enemies[id.index];
+
+                    if (enemy.IsValid())
+                    {
+                        enemy = new UnitEntity(enemy.transform.gameObject, enemiesSpawnRates[i].presetUnit, id);
+                        enemy.transform.position = spawnPosition;
+                        enemy.transform.gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        enemy = new UnitEntity(
+                            Instantiate(enemiesSpawnRates[i].enemyPrefab, spawnPosition, Quaternion.identity),
+                            enemiesSpawnRates[i].presetUnit,
+                            id);
+                    }
                 }
             }
         }
@@ -205,6 +203,8 @@ public class MainScript : MonoBehaviour
 
     public void FixedUpdate()
     {
+        mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, player.transform.position, Time.fixedDeltaTime * 5f);
+        
         if(isGameOver)
         {
             return;
@@ -221,5 +221,39 @@ public class MainScript : MonoBehaviour
                 enemies[enemyID].rigidbody.velocity = Velocity;
             }
         }
+    }
+
+    public void ProcessTriggerEnter(IDTriggerEnter source, Collider2D collider)
+    {
+        switch (source.id.type)
+        {
+            default: break;
+            case IDType.ProjectileDefault:
+                attackSystem.ProcessTriggerEnterEvent(this, source, collider);
+                break;
+        }
+    }
+
+    public ref UnitEntity GetUnit(in ID id, out bool isValid)
+    {
+        switch (id.type)
+        {
+            default: break;
+
+            case IDType.Player:
+                isValid = true;
+                return ref player;
+
+            case IDType.Enemy:
+                if (enemies.IsValidID(id))
+                {
+                    isValid = true;
+                    return ref enemies[id.index];
+                }
+                break;
+        }
+
+        isValid = false;
+        return ref player;
     }
 }

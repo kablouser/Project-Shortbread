@@ -49,6 +49,20 @@ public class MainEditorWindow : EditorWindow
         }
     }
 
+    public void Update()
+    {
+        if (!Application.isPlaying)
+            return;
+
+        if (!CacheMainScript())
+            return;
+
+        if (mainScript.player.transform && !mainScript.player.transform.gameObject.activeSelf)
+        {
+            Repaint();
+        }
+    }
+
     public void OnGUI()
     {
         if (!CacheMainScript())
@@ -77,7 +91,17 @@ public class MainEditorWindow : EditorWindow
             if (playerGO != null)
             {
                 Undo.RecordObject(mainScript, "Set Player GameObject");
-                mainScript.player = new UnitEntity(playerGO, mainScript.player);
+                mainScript.player = new UnitEntity(playerGO, mainScript.player, new ID { type = IDType.Player });
+            }
+
+            if (!playerGO.activeSelf)
+            {
+                if (GUILayout.Button("Respawn player"))
+                {
+                    mainScript.player = new UnitEntity(playerGO, mainScript.player, new ID { type = IDType.Player });
+                    playerGO.transform.position = Vector3.zero;
+                    playerGO.SetActive(true);
+                }
             }
         }
 
