@@ -5,7 +5,10 @@ public enum IDType
 {
     Invalid,
     Player,
-    Enemy
+    Enemy,
+
+    // 1 IDType per ProjectileType
+    ProjectileDefault,
 }
 
 [Serializable]
@@ -53,7 +56,7 @@ public struct ID : IEquatable<ID>
 }
 
 [Serializable]
-public struct VersionedPool<T> where T : struct
+public struct VersionedPool<T>
 {
     // all have the same lengths
     public List<T> elements;
@@ -134,9 +137,7 @@ public struct VersionedPool<T> where T : struct
         if (IsValidID(id))
         {
             despawnedElement = elements[id.index];
-#if UNITY_EDITOR // validation
-            elements[id.index] = default;
-#endif
+            //elements[id.index] = default;
             versions[id.index]++;
             isUsing[id.index] = false;
             return true;
@@ -190,7 +191,7 @@ public struct VersionedPool<T> where T : struct
     }
 }
 
-public struct VersionedPoolUsingEnumerator<T> where T : struct
+public struct VersionedPoolUsingEnumerator<T>
 {
     public int index;
     public VersionedPool<T> pool;

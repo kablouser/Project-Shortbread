@@ -1,15 +1,10 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor.ShaderKeywordFilter;
-
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 public class MainScript : MonoBehaviour
 {
     public Camera mainCamera;
+    public InputSystem inputSystem;
     public AnimationSystem animationSystem;
     public AttackSystem attackSystem;
     public NavigationGrid navigationGrid;
@@ -27,6 +22,15 @@ public class MainScript : MonoBehaviour
     public Vector2 mapBoundsMin = Vector2.zero;
     public float centreRadius = 1f;
     public float spawnOutsideCameraDistance = 0.1f;
+
+    public List<TriggerEvent> triggerEnterEvents;
+
+    public PlayerControls playerControls;
+
+    public void Awake()
+    {
+        playerControls = new PlayerControls();
+    }
 
     public void Start()
     {
@@ -46,6 +50,17 @@ public class MainScript : MonoBehaviour
     public void OnValidate()
     {
         enemies.type = IDType.Enemy;
+        attackSystem.defaultProjectile.pool.type = IDType.ProjectileDefault;
+    }
+
+    public void OnEnable()
+    {
+        playerControls.Enable();
+    }
+
+    public void OnDisable()
+    {
+        playerControls.Disable();
     }
 
     // perf markers
@@ -53,8 +68,20 @@ public class MainScript : MonoBehaviour
 
     public void Update()
     {
+        foreach(var e in triggerEnterEvents)
+        {
+            switch(e.id.type)
+            {
+                default: break;
+                case IDType.ProjectileDefault:
+                    attackSystem.ProcessTriggerEnterEvent(e);
+                    break;
+            }
+        }
+        triggerEnterEvents.Clear();
+
         mainCamera.transform.position = player.rigidbody.position;
-        InputSystem.Update(this);
+        inputSystem.Update(this);
         animationSystem.Update(this);
 
         // Time Update
@@ -111,7 +138,7 @@ public class MainScript : MonoBehaviour
                     // Get a random point along the selected side
                     Vector2 spawnPosition = new Vector2(0, 0);
                     int SelectedSide = SpawnPoints[UnityEngine.Random.Range(0, SpawnPoints.Count - 1)];
-                    switch(SelectedSide)
+                    switch (SelectedSide)
                     {
                         case 0: // Left edge
                             spawnPosition.x = CameraMin.x;
@@ -134,25 +161,23 @@ public class MainScript : MonoBehaviour
                     enemies.Spawn(new UnitEntity
                         (
                         Instantiate(enemiesSpawnRates[i].enemyPrefab, spawnPosition, Quaternion.identity),
-                        enemiesSpawnRates[i].animationComponent,
-                        enemiesSpawnRates[i].attackComponent,
-                        enemiesSpawnRates[i].moveSpeed)
-                        );
+                        enemiesSpawnRates[i].presetUnit));
                 }
             }
         }
+        attackSystem.Update(this);
     }
 
     public void FixedUpdate()
     {
-        InputSystem.FixedUpdate(this);
-
+        inputSystem.FixedUpdate(this);
+        
         // Enemy Movement
         {
             Vector3 playerPosition = player.transform.position;
             foreach(int enemyID in enemies)
             {
-                Vector2 Velocity = new Vector2(playerPosition.x - enemies[enemyID].transform.position.x, playerPosition.y - enemies[enemyID].transform.position.y).normalized * enemies[enemyID].MoveSpeed;
+                Vector2 Velocity = new Vector2(playerPosition.x - enemies[enemyID].transform.position.x, playerPosition.y - enemies[enemyID].transform.position.y).normalized * enemies[enemyID].moveSpeed;
                 enemies[enemyID].rigidbody.velocity = Velocity;
             }
         }

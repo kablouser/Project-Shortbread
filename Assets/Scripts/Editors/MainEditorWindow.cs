@@ -77,7 +77,7 @@ public class MainEditorWindow : EditorWindow
             if (playerGO != null)
             {
                 Undo.RecordObject(mainScript, "Set Player GameObject");
-                mainScript.player = new UnitEntity(playerGO, mainScript.player.animation, mainScript.player.attack, 10f);
+                mainScript.player = new UnitEntity(playerGO, mainScript.player);
             }
         }
 
@@ -88,16 +88,6 @@ public class MainEditorWindow : EditorWindow
             {
                 Undo.RecordObject(mainScript, "Correct AnimationSystem arrays");
                 mainScript.animationSystem.Validate();
-            }
-        }
-
-        if (!mainScript.attackSystem.IsValid())
-        {
-            EditorGUILayout.HelpBox("AttackSystem arrays not correct", MessageType.Error);
-            if (GUILayout.Button("Correct AttackSystem arrays"))
-            {
-                Undo.RecordObject(mainScript, "Correct AttackSystem arrays");
-                mainScript.attackSystem.Validate();
             }
         }
 

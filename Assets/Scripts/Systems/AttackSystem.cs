@@ -3,9 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public struct AttackPreset
+public struct ProjectilePrefabPreset
+{
+    public GameObject prefab;
+    public VersionedPool<GameObject> pool;
+}
+
+[Serializable]
+public struct MeleeAttackPreset
 {
     public float attackCooldown;
+}
+
+[Serializable]
+public struct ProjectileAttackPreset
+{
+    public float attackCooldown;
+
+    public float projectileOffset;
+    public float projectileSpeed;
 
     public bool usesAmmo;
     public float reloadCooldown;
@@ -15,29 +31,27 @@ public struct AttackPreset
 [Serializable]
 public struct AttackSystem
 {
-    public GameObject[] projectilePrefabs;
+    public ProjectilePrefabPreset defaultProjectile;
 
-    public AttackPreset player;
-    public AttackPreset enemy;
-
-#if UNITY_EDITOR
-    public bool IsValid()
-    {
-        return projectilePrefabs != null && Enum.GetNames(typeof(ProjectileType)).Length == projectilePrefabs.Length;
-    }
-
-    public void Validate()
-    {
-        Extensions.Resize(ref projectilePrefabs, Enum.GetNames(typeof(ProjectileType)).Length);
-    }
-#endif
+    public ProjectileAttackPreset player;
+    public MeleeAttackPreset enemy;
 
     public void Update(MainScript mainScript)
     {
-        UpdateUnit(ref mainScript.player, player);
+        UpdateProjectileUnit(ref mainScript.player, player, defaultProjectile, mainScript);
     }
 
-    public void UpdateUnit(ref UnitEntity unit, in AttackPreset preset)
+    public void UpdateMeleeUnit(ref UnitEntity unit, in ProjectileAttackPreset preset)
+    {
+
+
+    }
+
+    public void UpdateProjectileUnit(
+        ref UnitEntity unit,
+        in ProjectileAttackPreset preset,
+        in ProjectilePrefabPreset prefab,
+        MainScript mainScript)
     {
         unit.attack.reloadCooldown = Mathf.Max(unit.attack.reloadCooldown - Time.deltaTime, 0f);
         if (0f < unit.attack.reloadCooldown)
@@ -45,9 +59,10 @@ public struct AttackSystem
             return;
         }
 
+        // state not setup properly (ammo should be full after reload starts)
         if (preset.usesAmmo && unit.attack.ammoLeft <= 0)
         {
-
+            unit.attack.ammoLeft = preset.fullMagazineAmmo;
         }
 
         unit.attack.attackCooldown = Mathf.Max(unit.attack.attackCooldown - Time.deltaTime, 0f);
@@ -58,25 +73,48 @@ public struct AttackSystem
 
         if (unit.attack.isAttacking)
         {
-/*            if (unit.attack.isMelee)
-            {
-                Physics2D.BoxCast()
-            }
-            else
-            {
-                
-                unit.attack.projectile
-            }*/
-
             unit.attack.attackCooldown = preset.attackCooldown;
             if (preset.usesAmmo)
             {
                 --unit.attack.ammoLeft;
                 if (unit.attack.ammoLeft <= 0)
                 {
-
+                    unit.attack.Reload(preset);
                 }
             }
+
+            ID newID = prefab.pool.Spawn();
+            ref GameObject newProjectile = ref prefab.pool[newID.index];
+
+            if (newProjectile == null)
+            {
+                newProjectile = UnityEngine.Object.Instantiate(prefab.prefab);
+            }
+            else
+            {
+                newProjectile.SetActive(true);
+            }
+            IDTriggerEnter idTriggerEnter = newProjectile.GetComponent<IDTriggerEnter>();
+            idTriggerEnter.id = newID;
+            idTriggerEnter.mainScript = mainScript;
+
+            // shoot at unit's forward direction
+            Quaternion rotation = Quaternion.Euler(0f, 0f, unit.rotationDegrees);
+            Vector3 forward = rotation * Vector2.up;
+            newProjectile.transform.SetPositionAndRotation(
+                unit.transform.position + forward * preset.projectileOffset,
+                rotation);
+            newProjectile.GetComponent<Rigidbody2D>().velocity = forward * preset.projectileSpeed;
+        }
+    }
+
+    // Projectile on trigger enter
+    public void ProcessTriggerEnterEvent(in TriggerEvent e)
+    {
+        if (defaultProjectile.pool.TryDespawn(e.id, out GameObject projectile))
+        {
+            projectile.SetActive(false);
+            //e.collider;
         }
     }
 }

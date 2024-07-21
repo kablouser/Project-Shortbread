@@ -2,20 +2,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class InputSystem
+public struct InputSystem
 {
-    public const string
-        HORIZONTAL = "Horizontal",
-        VERTICAL = "Vertical",
-        FIRE1 = "Fire1";
+    private Vector3 lastMousePosition;
 
-    public static void Update(MainScript main)
+    public void Update(MainScript main)
     {
-        main.player.attack.isAttacking = Input.GetButton(FIRE1);
+        Vector3 newMousePosition = Input.mousePosition;
+
+        if (main.playerControls.ActionMap.Aim.IsPressed())
+        {
+            Vector2 aim = main.playerControls.ActionMap.Aim.ReadValue<Vector2>();
+            main.player.rotationDegrees = Vector3.SignedAngle(Vector3.up, aim, Vector3.forward);
+        }
+        else if (Input.mousePresent && 0.1f < (newMousePosition - lastMousePosition).sqrMagnitude)
+        {
+            Vector3 mousePositionWorld = main.mainCamera.ScreenToWorldPoint(newMousePosition);
+            main.player.rotationDegrees = Vector3.SignedAngle(Vector3.up, mousePositionWorld - main.player.transform.position, Vector3.forward);
+        }
+        lastMousePosition = newMousePosition;
+
+        main.player.attack.isAttacking = main.playerControls.ActionMap.Shoot.IsPressed();
+
+        if (main.playerControls.ActionMap.Reload.WasPressedThisFrame())
+        {
+            main.player.attack.Reload(main.attackSystem.player);
+        }
     }
 
-    public static void FixedUpdate(MainScript main)
+    public void FixedUpdate(MainScript main)
     {
-        main.player.rigidbody.velocity = new(Input.GetAxis(HORIZONTAL), Input.GetAxis(VERTICAL));
+        Vector2 moveDirection = main.playerControls.ActionMap.Move.ReadValue<Vector2>();
+        if (1f < moveDirection.sqrMagnitude)
+            moveDirection.Normalize();
+        main.player.rigidbody.velocity = moveDirection * main.player.moveSpeed;
     }
 }

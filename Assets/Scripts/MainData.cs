@@ -78,14 +78,22 @@ public enum ProjectileType
 public struct AttackComponent
 {
     public bool isAttacking;
-    // if true melee, false shoots projectile
-    public bool isMelee;
-    public ProjectileType projectile;
     // can start attack at 0
     public float attackCooldown;
-
     public uint ammoLeft;
     public float reloadCooldown;
+
+    public bool Reload(in ProjectileAttackPreset preset)
+    {
+        if (ammoLeft < preset.fullMagazineAmmo)
+        {
+            attackCooldown = 0f;
+            reloadCooldown = preset.reloadCooldown;
+            ammoLeft = preset.fullMagazineAmmo;
+            return true;
+        }
+        return false;
+    }
 }
 
 [Serializable]
@@ -94,22 +102,19 @@ public struct UnitEntity
     public Transform transform;
     public Rigidbody2D rigidbody;
     public SpriteRenderer spriteRenderer;
+    public float rotationDegrees;
     public AnimationComponent animation;
     public AttackComponent attack;
-    public float MoveSpeed;
+    public float moveSpeed;
 
     public UnitEntity(
         GameObject go,
-        in AnimationComponent animation,
-        in AttackComponent attack,
-        float MoveSpeed)
+        in UnitEntity template)
     {
+        this = template;
         transform = go.transform;
         rigidbody = go.GetComponent<Rigidbody2D>();
         spriteRenderer = go.GetComponent<SpriteRenderer>();
-        this.animation = animation;
-        this.attack = attack;
-        this.MoveSpeed = MoveSpeed;
     }
 
     public bool IsValid()
@@ -124,13 +129,10 @@ public struct UnitEntity
 public struct EnemyData
 {
     public GameObject enemyPrefab;
-    public AnimationComponent animationComponent;
-    public AttackComponent attackComponent;
-    public float moveSpeed;
+    public UnitEntity presetUnit;
 
     // Number of enemies to spawn per second over the game time.
     public AnimationCurve spawnRate;
-    [HideInInspector]
     public float currentNumberToSpawn;
     
 }
@@ -139,5 +141,12 @@ public struct EnemyData
 public struct CentreLight
 {
     public Light2DBase light;
+    public Collider2D collider;
+}
+
+[Serializable]
+public struct TriggerEvent
+{
+    public ID id;
     public Collider2D collider;
 }
