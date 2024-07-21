@@ -4,6 +4,10 @@ using UnityEngine;
 public class MainScript : MonoBehaviour
 {
     public Camera mainCamera;
+    public TextAndSlider
+        healthBar,
+        ammoBar;
+
     public InputSystem inputSystem;
     public AnimationSystem animationSystem;
     public AttackSystem attackSystem;
@@ -50,6 +54,8 @@ public class MainScript : MonoBehaviour
         centreLight.currentPower = centreLight.maxPower;
         centreLight.uiPowerBar.maxValue = centreLight.maxPower;
         centreLight.uiPowerBar.value = centreLight.maxPower;
+        healthBar.UpdateHealthBar(player.health);
+        ammoBar.UpdateAmmoBar(player.attack.ammoShot, attackSystem.player.fullMagazineAmmo);
     }
 
     public void OnValidate()
@@ -73,11 +79,6 @@ public class MainScript : MonoBehaviour
 
     public void Update()
     {
-        if(isGameOver)
-        {
-            return;
-        }
-
         mainCamera.transform.position = player.rigidbody.position;
         inputSystem.Update(this);
         animationSystem.Update(this);
@@ -192,10 +193,9 @@ public class MainScript : MonoBehaviour
             if (centreLight.currentPower <= 0f)
             {
                 isGameOver = true;
-                print("GAME OVER");
             }
 
-            // Update 
+            // Update
         }
 
         attackSystem.Update(this);
@@ -204,14 +204,9 @@ public class MainScript : MonoBehaviour
     public void FixedUpdate()
     {
         mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, player.transform.position, Time.fixedDeltaTime * 5f);
-        
-        if(isGameOver)
-        {
-            return;
-        }
 
         inputSystem.FixedUpdate(this);
-        
+
         // Enemy Movement
         {
             Vector3 playerPosition = player.transform.position;

@@ -71,6 +71,9 @@ public struct AnimationSystem
         ref UnitEntity unit,
         ref AnimationEvent outAnimationEvent)
     {
+        if (!unit.transform.gameObject.activeInHierarchy)
+            return false;
+
         List<Sprite> spriteSheet = spriteSheets[(int)unit.animation.spriteSheetIndex].spriteSheet;
         ref AnimationClip clip = ref animationClips[(int)unit.animation.animationClipIndex];
 

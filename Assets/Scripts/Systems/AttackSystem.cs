@@ -36,7 +36,7 @@ public struct ProjectileAttackPreset
 
     public bool usesAmmo;
     public float reloadCooldown;
-    public uint fullMagazineAmmo;
+    public int fullMagazineAmmo;
 
     public int damage;
 }
@@ -65,6 +65,9 @@ public struct AttackSystem
         in MeleeAttackPreset attackPreset,
         MainScript mainScript)
     {
+        if (!unit.transform.gameObject.activeInHierarchy)
+            return;
+
         bool wasAttacking = 0f < unit.attack.meleeAttackTime;
 
         unit.attack.meleeAttackTime = Mathf.Max(unit.attack.meleeAttackTime - Time.deltaTime, 0f);
@@ -114,16 +117,25 @@ public struct AttackSystem
         in ProjectileGroup group,
         MainScript mainScript)
     {
+        if (!unit.transform.gameObject.activeInHierarchy)
+            return;
+
+        bool wasReloading = 0f < unit.attack.reloadCooldown;
+
         unit.attack.reloadCooldown = Mathf.Max(unit.attack.reloadCooldown - Time.deltaTime, 0f);
         if (0f < unit.attack.reloadCooldown)
         {
             return;
         }
 
-        // state not setup properly (ammo should be full after reload starts)
-        if (attackPreset.usesAmmo && unit.attack.ammoLeft <= 0)
+        if (wasReloading)
         {
-            unit.attack.ammoLeft = attackPreset.fullMagazineAmmo;
+            // just reloaded
+            unit.attack.ammoShot = 0;
+            if (unitType == IDType.Player)
+            {
+                mainScript.ammoBar.UpdateAmmoBar(unit.attack.ammoShot, attackPreset.fullMagazineAmmo);
+            }
         }
 
         unit.attack.attackCooldown = Mathf.Max(unit.attack.attackCooldown - Time.deltaTime, 0f);
@@ -137,8 +149,13 @@ public struct AttackSystem
             unit.attack.attackCooldown = attackPreset.attackCooldown;
             if (attackPreset.usesAmmo)
             {
-                --unit.attack.ammoLeft;
-                if (unit.attack.ammoLeft <= 0)
+                ++unit.attack.ammoShot;
+                if (unitType == IDType.Player)
+                {
+                    mainScript.ammoBar.UpdateAmmoBar(unit.attack.ammoShot, attackPreset.fullMagazineAmmo);
+                }
+
+                if (attackPreset.fullMagazineAmmo <= unit.attack.ammoShot)
                 {
                     unit.attack.Reload(attackPreset);
                 }
@@ -212,6 +229,9 @@ public struct AttackSystem
 
             case IDType.Player:
                 DamagePlayer(ref mainScript.player, damage);
+                ref HealthComponent health = ref mainScript.player.health;
+                mainScript.healthBar.slider.value = health.current / (float)health.max;
+                mainScript.healthBar.text.text = $"HP={health.current}/{health.max}";
                 return true;
 
             case IDType.Enemy:

@@ -8,6 +8,9 @@ public struct InputSystem
 
     public void Update(MainScript main)
     {
+        if (!main.player.transform.gameObject.activeInHierarchy)
+            return;
+
         Vector3 newMousePosition = Input.mousePosition;
 
         if (main.playerControls.ActionMap.Aim.IsPressed())
@@ -32,6 +35,9 @@ public struct InputSystem
 
     public void FixedUpdate(MainScript main)
     {
+        if (!main.player.transform.gameObject.activeInHierarchy)
+            return;
+
         Vector2 moveDirection = main.playerControls.ActionMap.Move.ReadValue<Vector2>();
         if (1f < moveDirection.sqrMagnitude)
             moveDirection.Normalize();
