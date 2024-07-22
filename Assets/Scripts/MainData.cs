@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using UnityEngine.U2D;
 using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
+using TMPro;
 
 public enum SpriteSheetIndex
 {
@@ -83,7 +83,7 @@ public struct AttackComponent
     public bool isAttacking;
     // can start attack at 0
     public float attackCooldown;
-    public uint ammoLeft;
+    public int ammoShot;
     public float reloadCooldown;
 
     // freeze during melee attacks, deal damage at end
@@ -92,11 +92,10 @@ public struct AttackComponent
 
     public bool Reload(in ProjectileAttackPreset preset)
     {
-        if (ammoLeft < preset.fullMagazineAmmo)
+        if (0 < ammoShot)
         {
             attackCooldown = 0f;
             reloadCooldown = preset.reloadCooldown;
-            ammoLeft = preset.fullMagazineAmmo;
             return true;
         }
         return false;
@@ -193,5 +192,27 @@ public struct LightCrystal
         transform = go.transform;
         spriteRenderer = go.GetComponent<SpriteRenderer>();
         go.GetComponent<IDComponent>().id = id;
+    }
+}
+
+public struct TextAndSlider
+{
+    public TextMeshProUGUI text;
+    public Slider slider;
+
+    public void UpdateHealthBar(in HealthComponent health)
+    {
+        UpdateBar("HP:", health.current, health.max);
+    }
+
+    public void UpdateAmmoBar(int ammoShot, int ammoCapacity)
+    {
+        UpdateBar("Ammo:", ammoCapacity - ammoShot, ammoCapacity);
+    }
+
+    public void UpdateBar(string labelPrefix, int currentValue, int maxValue)
+    {
+        slider.value = currentValue / (float)maxValue;
+        text.text = $"{labelPrefix}{currentValue}/{maxValue}";
     }
 }
