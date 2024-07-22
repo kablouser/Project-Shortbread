@@ -12,6 +12,7 @@ public class MainScript : MonoBehaviour
     public VersionedPool<UnitEntity> enemies;
     public EnemyData[] enemiesSpawnRates;
     public CentreLight centreLight;
+    public VersionedPool<LightCrystal> lightCrystals;
 
     [Header("Game Settings")]
     public float timeToSurvive = 900f;
@@ -50,6 +51,11 @@ public class MainScript : MonoBehaviour
         centreLight.currentPower = centreLight.maxPower;
         centreLight.uiPowerBar.maxValue = centreLight.maxPower;
         centreLight.uiPowerBar.value = centreLight.maxPower;
+
+        // Light Crystal Spawning
+        {
+
+        }
     }
 
     public void OnValidate()
@@ -255,5 +261,14 @@ public class MainScript : MonoBehaviour
 
         isValid = false;
         return ref player;
+    }
+
+    public void AddLightPower(float amount)
+    {
+        centreLight.currentPower += amount;
+        if(centreLight.currentPower > centreLight.maxPower)
+        {
+            centreLight.currentPower = centreLight.maxPower;
+        }
     }
 }

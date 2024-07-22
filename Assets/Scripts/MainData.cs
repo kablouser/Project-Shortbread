@@ -9,6 +9,7 @@ public enum SpriteSheetIndex
 {
     Player,
     Enemy,
+    LightCrystal,
 };
 
 public enum AnimationClipIndex
@@ -120,6 +121,7 @@ public struct UnitEntity
     public AttackComponent attack;
     public float moveSpeed;
     public HealthComponent health;
+    public float lightPower;
 
     public UnitEntity(
         GameObject go,
@@ -171,4 +173,25 @@ public struct CentreLight
     public float maxPower;
 
     public float currentPower;
+}
+
+[Serializable]
+public struct LightCrystal
+{
+    public Transform transform;
+    public HealthComponent health;
+    public float lightPower;
+    public SpriteRenderer spriteRenderer;
+    public AnimationComponent animation;
+
+    public LightCrystal(
+        GameObject go,
+        in LightCrystal template,
+        ID id)
+    {
+        this = template;
+        transform = go.transform;
+        spriteRenderer = go.GetComponent<SpriteRenderer>();
+        go.GetComponent<IDComponent>().id = id;
+    }
 }

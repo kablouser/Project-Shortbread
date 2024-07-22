@@ -266,6 +266,70 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: lightCrystals.type
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: lightCrystals.isUsing.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: lightCrystals.elements.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: lightCrystals.versions.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: lightCrystals.isUsing.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: animationSystem.spriteSheets.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: lightCrystals.elements.Array.data[0].rigidbody
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: lightCrystals.elements.Array.data[0].transform
+      value: 
+      objectReference: {fileID: 1327593167}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: animationSystem.spriteSheets.Array.data[2].name
+      value: Light Crystal
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: lightCrystals.elements.Array.data[0].health.max
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: lightCrystals.elements.Array.data[0].lightPower
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: lightCrystals.elements.Array.data[0].health.current
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: lightCrystals.elements.Array.data[0].spriteRenderer
+      value: 
+      objectReference: {fileID: 1327593166}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: lightCrystals.elements.Array.data[0].animation.spriteSheetIndex
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: animationSystem.spriteSheets.Array.data[2].spriteSheet.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: animationSystem.spriteSheets.Array.data[2].spriteSheet.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: 81c9fa05c62ea084e8f67a3f5ee1f49d, type: 3}
     - target: {fileID: 8890481135724435722, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: m_Name
       value: Main Script
@@ -275,6 +339,16 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+--- !u!212 &1327593166 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 4291488318783747403, guid: 83d6d020a52922f46b5fc8169012a06a, type: 3}
+  m_PrefabInstance: {fileID: 6327735581492544785}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1327593167 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2669441711434798250, guid: 83d6d020a52922f46b5fc8169012a06a, type: 3}
+  m_PrefabInstance: {fileID: 6327735581492544785}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2073098578
 GameObject:
   m_ObjectHideFlags: 0
@@ -405,6 +479,67 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1001 &6327735581492544785
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2466001976614605658, guid: 83d6d020a52922f46b5fc8169012a06a, type: 3}
+      propertyPath: m_Name
+      value: Crystal
+      objectReference: {fileID: 0}
+    - target: {fileID: 2669441711434798250, guid: 83d6d020a52922f46b5fc8169012a06a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 5.442
+      objectReference: {fileID: 0}
+    - target: {fileID: 2669441711434798250, guid: 83d6d020a52922f46b5fc8169012a06a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.128
+      objectReference: {fileID: 0}
+    - target: {fileID: 2669441711434798250, guid: 83d6d020a52922f46b5fc8169012a06a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2669441711434798250, guid: 83d6d020a52922f46b5fc8169012a06a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2669441711434798250, guid: 83d6d020a52922f46b5fc8169012a06a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2669441711434798250, guid: 83d6d020a52922f46b5fc8169012a06a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2669441711434798250, guid: 83d6d020a52922f46b5fc8169012a06a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2669441711434798250, guid: 83d6d020a52922f46b5fc8169012a06a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2669441711434798250, guid: 83d6d020a52922f46b5fc8169012a06a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2669441711434798250, guid: 83d6d020a52922f46b5fc8169012a06a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4291488318783747403, guid: 83d6d020a52922f46b5fc8169012a06a, type: 3}
+      propertyPath: m_SortingLayer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 83d6d020a52922f46b5fc8169012a06a, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -412,3 +547,4 @@ SceneRoots:
   - {fileID: 1109500267}
   - {fileID: 2073098579}
   - {fileID: 777943494}
+  - {fileID: 6327735581492544785}

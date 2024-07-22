@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 [Serializable]
@@ -204,6 +205,18 @@ public struct AttackSystem
         return false;
     }
 
+    public static bool DamageCrystal(ref LightCrystal crystal, int damage, in ID id, ref VersionedPool<LightCrystal> pool)
+    {
+        crystal.health.current -= damage;
+        if (crystal.health.current <= 0)
+        {
+            UnityEngine.Object.Destroy(crystal.transform.gameObject);
+            pool.TryDespawn(id, out _);
+            return true;
+        }
+        return false;
+    }
+
     public static bool Damage(in ID id, int damage, MainScript mainScript)
     {
         switch (id.type)
@@ -218,6 +231,15 @@ public struct AttackSystem
                 if (mainScript.enemies.IsValidID(id))
                 {
                     DamageInPool(ref mainScript.enemies[id.index], damage, id, ref mainScript.enemies);
+                    return true;
+                }
+                break;
+
+            case IDType.LightCrystal:
+                if(DamageCrystal(ref mainScript.lightCrystals[id.index], damage, id, ref mainScript.lightCrystals))
+                {
+                    Debug.Log("Destroyed Light Crystal!");
+                    mainScript.AddLightPower(mainScript.lightCrystals[id.index].lightPower);
                     return true;
                 }
                 break;

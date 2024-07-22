@@ -6,6 +6,7 @@ public enum IDType
     Invalid,
     Player,
     Enemy,
+    LightCrystal,
 
     // 1 IDType per ProjectileType
     ProjectileDefault,
