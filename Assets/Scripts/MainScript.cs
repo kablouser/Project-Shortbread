@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class MainScript : MonoBehaviour
 {
@@ -16,7 +17,10 @@ public class MainScript : MonoBehaviour
     public VersionedPool<UnitEntity> enemies;
     public EnemyData[] enemiesSpawnRates;
     public CentreLight centreLight;
+    public LightCrystalSpawning lightCrystalSpawning;
     public VersionedPool<LightCrystal> lightCrystals;
+    public IndicatorAndLocation lightCrystalIndicator;
+    public IndicatorAndLocation centreIndicator;
 
     [Header("Game Settings")]
     public float timeToSurvive = 900f;
@@ -58,7 +62,27 @@ public class MainScript : MonoBehaviour
 
         // Light Crystal Spawning
         {
+            for(int i = 0; i < lightCrystalSpawning.crystalsToSpawn; i++)
+            {
+                Vector2 spawnPosition = new Vector2(UnityEngine.Random.Range(mapBoundsMin.x, mapBoundsMax.x), UnityEngine.Random.Range(mapBoundsMin.y, mapBoundsMax.y));
 
+                ID id = lightCrystals.Spawn();
+                ref LightCrystal crystal = ref lightCrystals[id.index];
+
+                if(crystal.IsValid())
+                {
+                    crystal = new LightCrystal(crystal.transform.gameObject, lightCrystalSpawning.presetCrystal, id);
+                    crystal.transform.position = spawnPosition;
+                    crystal.transform.gameObject.SetActive(true);
+                }
+                else
+                {
+                    crystal = new LightCrystal(
+                            Instantiate(lightCrystalSpawning.crystalPrefab, spawnPosition, Quaternion.identity),
+                            lightCrystalSpawning.presetCrystal,
+                            id);
+                }
+            }
         }
         
         healthBar.UpdateHealthBar(player.health);
@@ -203,6 +227,25 @@ public class MainScript : MonoBehaviour
             }
 
             // Update
+        }
+
+        // Indicator Updates
+        {
+            centreIndicator.Update(this);
+
+            // Find closest light crystal
+            lightCrystalIndicator.distance = float.PositiveInfinity;
+            foreach (int Index in lightCrystals)
+            {
+                float TempDistance = Vector2.SqrMagnitude(player.rigidbody.position - (Vector2)lightCrystals[Index].transform.position);
+                if (TempDistance < lightCrystalIndicator.distance)
+                {
+                    lightCrystalIndicator.distance = TempDistance;
+                    lightCrystalIndicator.position = lightCrystals[Index].transform.position;
+                }
+            }
+
+            lightCrystalIndicator.Update(this);
         }
 
         attackSystem.Update(this);

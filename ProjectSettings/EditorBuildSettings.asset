@@ -4,6 +4,9 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/BenTest.unity
+    guid: 1c0fcb33a1a115a48868a16d1653e65e
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: b42b410bd7f138d49a036800c6740956, type: 2}

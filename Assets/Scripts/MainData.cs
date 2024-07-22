@@ -4,6 +4,7 @@ using System;
 using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
 using TMPro;
+using Unity.VisualScripting;
 
 public enum SpriteSheetIndex
 {
@@ -175,6 +176,16 @@ public struct CentreLight
 }
 
 [Serializable]
+public struct LightCrystalSpawning
+{
+    public int crystalsToSpawn;
+    public AnimationCurve spawnAmountAtDistance;
+
+    public GameObject crystalPrefab;
+    public LightCrystal presetCrystal;
+}
+
+[Serializable]
 public struct LightCrystal
 {
     public Transform transform;
@@ -193,8 +204,15 @@ public struct LightCrystal
         spriteRenderer = go.GetComponent<SpriteRenderer>();
         go.GetComponent<IDComponent>().id = id;
     }
+
+    public bool IsValid()
+    {
+        return transform != null &&
+            spriteRenderer != null;
+    }
 }
 
+[Serializable]
 public struct TextAndSlider
 {
     public TextMeshProUGUI text;
@@ -214,5 +232,39 @@ public struct TextAndSlider
     {
         slider.value = currentValue / (float)maxValue;
         text.text = $"{labelPrefix}{currentValue}/{maxValue}";
+    }
+}
+
+[Serializable]
+public struct IndicatorAndLocation
+{
+    public RectTransform indicatorHolder;
+    public Vector2 position;
+    public float distance;
+
+    public void Update(MainScript main)
+    {
+        Vector2 cameraPosition = main.mainCamera.transform.position;
+        float verticleExtent = main.mainCamera.orthographicSize;
+        float horizontalExtent = verticleExtent * Screen.width / Screen.height;
+        float indicatorDistanceFromPlayer = 2f;
+
+        if ((cameraPosition.x - horizontalExtent) < position.x
+            && (cameraPosition.x + horizontalExtent) > position.x
+            && (cameraPosition.y - verticleExtent) < position.y
+            && (cameraPosition.y + verticleExtent) > position.y)
+        {
+            // lightCrystalIndicator.indicatorArrow.enabled = false;
+            indicatorHolder.gameObject.SetActive(false);
+        }
+        else
+        {
+            // lightCrystalIndicator.indicatorArrow.enabled = true;
+            indicatorHolder.gameObject.SetActive(true);
+
+            Vector2 indicatorPosition = main.mainCamera.WorldToViewportPoint(cameraPosition + (position - cameraPosition).normalized * indicatorDistanceFromPlayer);
+            indicatorHolder.anchorMin = indicatorPosition;
+            indicatorHolder.anchorMax = indicatorPosition;
+        }
     }
 }
