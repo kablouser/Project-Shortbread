@@ -98,7 +98,7 @@ public class MainEditorWindow : EditorWindow
             {
                 if (GUILayout.Button("Respawn player"))
                 {
-                    mainScript.player = new UnitEntity(playerGO, mainScript.player, new ID { type = IDType.Player });
+                    mainScript.player.health.current = mainScript.player.health.max;
                     playerGO.transform.position = Vector3.zero;
                     playerGO.SetActive(true);
                 }

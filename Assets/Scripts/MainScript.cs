@@ -12,15 +12,19 @@ public class MainScript : MonoBehaviour
     public InputSystem inputSystem;
     public AnimationSystem animationSystem;
     public AttackSystem attackSystem;
+    public AISystem aiSystem;
     public NavigationGrid navigationGrid;
     public UnitEntity player;
     public VersionedPool<UnitEntity> enemies;
+    public VersionedPool<Boss0Entity> bosses0;
     public EnemyData[] enemiesSpawnRates;
+    public Boss0SpawnData boss0SpawnData;
     public CentreLight centreLight;
     public LightCrystalSpawning lightCrystalSpawning;
     public VersionedPool<LightCrystal> lightCrystals;
     public IndicatorAndLocation lightCrystalIndicator;
     public IndicatorAndLocation centreIndicator;
+
 
     [Header("Game Settings")]
     public float timeToSurvive = 900f;
@@ -92,6 +96,7 @@ public class MainScript : MonoBehaviour
     public void OnValidate()
     {
         enemies.type = IDType.Enemy;
+        bosses0.type = IDType.Boss0;
         attackSystem.defaultProjectile.pool.type = IDType.ProjectileDefault;
     }
 
@@ -110,7 +115,6 @@ public class MainScript : MonoBehaviour
 
     public void Update()
     {
-        mainCamera.transform.position = player.rigidbody.position;
         inputSystem.Update(this);
         animationSystem.Update(this);
 
@@ -130,22 +134,22 @@ public class MainScript : MonoBehaviour
             Vector2 CameraMin = new Vector2(cameraPosition.x - horizontalExtent - spawnOutsideCameraDistance, cameraPosition.y - verticleExtent - spawnOutsideCameraDistance);
             Vector2 CameraMax = new Vector2(cameraPosition.x + horizontalExtent + spawnOutsideCameraDistance, cameraPosition.y + verticleExtent + spawnOutsideCameraDistance);
 
-            if(CameraMin.x <= mapBoundsMin.x)
+            if (CameraMin.x <= mapBoundsMin.x)
             {
                 SpawnPoints.Remove(0);
             }
 
-            if(CameraMax.x >= mapBoundsMax.x)
+            if (CameraMax.x >= mapBoundsMax.x)
             {
                 SpawnPoints.Remove(1);
             }
 
-            if(CameraMin.y <= mapBoundsMin.y)
+            if (CameraMin.y <= mapBoundsMin.y)
             {
                 SpawnPoints.Remove(2);
             }
 
-            if(CameraMax.y >= mapBoundsMax.y)
+            if (CameraMax.y >= mapBoundsMax.y)
             {
                 SpawnPoints.Remove(3);
             }
@@ -153,12 +157,12 @@ public class MainScript : MonoBehaviour
             for (int i = 0; i < enemiesSpawnRates.Length; i++)
             {
                 // Get the number of enemies that should be spawned
-                enemiesSpawnRates[i].currentNumberToSpawn += (enemiesSpawnRates[i].spawnRate.Evaluate(currentTime/timeToSurvive)) * Time.deltaTime;
+                enemiesSpawnRates[i].currentNumberToSpawn += (enemiesSpawnRates[i].spawnRate.Evaluate(currentTime / timeToSurvive)) * Time.deltaTime;
                 int numberOfEnemiesToSpawn = Mathf.FloorToInt(enemiesSpawnRates[i].currentNumberToSpawn);
                 enemiesSpawnRates[i].currentNumberToSpawn -= numberOfEnemiesToSpawn;
 
                 // Dont try to spawn if no point avaliable
-                if(SpawnPoints.Count <= 0)
+                if (SpawnPoints.Count <= 0)
                 {
                     continue;
                 }
@@ -206,6 +210,54 @@ public class MainScript : MonoBehaviour
                     }
                 }
             }
+        }
+
+        // Boss spawning
+        while (true)
+        {
+            // Get the number of enemies that should be spawned
+            int spawnRequirement = Mathf.FloorToInt(boss0SpawnData.spawnRate.Evaluate(currentTime / timeToSurvive));
+            if (spawnRequirement <= boss0SpawnData.numberSpawned)
+                break;
+
+            int numberToSpawn = spawnRequirement - boss0SpawnData.numberSpawned;
+            boss0SpawnData.numberSpawned = spawnRequirement;
+
+            for (int j = 0; j < numberToSpawn; j++)
+            {
+                int attempts = 0;
+                Vector2 randomPosition;
+                do
+                {
+                    randomPosition = new Vector2(
+                        Random.Range(mapBoundsMin.x, mapBoundsMax.x),
+                        Random.Range(mapBoundsMin.y, mapBoundsMax.y));
+
+                    if (boss0SpawnData.minDistanceToPlayer <
+                        Vector2.Distance(randomPosition, player.transform.position))
+                        break;
+
+                } while (++attempts < 5);
+
+                ID id = bosses0.Spawn();
+                ref Boss0Entity boss = ref bosses0[id.index];
+
+                if (boss.unit.IsValid())
+                {
+                    boss = new Boss0Entity(boss.unit.transform.gameObject, boss0SpawnData.presetUnit, id);
+                    boss.unit.transform.position = randomPosition;
+                    boss.unit.transform.gameObject.SetActive(true);
+                }
+                else
+                {
+                    boss = new Boss0Entity(
+                        Instantiate(boss0SpawnData.prefab, randomPosition, Quaternion.identity),
+                        boss0SpawnData.presetUnit,
+                        id);
+                }
+            }
+
+            break;
         }
 
         // Light Shield
@@ -256,16 +308,7 @@ public class MainScript : MonoBehaviour
         mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, player.transform.position, Time.fixedDeltaTime * 5f);
 
         inputSystem.FixedUpdate(this);
-
-        // Enemy Movement
-        {
-            Vector3 playerPosition = player.transform.position;
-            foreach(int enemyID in enemies)
-            {
-                Vector2 Velocity = new Vector2(playerPosition.x - enemies[enemyID].transform.position.x, playerPosition.y - enemies[enemyID].transform.position.y).normalized * enemies[enemyID].moveSpeed;
-                enemies[enemyID].rigidbody.velocity = Velocity;
-            }
-        }
+        aiSystem.FixedUpdate(this);
     }
 
     public void ProcessTriggerEnter(IDTriggerEnter source, Collider2D collider)
@@ -296,6 +339,14 @@ public class MainScript : MonoBehaviour
                     return ref enemies[id.index];
                 }
                 break;
+
+            case IDType.Boss0:
+                if (bosses0.IsValidID(id))
+                {
+                    isValid = true;
+                    return ref bosses0[id.index].unit;
+                }
+                break;
         }
 
         isValid = false;
@@ -309,5 +360,28 @@ public class MainScript : MonoBehaviour
         {
             centreLight.currentPower = centreLight.maxPower;
         }
+    }
+
+    public static Team GetTeam(IDType type)
+    {
+        switch (type)
+        {
+            default:
+            case IDType.Invalid:
+            case IDType.ProjectileDefault:
+                return Team.Neutral;
+
+            case IDType.Player:
+                return Team.Player;
+
+            case IDType.Enemy:
+            case IDType.Boss0:
+                return Team.Enemy;
+        }
+    }
+
+    public static bool IsOppositeTeams(IDType a, IDType b)
+    {
+        return GetTeam(a) != GetTeam(b);
     }
 }

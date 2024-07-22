@@ -4,7 +4,8 @@ using System;
 using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
 using TMPro;
-using Unity.VisualScripting;
+
+public enum Team { Neutral, Player, Enemy };
 
 public enum SpriteSheetIndex
 {
@@ -143,6 +144,11 @@ public struct UnitEntity
             rigidbody != null &&
             spriteRenderer != null;
     }
+
+    public void SetRotationDegrees(in Vector3 forward)
+    {
+        rotationDegrees = Vector3.SignedAngle(Vector3.up, forward, Vector3.forward);
+    }
 }
 
 [Serializable]
@@ -154,7 +160,19 @@ public struct EnemyData
     // Number of enemies to spawn per second over the game time.
     public AnimationCurve spawnRate;
     public float currentNumberToSpawn;
-    
+}
+
+[Serializable]
+public struct Boss0SpawnData
+{
+    public GameObject prefab;
+    public Boss0Entity presetUnit;
+
+    // Number required to have spawned over the game time.
+    public AnimationCurve spawnRate;
+    public int numberSpawned;
+    // min distance gap to player when spawned
+    public float minDistanceToPlayer;
 }
 
 [Serializable]
@@ -266,5 +284,23 @@ public struct IndicatorAndLocation
             indicatorHolder.anchorMin = indicatorPosition;
             indicatorHolder.anchorMax = indicatorPosition;
         }
+    }
+}
+
+[Serializable]
+public struct Boss0Entity
+{
+    public UnitEntity unit;
+    public bool hasAgro;
+    // other components here
+    // e.g. limbs system
+
+    public Boss0Entity(
+        GameObject go,
+        in Boss0Entity template,
+        ID id)
+    {
+        this = template;
+        unit = new UnitEntity(go, template.unit, id);
     }
 }

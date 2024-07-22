@@ -8,6 +8,8 @@ public enum IDType
     Enemy,
     LightCrystal,
 
+    Boss0,
+
     // 1 IDType per ProjectileType
     ProjectileDefault,
 }
@@ -147,9 +149,36 @@ public struct VersionedPool<T>
         return false;
     }
 
+    public bool TryDespawn(in ID id)
+    {
+        if (IsValidID(id))
+        {
+            versions[id.index]++;
+            isUsing[id.index] = false;
+            return true;
+        }
+        return false;
+    }
+
+    public bool TryDespawn(int index)
+    {
+        if (IsValidIndex(index))
+        {
+            versions[index]++;
+            isUsing[index] = false;
+            return true;
+        }
+        return false;
+    }
+
     public bool IsValidID(in ID id)
     {
-        return id.type == type && id.index < elements.Count && id.index < versions.Count && versions[id.index] == id.version;
+        return id.type == type && IsValidIndex(id.index) && versions[id.index] == id.version;
+    }
+
+    public bool IsValidIndex(int index)
+    {
+        return index < elements.Count && index < versions.Count && index < isUsing.Count;
     }
 
     public ID GetCurrentID(int index)

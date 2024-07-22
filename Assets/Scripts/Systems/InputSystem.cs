@@ -16,12 +16,12 @@ public struct InputSystem
         if (main.playerControls.ActionMap.Aim.IsPressed())
         {
             Vector2 aim = main.playerControls.ActionMap.Aim.ReadValue<Vector2>();
-            main.player.rotationDegrees = Vector3.SignedAngle(Vector3.up, aim, Vector3.forward);
+            main.player.SetRotationDegrees(aim);
         }
-        else if (Input.mousePresent && 0.1f < (newMousePosition - lastMousePosition).sqrMagnitude)
+        else if (Input.mousePresent && Application.isFocused && 0.1f < (newMousePosition - lastMousePosition).sqrMagnitude)
         {
             Vector3 mousePositionWorld = main.mainCamera.ScreenToWorldPoint(newMousePosition);
-            main.player.rotationDegrees = Vector3.SignedAngle(Vector3.up, mousePositionWorld - main.player.transform.position, Vector3.forward);
+            main.player.SetRotationDegrees(mousePositionWorld - main.player.transform.position);
         }
         lastMousePosition = newMousePosition;
 

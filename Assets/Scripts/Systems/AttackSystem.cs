@@ -8,6 +8,8 @@ public struct ProjectileEntity
     public GameObject gameObject;
     public IDType source;
     public int damage;
+    public float rangeLeft;
+    public Vector2 lastPosition;
 }
 
 [Serializable]
@@ -40,6 +42,7 @@ public struct ProjectileAttackPreset
     public int fullMagazineAmmo;
 
     public int damage;
+    public float projectileRange;
 }
 
 [Serializable]
@@ -49,19 +52,45 @@ public struct AttackSystem
 
     public ProjectileAttackPreset player;
     public MeleeAttackPreset enemy;
+    public ProjectileAttackPreset boss0;
 
     public void Update(MainScript mainScript)
     {
-        UpdateProjectile(ref mainScript.player, IDType.Player,
+        // projectile lifetimes first
+        foreach (int i in defaultProjectile.pool)
+        {
+            UpdateProjectile(ref defaultProjectile.pool[i], ref defaultProjectile.pool, i);
+        }
+
+        UpdateAttackProjectile(ref mainScript.player, IDType.Player,
             player, defaultProjectile, mainScript);
 
         foreach (int i in mainScript.enemies)
         {
-            UpdateMelee(ref mainScript.enemies[i], enemy, mainScript);
+            UpdateAttackMelee(ref mainScript.enemies[i], enemy, mainScript);
+        }
+
+        foreach (int i in mainScript.bosses0)
+        {
+            UpdateAttackProjectile(ref mainScript.bosses0[i].unit, IDType.Boss0,
+                boss0, defaultProjectile, mainScript);
         }
     }
 
-    public void UpdateMelee(
+    public void UpdateProjectile(ref ProjectileEntity projectile, ref VersionedPool<ProjectileEntity> pool, int index)
+    {
+        Vector2 currentPosition = projectile.gameObject.transform.position;
+        projectile.rangeLeft -= (currentPosition - projectile.lastPosition).magnitude;
+        projectile.lastPosition = currentPosition;
+
+        if (projectile.rangeLeft < 0f)
+        {
+            projectile.gameObject.SetActive(false);
+            pool.TryDespawn(index);
+        }
+    }
+
+    public void UpdateAttackMelee(
         ref UnitEntity unit,
         in MeleeAttackPreset attackPreset,
         MainScript mainScript)
@@ -111,7 +140,7 @@ public struct AttackSystem
         }
     }
 
-    public void UpdateProjectile(
+    public void UpdateAttackProjectile(
         ref UnitEntity unit,
         IDType unitType,
         in ProjectileAttackPreset attackPreset,
@@ -175,6 +204,7 @@ public struct AttackSystem
             }
             projectile.damage = attackPreset.damage;
             projectile.source = unitType;
+            projectile.rangeLeft = attackPreset.projectileRange;
             IDTriggerEnter idTriggerEnter = projectile.gameObject.GetComponent<IDTriggerEnter>();
             idTriggerEnter.id = projectileID;
             idTriggerEnter.mainScript = mainScript;
@@ -186,33 +216,48 @@ public struct AttackSystem
                 unit.transform.position + forward * attackPreset.projectileOffset,
                 rotation);
             projectile.gameObject.GetComponent<Rigidbody2D>().velocity = forward * attackPreset.projectileSpeed;
+            projectile.lastPosition = projectile.gameObject.transform.position;
         }
     }
 
     // Projectile on trigger enter
     public void ProcessTriggerEnterEvent(MainScript mainScript, IDTriggerEnter source, Collider2D collider)
     {
-        if (defaultProjectile.pool.TryDespawn(source.id, out ProjectileEntity projectile))
+        if (!defaultProjectile.pool.IsValidID(source.id))
+            return;
+
+        ref ProjectileEntity projectile = ref defaultProjectile.pool[source.id.index];
+        IDComponent idComp = collider.GetComponent<IDComponent>();
+
+        if (idComp == null ||
+            (
+                MainScript.IsOppositeTeams(projectile.source, idComp.id.type) &&
+                //enemy can only damage player, nothing else, enemy projectiles pass through other objects
+                (MainScript.GetTeam(projectile.source) != Team.Enemy || MainScript.GetTeam(idComp.id.type) == Team.Player)
+            ) &&
+            defaultProjectile.pool.TryDespawn(source.id.index))
         {
             projectile.gameObject.SetActive(false);
-            IDComponent idComp = collider.GetComponent<IDComponent>();
-            if (idComp)
+            if (idComp != null)
             {
                 Damage(idComp.id, projectile.damage, mainScript);
             }
         }
     }
 
-    public static void DamageInPool(ref UnitEntity unit, int damage, in ID id, ref VersionedPool<UnitEntity> pool)
+    public static void DamageInPool<T>(ref UnitEntity unit, int damage, in ID id, ref VersionedPool<T> pool)
     {
-        if (DamagePlayer(ref unit, damage))
+        if (DamageWithoutDespawn(ref unit, damage))
         {
-            pool.TryDespawn(id, out _);
+            pool.TryDespawn(id);
         }
     }
 
-    public static bool DamagePlayer(ref UnitEntity unit, int damage)
+    public static bool DamageWithoutDespawn(ref UnitEntity unit, int damage)
     {
+        if (unit.health.current <= 0)
+            return false;
+
         unit.health.current -= damage;
         if (unit.health.current <= 0)
         {
@@ -241,7 +286,7 @@ public struct AttackSystem
             default: break;
 
             case IDType.Player:
-                DamagePlayer(ref mainScript.player, damage);
+                DamageWithoutDespawn(ref mainScript.player, damage);
                 ref HealthComponent health = ref mainScript.player.health;
                 mainScript.healthBar.slider.value = health.current / (float)health.max;
                 mainScript.healthBar.text.text = $"HP={health.current}/{health.max}";
@@ -258,8 +303,15 @@ public struct AttackSystem
             case IDType.LightCrystal:
                 if(DamageCrystal(ref mainScript.lightCrystals[id.index], damage, id, ref mainScript.lightCrystals))
                 {
-                    Debug.Log("Destroyed Light Crystal!");
                     mainScript.AddLightPower(mainScript.lightCrystals[id.index].lightPower);
+                    return true;
+                }
+                break;
+                
+            case IDType.Boss0:
+                if (mainScript.bosses0.IsValidID(id))
+                {
+                    DamageInPool(ref mainScript.bosses0[id.index].unit, damage, id, ref mainScript.bosses0);
                     return true;
                 }
                 break;

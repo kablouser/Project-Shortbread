@@ -63,6 +63,17 @@ public struct AnimationSystem
                 animationEvents.Add(animationEvent);
             }
         }
+
+        animationEvent.id.type = IDType.Boss0;
+        foreach (int index in main.bosses0)
+        {
+            if (UpdateUnit(animateFrames, spriteSheetsSpan, animationClipsSpan,
+                ref main.bosses0[index].unit,
+                ref animationEvent))
+            {
+                animationEvents.Add(animationEvent);
+            }
+        }
     }
 
     // returns true if produced events
