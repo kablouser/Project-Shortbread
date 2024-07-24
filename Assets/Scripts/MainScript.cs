@@ -22,6 +22,8 @@ public class MainScript : MonoBehaviour
     public CentreLight centreLight;
     public LightCrystalSpawning lightCrystalSpawning;
     public VersionedPool<LightCrystal> lightCrystals;
+    public LightShardData lightShardData;
+    public VersionedPool<LightShard> lightShards;
     public IndicatorAndLocation lightCrystalIndicator;
     public IndicatorAndLocation centreIndicator;
     public IndicatorAndLocation bossIndicator;
@@ -257,6 +259,35 @@ public class MainScript : MonoBehaviour
             // Update
         }
 
+        // Light Shards
+        {
+            Vector2 playerPosition = player.transform.position;
+
+            foreach (int shardID in lightShards)
+            {
+                ref LightShard shard = ref lightShards[shardID];
+                float DistanceFromPlayer = Vector2.SqrMagnitude((Vector2)shard.transform.position - playerPosition);
+
+                // Collect shards if close enough
+                if((lightShardData.pickUpDistance * lightShardData.pickUpDistance) >= DistanceFromPlayer)
+                {
+                    AddLightPower(shard.lightPower);
+                    shard.transform.gameObject.SetActive(false);
+                    lightShards.TryDespawn(shard.transform.GetComponent<IDComponent>().id, out _);
+                    continue;
+                }
+
+                // Move towards player when in range
+                float attrackDistanceSqr = (lightShardData.playerDistanceToAttract * lightShardData.playerDistanceToAttract);
+                if(DistanceFromPlayer <= attrackDistanceSqr)
+                {
+                    float moveSpeed = lightShardData.speedAtDistanceFromPlayer.Evaluate(DistanceFromPlayer / attrackDistanceSqr) * lightShardData.maxSpeed;
+                    Vector2 velocity = (playerPosition - (Vector2)shard.transform.position).normalized * moveSpeed;
+                    shard.rigidbody.velocity = velocity;
+                }
+            }
+        }
+
         // Indicator Updates
         {
             centreIndicator.Update(this);
@@ -419,6 +450,40 @@ public class MainScript : MonoBehaviour
                         Instantiate(lightCrystalSpawning.crystalPrefab, spawnPosition, Quaternion.identity),
                         lightCrystalSpawning.presetCrystal,
                         id);
+            }
+        }
+    }
+
+    public void SpawnLightShards(Vector3 position, float lightPower)
+    {
+        int NumberToSpawn = Mathf.CeilToInt(lightPower / lightShardData.maxPowerPerShard);
+
+        for(int i = 0; i < NumberToSpawn; i++)
+        {
+
+            float shardPower = lightPower;
+            if(lightPower > lightShardData.maxPowerPerShard)
+            {
+                shardPower = lightPower;
+                lightPower -= lightShardData.maxPowerPerShard;
+            }
+
+            ID id = lightShards.Spawn();
+            ref LightShard shard = ref lightShards[id.index];
+
+            if (shard.IsValid())
+            {
+                shard = new LightShard(shard.transform.gameObject, lightShardData.presetShard, id, shardPower);
+                shard.transform.position = position;
+                shard.transform.gameObject.SetActive(true);
+            }
+            else
+            {
+                shard = new LightShard(
+                        Instantiate(lightShardData.shardPrefab, position, Quaternion.identity),
+                        lightShardData.presetShard,
+                        id,
+                        shardPower);
             }
         }
     }

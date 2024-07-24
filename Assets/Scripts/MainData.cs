@@ -237,6 +237,51 @@ public struct LightCrystal
 }
 
 [Serializable]
+public struct LightShardData
+{
+    public GameObject shardPrefab;
+    public LightShard presetShard;
+    public float maxPowerPerShard;
+
+    public float playerDistanceToAttract;
+    public AnimationCurve speedAtDistanceFromPlayer;
+    public float maxSpeed;
+    public float pickUpDistance;
+}
+
+[Serializable]
+public struct LightShard
+{
+    public Transform transform;
+    public Rigidbody2D rigidbody;
+    public float lightPower;
+    public SpriteRenderer spriteRenderer;
+    public AnimationComponent animation;
+
+    public LightShard(
+        GameObject go,
+        in LightShard template,
+        ID id,
+        float lightPower)
+    {
+        this = template;
+        this.lightPower = lightPower;
+        transform = go.transform;
+        rigidbody = go.GetComponent<Rigidbody2D>();
+        spriteRenderer = go.GetComponent<SpriteRenderer>();
+        go.GetComponent<IDComponent>().id = id;
+
+        rigidbody.constraints &= ~RigidbodyConstraints2D.FreezePosition;
+    }
+
+    public bool IsValid()
+    {
+        return transform != null &&
+            spriteRenderer != null;
+    }
+}
+
+[Serializable]
 public struct TextAndSlider
 {
     public TextMeshProUGUI text;

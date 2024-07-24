@@ -7,6 +7,7 @@ public enum IDType
     Player,
     Enemy,
     LightCrystal,
+    LightShard,
 
     Boss0,
 

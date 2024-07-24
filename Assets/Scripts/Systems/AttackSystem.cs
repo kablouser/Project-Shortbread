@@ -318,10 +318,15 @@ public struct AttackSystem
                 break;
 
             case IDType.LightCrystal:
-                if(DamageCrystal(ref mainScript.lightCrystals[id.index], damage, id, ref mainScript.lightCrystals))
+                if(mainScript.lightCrystals.IsValidID(id))
                 {
-                    mainScript.AddLightPower(mainScript.lightCrystals[id.index].lightPower);
-                    return true;
+                    Vector2 position = mainScript.lightCrystals[id.index].transform.position;
+                    if (DamageCrystal(ref mainScript.lightCrystals[id.index], damage, id, ref mainScript.lightCrystals))
+                    {
+                        mainScript.SpawnLightShards(position, mainScript.lightCrystals[id.index].lightPower);
+                        // mainScript.AddLightPower(Crystal.lightPower);
+                        return true;
+                    }
                 }
                 break;
                 

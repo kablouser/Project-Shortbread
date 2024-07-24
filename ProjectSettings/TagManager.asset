@@ -13,7 +13,7 @@ TagManager:
   - UI
   - Player
   - Projectile
-  - 
+  - Shard
   - 
   - 
   - 
@@ -43,6 +43,9 @@ TagManager:
     locked: 0
   - name: Background
     uniqueID: 3655233065
+    locked: 0
+  - name: Shards
+    uniqueID: 2884445495
     locked: 0
   - name: Enemies
     uniqueID: 1886848587
