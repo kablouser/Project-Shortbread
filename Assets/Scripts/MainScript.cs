@@ -24,6 +24,7 @@ public class MainScript : MonoBehaviour
     public VersionedPool<LightCrystal> lightCrystals;
     public IndicatorAndLocation lightCrystalIndicator;
     public IndicatorAndLocation centreIndicator;
+    public IndicatorAndLocation bossIndicator;
 
 
     [Header("Game Settings")]
@@ -65,30 +66,8 @@ public class MainScript : MonoBehaviour
         centreLight.uiPowerBar.value = centreLight.maxPower;
 
         // Light Crystal Spawning
-        {
-            for(int i = 0; i < lightCrystalSpawning.crystalsToSpawn; i++)
-            {
-                Vector2 spawnPosition = new Vector2(UnityEngine.Random.Range(mapBoundsMin.x, mapBoundsMax.x), UnityEngine.Random.Range(mapBoundsMin.y, mapBoundsMax.y));
+        ReplenishCrystalsNumber();
 
-                ID id = lightCrystals.Spawn();
-                ref LightCrystal crystal = ref lightCrystals[id.index];
-
-                if(crystal.IsValid())
-                {
-                    crystal = new LightCrystal(crystal.transform.gameObject, lightCrystalSpawning.presetCrystal, id);
-                    crystal.transform.position = spawnPosition;
-                    crystal.transform.gameObject.SetActive(true);
-                }
-                else
-                {
-                    crystal = new LightCrystal(
-                            Instantiate(lightCrystalSpawning.crystalPrefab, spawnPosition, Quaternion.identity),
-                            lightCrystalSpawning.presetCrystal,
-                            id);
-                }
-            }
-        }
-        
         healthBar.UpdateHealthBar(player.health);
         ammoBar.UpdateAmmoBar(player.attack.ammoShot, attackSystem.player.fullMagazineAmmo);
     }
@@ -98,6 +77,14 @@ public class MainScript : MonoBehaviour
         enemies.type = IDType.Enemy;
         bosses0.type = IDType.Boss0;
         attackSystem.defaultProjectile.pool.type = IDType.ProjectileDefault;
+        if (player.transform)
+        {
+            var idComp = player.transform.GetComponent<IDComponent>();
+            if (idComp)
+            {
+                idComp.id.type = IDType.Player;
+            }
+        }
     }
 
     public void OnEnable()
@@ -225,19 +212,8 @@ public class MainScript : MonoBehaviour
 
             for (int j = 0; j < numberToSpawn; j++)
             {
-                int attempts = 0;
-                Vector2 randomPosition;
-                do
-                {
-                    randomPosition = new Vector2(
-                        Random.Range(mapBoundsMin.x, mapBoundsMax.x),
-                        Random.Range(mapBoundsMin.y, mapBoundsMax.y));
-
-                    if (boss0SpawnData.minDistanceToPlayer <
-                        Vector2.Distance(randomPosition, player.transform.position))
-                        break;
-
-                } while (++attempts < 5);
+                if (!RandomPositionAwayFromPlayer(boss0SpawnData.minDistanceToPlayer, out Vector2 randomPosition))
+                    continue;
 
                 ID id = bosses0.Spawn();
                 ref Boss0Entity boss = ref bosses0[id.index];
@@ -298,9 +274,25 @@ public class MainScript : MonoBehaviour
             }
 
             lightCrystalIndicator.Update(this);
+
+            // Find closest boss
+            bossIndicator.distance = float.PositiveInfinity;
+            foreach (int Index in bosses0)
+            {
+                float TempDistance = Vector2.SqrMagnitude(player.rigidbody.position - (Vector2)bosses0[Index].unit.transform.position);
+                if (TempDistance < bossIndicator.distance)
+                {
+                    bossIndicator.distance = TempDistance;
+                    bossIndicator.position = bosses0[Index].unit.transform.position;
+                }
+            }
+
+            bossIndicator.Update(this);
         }
 
         attackSystem.Update(this);
+
+        ReplenishCrystalsNumber();
     }
 
     public void FixedUpdate()
@@ -383,5 +375,51 @@ public class MainScript : MonoBehaviour
     public static bool IsOppositeTeams(IDType a, IDType b)
     {
         return GetTeam(a) != GetTeam(b);
+    }
+
+    public bool RandomPositionAwayFromPlayer(float minDistanceToPlayer, out Vector2 randomPosition, int maxAttempts = 5)
+    {
+        int attempts = 0;
+        Vector2 playerPos = player.transform.position;
+        do
+        {
+            randomPosition = new Vector2(
+                Random.Range(mapBoundsMin.x, mapBoundsMax.x),
+                Random.Range(mapBoundsMin.y, mapBoundsMax.y));
+
+            if (minDistanceToPlayer <
+                Vector2.Distance(randomPosition, playerPos))
+            {
+                return true;
+            }
+        } while (++attempts < maxAttempts);
+        return false;
+    }
+
+    public void ReplenishCrystalsNumber()
+    {
+        int crystalsToSpawn = lightCrystalSpawning.GetCrystalsNumber(mapBoundsMin, mapBoundsMax);
+        for (int i = lightCrystals.CountUsing(); i < crystalsToSpawn; i++)
+        {
+            if (!RandomPositionAwayFromPlayer(lightCrystalSpawning.minDistanceToPlayer, out Vector2 spawnPosition))
+                continue;
+
+            ID id = lightCrystals.Spawn();
+            ref LightCrystal crystal = ref lightCrystals[id.index];
+
+            if (crystal.IsValid())
+            {
+                crystal = new LightCrystal(crystal.transform.gameObject, lightCrystalSpawning.presetCrystal, id);
+                crystal.transform.position = spawnPosition;
+                crystal.transform.gameObject.SetActive(true);
+            }
+            else
+            {
+                crystal = new LightCrystal(
+                        Instantiate(lightCrystalSpawning.crystalPrefab, spawnPosition, Quaternion.identity),
+                        lightCrystalSpawning.presetCrystal,
+                        id);
+            }
+        }
     }
 }

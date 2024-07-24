@@ -196,11 +196,17 @@ public struct CentreLight
 [Serializable]
 public struct LightCrystalSpawning
 {
-    public int crystalsToSpawn;
-    public AnimationCurve spawnAmountAtDistance;
-
+    public float crystalsToSpawnPerArea;
     public GameObject crystalPrefab;
     public LightCrystal presetCrystal;
+    public float minDistanceToPlayer;
+
+    // map area * crystalsToSpawnPerArea
+    public int GetCrystalsNumber(in Vector2 mapBoundsMin, in Vector2 mapBoundsMax)
+    {
+        Vector2 mapArea = mapBoundsMax - mapBoundsMin;
+        return Mathf.RoundToInt(crystalsToSpawnPerArea * mapArea.x * mapArea.y);
+    }
 }
 
 [Serializable]
@@ -267,10 +273,11 @@ public struct IndicatorAndLocation
         float horizontalExtent = verticleExtent * Screen.width / Screen.height;
         float indicatorDistanceFromPlayer = 2f;
 
-        if ((cameraPosition.x - horizontalExtent) < position.x
+        if (!float.IsFinite(distance) ||
+            ((cameraPosition.x - horizontalExtent) < position.x
             && (cameraPosition.x + horizontalExtent) > position.x
             && (cameraPosition.y - verticleExtent) < position.y
-            && (cameraPosition.y + verticleExtent) > position.y)
+            && (cameraPosition.y + verticleExtent) > position.y))
         {
             // lightCrystalIndicator.indicatorArrow.enabled = false;
             indicatorHolder.gameObject.SetActive(false);

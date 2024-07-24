@@ -195,6 +195,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id:
-    type: 3
+    type: 0
     index: 0
     version: 0

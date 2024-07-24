@@ -24,7 +24,10 @@ public struct MeleeAttackPreset
 {
     public float attackCooldown;
     public int damage;
+    // distance to begin attack
     public float attackRange;
+    // distance to allow damage at the end of attacks
+    public float damageRange;
     // from start attack to damage. Freeze movement during this time
     public float attackTime;
 }
@@ -108,10 +111,25 @@ public struct AttackSystem
             return;
         }
 
-        if (wasAttacking)
+        while (wasAttacking)
         {
             // remove freeze pos
             unit.rigidbody.constraints &= ~RigidbodyConstraints2D.FreezePosition;
+
+            ref UnitEntity targetUnit = ref mainScript.GetUnit(unit.attack.singleTarget, out bool isTargetValid);
+            if (!isTargetValid)
+            {
+                break;
+            }
+
+            if (attackPreset.damageRange < Vector3.Distance(targetUnit.transform.position, unit.transform.position))
+            {
+                break;
+            }
+
+            // damage when in range
+            Damage(unit.attack.singleTarget, attackPreset.damage, mainScript);
+            break;
         }
 
         if (0f < unit.attack.attackCooldown)
@@ -136,7 +154,6 @@ public struct AttackSystem
             unit.attack.meleeAttackTime = attackPreset.attackTime;
             unit.rigidbody.constraints |= RigidbodyConstraints2D.FreezePosition;
 
-            Damage(unit.attack.singleTarget, attackPreset.damage, mainScript);
         }
     }
 
@@ -272,7 +289,7 @@ public struct AttackSystem
         crystal.health.current -= damage;
         if (crystal.health.current <= 0)
         {
-            UnityEngine.Object.Destroy(crystal.transform.gameObject);
+            crystal.transform.gameObject.SetActive(false);
             pool.TryDespawn(id, out _);
             return true;
         }
