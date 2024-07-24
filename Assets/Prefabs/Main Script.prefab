@@ -657,7 +657,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1964593707
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1676,6 +1676,55 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &7861605886599503125
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2008678372121399967}
+  - component: {fileID: 8876101772457709389}
+  m_Layer: 0
+  m_Name: Global Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2008678372121399967
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7861605886599503125}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 3.8122728, y: 1.2738613, z: -0.11070133}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 39358095077730421}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8876101772457709389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7861605886599503125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: db244fa322c2a1c4a90b4f2ee2e5b2a9, type: 2}
 --- !u!1 &8111718926709964186
 GameObject:
   m_ObjectHideFlags: 0
@@ -2033,6 +2082,7 @@ Transform:
   - {fileID: 4508686328054774395}
   - {fileID: 4367901179468008411}
   - {fileID: 5826851719292051190}
+  - {fileID: 2008678372121399967}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7863157616502942289
@@ -2091,7 +2141,7 @@ MonoBehaviour:
         elements: []
         versions: 
         isUsing: 
-        type: 5
+        type: 6
     player:
       attackCooldown: 0.2
       projectileOffset: 0.25
@@ -2160,7 +2210,7 @@ MonoBehaviour:
     elements: []
     versions: 
     isUsing: 
-    type: 4
+    type: 5
   enemiesSpawnRates:
   - enemyPrefab: {fileID: 4457552636102010915, guid: 765a9046aa71fea47b3c6d27bd15f623, type: 3}
     presetUnit:
@@ -2291,11 +2341,56 @@ MonoBehaviour:
         spriteSheetIndex: 2
         animationClipIndex: 0
         currentIndex: 0
+    minDistanceToPlayer: 0
   lightCrystals:
     elements: []
     versions: 
     isUsing: 
     type: 3
+  lightShardData:
+    shardPrefab: {fileID: 2466001976614605658, guid: 6ac2af5c107550b41a8a33d443e2e519, type: 3}
+    presetShard:
+      transform: {fileID: 0}
+      rigidbody: {fileID: 0}
+      lightPower: 0
+      spriteRenderer: {fileID: 0}
+      animation:
+        spriteSheetIndex: 0
+        animationClipIndex: 0
+        currentIndex: 0
+    maxPowerPerShard: 0.05
+    playerDistanceToAttract: 2
+    speedAtDistanceFromPlayer:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: -0.8
+        outSlope: -0.8
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1
+        value: 0.2
+        inSlope: -0.8
+        outSlope: -0.8
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    maxSpeed: 2
+    pickUpDistance: 0.1
+  lightShards:
+    elements: []
+    versions: 
+    isUsing: 
+    type: 0
   lightCrystalIndicator:
     indicatorHolder: {fileID: 8101899956221566316}
     position: {x: 0, y: 0}
