@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainScript : MonoBehaviour
 {
@@ -26,15 +27,14 @@ public class MainScript : MonoBehaviour
     public IndicatorAndLocation centreIndicator;
     public IndicatorAndLocation bossIndicator;
 
+    public GameTimer gameTimer;
+    public GameOverScreen gameOverScreen;
+
     public CraftingResource
         fire, earth, air, water;
     public PickupSystem pickupSystem;
 
     [Header("Game Settings")]
-    public float timeToSurvive = 900f;
-
-    public float currentTime = 0f;
-
     public Vector2 mapBoundsMax = Vector2.zero;
     public Vector2 mapBoundsMin = Vector2.zero;
     public float centreRadius = 1f;
@@ -82,6 +82,13 @@ public class MainScript : MonoBehaviour
         earth.SetValue(0);
         air.SetValue(0);
         water.SetValue(0);
+
+        // Assign Buttons
+        gameOverScreen.restartButton.onClick.AddListener(() =>
+        {
+            // Useing this to restart the game for now
+            SceneManager.LoadScene(SceneManager.GetSceneByBuildIndex(0).name);
+        });
     }
 
     public void OnValidate()
@@ -114,9 +121,21 @@ public class MainScript : MonoBehaviour
 
     public void Update()
     {
+        if(isGameOver)
+        {
+            return;
+        }
+
         // Time Update
         {
-            currentTime += Time.deltaTime;
+            gameTimer.currentTime += Time.deltaTime;
+            if(gameTimer.currentTime >= gameTimer.timeToSurvive)
+            {
+                gameOverScreen.Enable(gameOverScreen.winText);
+                isGameOver = true;
+            }
+
+            gameTimer.timerText.SetText(gameTimer.GetTimeLeftString());
         }
 
         // is player alive
@@ -124,6 +143,11 @@ public class MainScript : MonoBehaviour
         {
             inputSystem.Update(this);
             ReplenishCrystalsNumber();
+        }
+        else
+        {
+            gameOverScreen.Enable(gameOverScreen.loseText);
+            isGameOver = true;
         }
 
         // Enemy Spawning
@@ -160,7 +184,7 @@ public class MainScript : MonoBehaviour
             for (int i = 0; i < enemiesSpawnRates.Length; i++)
             {
                 // Get the number of enemies that should be spawned
-                enemiesSpawnRates[i].currentNumberToSpawn += (enemiesSpawnRates[i].spawnRate.Evaluate(currentTime / timeToSurvive)) * Time.deltaTime;
+                enemiesSpawnRates[i].currentNumberToSpawn += (enemiesSpawnRates[i].spawnRate.Evaluate(gameTimer.currentTime / gameTimer.timeToSurvive)) * Time.deltaTime;
                 int numberOfEnemiesToSpawn = Mathf.FloorToInt(enemiesSpawnRates[i].currentNumberToSpawn);
                 enemiesSpawnRates[i].currentNumberToSpawn -= numberOfEnemiesToSpawn;
 
@@ -219,7 +243,7 @@ public class MainScript : MonoBehaviour
         while (true)
         {
             // Get the number of enemies that should be spawned
-            int spawnRequirement = Mathf.FloorToInt(boss0SpawnData.spawnRate.Evaluate(currentTime / timeToSurvive));
+            int spawnRequirement = Mathf.FloorToInt(boss0SpawnData.spawnRate.Evaluate(gameTimer.currentTime / gameTimer.timeToSurvive));
             if (spawnRequirement <= boss0SpawnData.numberSpawned)
                 break;
 

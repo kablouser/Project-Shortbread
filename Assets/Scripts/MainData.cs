@@ -344,3 +344,34 @@ public struct CraftingResource
         }
     }
 }
+
+[Serializable]
+public struct GameOverScreen
+{
+    public GameObject gameOverScreen;
+    public TMP_Text gameOverText;
+    public Button restartButton;
+    public String winText;
+    public String loseText;
+
+    public void Enable(String text)
+    {
+        gameOverText.SetText(text);
+        gameOverScreen.SetActive(true);
+    }
+}
+
+[Serializable]
+public struct GameTimer
+{
+    public TMP_Text timerText;
+
+    public float timeToSurvive;
+    public float currentTime;
+
+    public string GetTimeLeftString()
+    {
+        float timeLeft = (timeToSurvive - currentTime);
+        return Mathf.FloorToInt(timeLeft / 60) + ":" + Mathf.FloorToInt(timeLeft % 60);
+    }
+}
