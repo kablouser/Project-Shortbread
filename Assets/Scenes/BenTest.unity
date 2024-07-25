@@ -270,6 +270,22 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: pickupSystem.spritePresets.Array.data[1].material
+      value: 
+      objectReference: {fileID: 2100000, guid: 9c388b81f2cdaaf42bd2d6007d4a3b30, type: 2}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: pickupSystem.spritePresets.Array.data[2].material
+      value: 
+      objectReference: {fileID: 2100000, guid: 224e8927dad55d04bbaa24d3f7844e80, type: 2}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: pickupSystem.spritePresets.Array.data[3].material
+      value: 
+      objectReference: {fileID: 2100000, guid: 783e6ff5a9fd2a942ae117fbe0934847, type: 2}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: pickupSystem.spritePresets.Array.data[4].material
+      value: 
+      objectReference: {fileID: 2100000, guid: d86f0a0f7af87ea48a9955ed9542b20c, type: 2}
     - target: {fileID: 7995831551003652219, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

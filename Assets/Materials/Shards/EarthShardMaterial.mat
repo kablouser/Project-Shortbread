@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ShardMaterial
+  m_Name: EarthShardMaterial
   m_Shader: {fileID: -6465566751694194690, guid: 8290583e7f4142b41918d9e9b6880117, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -50,7 +50,7 @@ Material:
     m_Ints: []
     m_Floats: []
     m_Colors:
-    - _Color: {r: 23.968628, g: 21.567133, b: 0, a: 0}
+    - _Color: {r: 0.3018875, g: 0.03951358, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &6447880464083631312
 MonoBehaviour:
