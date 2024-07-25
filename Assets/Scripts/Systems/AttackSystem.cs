@@ -262,18 +262,22 @@ public struct AttackSystem
         }
     }
 
-    public static void DamageInPool<T>(ref UnitEntity unit, int damage, in ID id, ref VersionedPool<T> pool)
+    // returns true when unit is dead
+    public static bool DamageInPool<T>(ref UnitEntity unit, int damage, in ID id, ref VersionedPool<T> pool)
     {
         if (DamageWithoutDespawn(ref unit, damage))
         {
             pool.TryDespawn(id);
+            return true;
         }
+        return false;
     }
 
+    // returns true when unit is dead
     public static bool DamageWithoutDespawn(ref UnitEntity unit, int damage)
     {
         if (unit.health.current <= 0)
-            return false;
+            return true;
 
         unit.health.current -= damage;
         if (unit.health.current <= 0)
@@ -284,6 +288,7 @@ public struct AttackSystem
         return false;
     }
 
+    // returns true when unit is dead
     public static bool DamageCrystal(ref LightCrystal crystal, int damage, in ID id, ref VersionedPool<LightCrystal> pool)
     {
         crystal.health.current -= damage;
@@ -296,6 +301,7 @@ public struct AttackSystem
         return false;
     }
 
+    // returns true when damaged
     public static bool Damage(in ID id, int damage, MainScript mainScript)
     {
         switch (id.type)
@@ -323,8 +329,7 @@ public struct AttackSystem
                     Vector2 position = mainScript.lightCrystals[id.index].transform.position;
                     if (DamageCrystal(ref mainScript.lightCrystals[id.index], damage, id, ref mainScript.lightCrystals))
                     {
-                        mainScript.SpawnLightShards(position, mainScript.lightCrystals[id.index].lightPower);
-                        // mainScript.AddLightPower(Crystal.lightPower);
+                        mainScript.pickupSystem.SpawnLightShards(mainScript, position, mainScript.lightCrystals[id.index].lightPower);
                         return true;
                     }
                 }
@@ -333,7 +338,38 @@ public struct AttackSystem
             case IDType.Boss0:
                 if (mainScript.bosses0.IsValidID(id))
                 {
-                    DamageInPool(ref mainScript.bosses0[id.index].unit, damage, id, ref mainScript.bosses0);
+                    ref Boss0Entity boss = ref mainScript.bosses0[id.index];
+                    // attack player if they damaged the boss from afar
+                    boss.hasAgro = true;
+
+                    if (DamageInPool(ref boss.unit, damage, id, ref mainScript.bosses0))
+                    {
+                        // dead, spawn elemental pickups
+                        ref Boss0SpawnData spawnData = ref mainScript.boss0SpawnData;
+
+                        float total = spawnData.fire + spawnData.earth + spawnData.air + spawnData.water;
+                        if (0f < total && 0 < spawnData.dropResources)
+                        {
+                            Vector3 bossPos = boss.unit.transform.position;
+
+                            for (int i = 0; i < spawnData.dropResources; i++)
+                            {
+                                float choose = UnityEngine.Random.Range(0f, total);
+                                float sum = 0f;
+                                PickupType pickupType;
+                                if (choose < sum.Accumulate(spawnData.fire))
+                                    pickupType = PickupType.Fire;
+                                else if (choose < sum.Accumulate(spawnData.earth))
+                                    pickupType = PickupType.Earth;
+                                else if (choose < sum.Accumulate(spawnData.air))
+                                    pickupType = PickupType.Air;
+                                else
+                                    pickupType = PickupType.Water;
+
+                                mainScript.pickupSystem.SpawnPickup(pickupType, bossPos.AddRandom(0.05f), 1f);
+                            }
+                        }
+                    }
                     return true;
                 }
                 break;

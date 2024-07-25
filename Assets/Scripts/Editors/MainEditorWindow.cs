@@ -115,6 +115,16 @@ public class MainEditorWindow : EditorWindow
             }
         }
 
+        if (!mainScript.pickupSystem.IsValid())
+        {
+            EditorGUILayout.HelpBox("PickupSystem arrays not correct", MessageType.Error);
+            if (GUILayout.Button("Correct PickupSystem arrays"))
+            {
+                Undo.RecordObject(mainScript, "Correct PickupSystem arrays");
+                mainScript.pickupSystem.Validate();
+            }
+        }
+
         if (bSceneViewDirty)
             SceneView.RepaintAll();
     }

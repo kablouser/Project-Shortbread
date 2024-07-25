@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class MainScript : MonoBehaviour
 {
@@ -23,11 +22,13 @@ public class MainScript : MonoBehaviour
     public LightCrystalSpawning lightCrystalSpawning;
     public VersionedPool<LightCrystal> lightCrystals;
     public LightShardData lightShardData;
-    public VersionedPool<LightShard> lightShards;
     public IndicatorAndLocation lightCrystalIndicator;
     public IndicatorAndLocation centreIndicator;
     public IndicatorAndLocation bossIndicator;
 
+    public CraftingResource
+        fire, earth, air, water;
+    public PickupSystem pickupSystem;
 
     [Header("Game Settings")]
     public float timeToSurvive = 900f;
@@ -43,9 +44,13 @@ public class MainScript : MonoBehaviour
 
     public bool isGameOver = false;
 
+    // used for physics queries
+    private List<Collider2D> colliderCache;
+
     public void Awake()
     {
         playerControls = new PlayerControls();
+        colliderCache = new List<Collider2D>();
     }
 
     public void Start()
@@ -72,6 +77,11 @@ public class MainScript : MonoBehaviour
 
         healthBar.UpdateHealthBar(player.health);
         ammoBar.UpdateAmmoBar(player.attack.ammoShot, attackSystem.player.fullMagazineAmmo);
+
+        fire.SetValue(0);
+        earth.SetValue(0);
+        air.SetValue(0);
+        water.SetValue(0);
     }
 
     public void OnValidate()
@@ -104,12 +114,16 @@ public class MainScript : MonoBehaviour
 
     public void Update()
     {
-        inputSystem.Update(this);
-        animationSystem.Update(this);
-
         // Time Update
         {
             currentTime += Time.deltaTime;
+        }
+
+        // is player alive
+        if (player.transform.gameObject.activeInHierarchy)
+        {
+            inputSystem.Update(this);
+            ReplenishCrystalsNumber();
         }
 
         // Enemy Spawning
@@ -255,37 +269,6 @@ public class MainScript : MonoBehaviour
             {
                 isGameOver = true;
             }
-
-            // Update
-        }
-
-        // Light Shards
-        {
-            Vector2 playerPosition = player.transform.position;
-
-            foreach (int shardID in lightShards)
-            {
-                ref LightShard shard = ref lightShards[shardID];
-                float DistanceFromPlayer = Vector2.SqrMagnitude((Vector2)shard.transform.position - playerPosition);
-
-                // Collect shards if close enough
-                if((lightShardData.pickUpDistance * lightShardData.pickUpDistance) >= DistanceFromPlayer)
-                {
-                    AddLightPower(shard.lightPower);
-                    shard.transform.gameObject.SetActive(false);
-                    lightShards.TryDespawn(shard.transform.GetComponent<IDComponent>().id, out _);
-                    continue;
-                }
-
-                // Move towards player when in range
-                float attrackDistanceSqr = (lightShardData.playerDistanceToAttract * lightShardData.playerDistanceToAttract);
-                if(DistanceFromPlayer <= attrackDistanceSqr)
-                {
-                    float moveSpeed = lightShardData.speedAtDistanceFromPlayer.Evaluate(DistanceFromPlayer / attrackDistanceSqr) * lightShardData.maxSpeed;
-                    Vector2 velocity = (playerPosition - (Vector2)shard.transform.position).normalized * moveSpeed;
-                    shard.rigidbody.velocity = velocity;
-                }
-            }
         }
 
         // Indicator Updates
@@ -323,15 +306,21 @@ public class MainScript : MonoBehaviour
 
         attackSystem.Update(this);
 
-        ReplenishCrystalsNumber();
+        animationSystem.Update(this);
     }
 
     public void FixedUpdate()
     {
         mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, player.transform.position, Time.fixedDeltaTime * 5f);
 
-        inputSystem.FixedUpdate(this);
         aiSystem.FixedUpdate(this);
+
+        // is player alive
+        if (player.transform.gameObject.activeInHierarchy)
+        {
+            inputSystem.FixedUpdate(this);
+            pickupSystem.FixedUpdate(this);
+        }
     }
 
     public void ProcessTriggerEnter(IDTriggerEnter source, Collider2D collider)
@@ -450,40 +439,6 @@ public class MainScript : MonoBehaviour
                         Instantiate(lightCrystalSpawning.crystalPrefab, spawnPosition, Quaternion.identity),
                         lightCrystalSpawning.presetCrystal,
                         id);
-            }
-        }
-    }
-
-    public void SpawnLightShards(Vector3 position, float lightPower)
-    {
-        int NumberToSpawn = Mathf.CeilToInt(lightPower / lightShardData.maxPowerPerShard);
-
-        for(int i = 0; i < NumberToSpawn; i++)
-        {
-
-            float shardPower = lightPower;
-            if(lightPower > lightShardData.maxPowerPerShard)
-            {
-                shardPower = lightPower;
-                lightPower -= lightShardData.maxPowerPerShard;
-            }
-
-            ID id = lightShards.Spawn();
-            ref LightShard shard = ref lightShards[id.index];
-
-            if (shard.IsValid())
-            {
-                shard = new LightShard(shard.transform.gameObject, lightShardData.presetShard, id, shardPower);
-                shard.transform.position = position;
-                shard.transform.gameObject.SetActive(true);
-            }
-            else
-            {
-                shard = new LightShard(
-                        Instantiate(lightShardData.shardPrefab, position, Quaternion.identity),
-                        lightShardData.presetShard,
-                        id,
-                        shardPower);
             }
         }
     }

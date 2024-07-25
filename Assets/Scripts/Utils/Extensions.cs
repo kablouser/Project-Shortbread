@@ -64,4 +64,29 @@ public static class Extensions
         Resize(ref array, enumNames.Length);
         array.ForEachRef((ref ArrayType element, int i) => setName(ref element, enumNames[i]));
     }
+
+    public static Vector3 AddRandom(this Vector3 vector, float randomRange)
+    {
+        return new Vector3
+        (
+            vector.x + UnityEngine.Random.Range(-randomRange, randomRange),
+            vector.y + UnityEngine.Random.Range(-randomRange, randomRange),
+            vector.z + UnityEngine.Random.Range(-randomRange, randomRange)
+        );
+    }
+
+    public static Vector2 AddRandom(this Vector2 vector, float randomRange)
+    {
+        return new Vector2
+        (
+            vector.x + UnityEngine.Random.Range(-randomRange, randomRange),
+            vector.y + UnityEngine.Random.Range(-randomRange, randomRange)
+        );
+    }
+
+    public static float Accumulate(ref this float x, float y)
+    {
+        x += y;
+        return x;
+    }
 }
