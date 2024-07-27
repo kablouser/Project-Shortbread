@@ -262,6 +262,70 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2644076878060314351, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2644076878060314351, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2644076878060314351, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2644076878060314351, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2737213200452084361, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2737213200452084361, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2737213200452084361, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2737213200452084361, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3278672491468321615, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3278672491468321615, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3278672491468321615, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3278672491468321615, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6760828482517082442, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6760828482517082442, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6760828482517082442, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6760828482517082442, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6995138111374264186, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -269,6 +333,94 @@ PrefabInstance:
     - target: {fileID: 6995138111374264186, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: player.baseMoveSpeed
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: player.health.baseHealth
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: player.statModifiers.damageModifier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: player.statModifiers.healthModifier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: player.statModifiers.moveSpeedModifier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: upgradeSystem.reloadSpeedModifierLimit
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: player.statModifiers.reloadSpeedModifier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: player.statModifiers.reloadCooldownModifier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: boss0SpawnData.presetUnit.unit.baseMoveSpeed
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: boss0SpawnData.presetUnit.unit.health.baseHealth
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: enemiesSpawnRates.Array.data[0].presetUnit.baseMoveSpeed
+      value: 1.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: boss0SpawnData.presetUnit.unit.statModifiers.damageModifier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: boss0SpawnData.presetUnit.unit.statModifiers.healthModifier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: enemiesSpawnRates.Array.data[0].presetUnit.health.baseHealth
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: boss0SpawnData.presetUnit.unit.statModifiers.moveSpeedModifier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: boss0SpawnData.presetUnit.unit.statModifiers.reloadSpeedModifier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: boss0SpawnData.presetUnit.unit.statModifiers.reloadCooldownModifier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: enemiesSpawnRates.Array.data[0].presetUnit.statModifiers.damageModifier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: enemiesSpawnRates.Array.data[0].presetUnit.statModifiers.healthModifier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: enemiesSpawnRates.Array.data[0].presetUnit.statModifiers.moveSpeedModifier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: enemiesSpawnRates.Array.data[0].presetUnit.statModifiers.reloadSpeedModifier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: enemiesSpawnRates.Array.data[0].presetUnit.statModifiers.reloadCooldownModifier
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7995831551003652219, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: m_AnchorMax.x

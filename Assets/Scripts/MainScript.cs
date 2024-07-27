@@ -11,6 +11,7 @@ public class MainScript : MonoBehaviour
 
     public InputSystem inputSystem;
     public AnimationSystem animationSystem;
+    public UpgradeSystem upgradeSystem;
     public AttackSystem attackSystem;
     public AISystem aiSystem;
     public NavigationGrid navigationGrid;
@@ -124,6 +125,29 @@ public class MainScript : MonoBehaviour
         if(isGameOver)
         {
             return;
+        }
+
+        // Debug
+        {
+            //if (Input.GetKeyDown(KeyCode.Alpha1))
+            //{
+            //    upgradeSystem.ApplyUpgrade(ref player, UpgradeType.MoveSpeed, 0.1f);
+            //}
+
+            //if (Input.GetKeyDown(KeyCode.Alpha2))
+            //{
+            //    upgradeSystem.ApplyUpgrade(ref player, UpgradeType.Health, 1f);
+            //}
+
+            //if (Input.GetKeyDown(KeyCode.Alpha3))
+            //{
+            //    upgradeSystem.ApplyUpgrade(ref player, UpgradeType.Damage, 1f);
+            //}
+
+            //if (Input.GetKeyDown(KeyCode.Alpha4))
+            //{
+            //    upgradeSystem.ApplyUpgrade(ref player, UpgradeType.ReloadSpeed, -0.1f);
+            //}
         }
 
         // Time Update

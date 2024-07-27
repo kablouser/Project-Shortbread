@@ -4,6 +4,7 @@ using System;
 using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
 using TMPro;
+using Unity.VisualScripting.FullSerializer;
 
 public enum Team { Neutral, Player, Enemy };
 
@@ -92,12 +93,12 @@ public struct AttackComponent
     public float meleeAttackTime;
     public ID singleTarget;
 
-    public bool Reload(in ProjectileAttackPreset preset)
+    public bool Reload(in ProjectileAttackPreset preset, StatsModifierComponent stats)
     {
         if (0 < ammoShot)
         {
             attackCooldown = 0f;
-            reloadCooldown = preset.reloadCooldown;
+            reloadCooldown = preset.reloadCooldown * stats.reloadSpeedModifier;
             return true;
         }
         return false;
@@ -107,6 +108,7 @@ public struct AttackComponent
 [Serializable]
 public struct HealthComponent
 {
+    public int baseHealth;
     public int current;
     public int max;
 }
@@ -120,9 +122,11 @@ public struct UnitEntity
     public float rotationDegrees;
     public AnimationComponent animation;
     public AttackComponent attack;
+    public float baseMoveSpeed;
     public float moveSpeed;
     public HealthComponent health;
     public float lightPower;
+    public StatsModifierComponent statModifiers;
 
     public UnitEntity(
         GameObject go,
@@ -136,6 +140,11 @@ public struct UnitEntity
         go.GetComponent<IDComponent>().id = id;
 
         rigidbody.constraints &= ~RigidbodyConstraints2D.FreezePosition;
+
+        // Set stats
+        health.max = Mathf.FloorToInt(health.baseHealth * statModifiers.healthModifier);
+        health.current += health.max;
+        moveSpeed = baseMoveSpeed * statModifiers.moveSpeedModifier;
     }
 
     public bool IsValid()

@@ -204,7 +204,7 @@ public struct AttackSystem
 
                 if (attackPreset.fullMagazineAmmo <= unit.attack.ammoShot)
                 {
-                    unit.attack.Reload(attackPreset);
+                    unit.attack.Reload(attackPreset, unit.statModifiers);
                 }
             }
 
@@ -219,7 +219,7 @@ public struct AttackSystem
             {
                 projectile.gameObject.SetActive(true);
             }
-            projectile.damage = attackPreset.damage;
+            projectile.damage = Mathf.FloorToInt(attackPreset.damage * unit.statModifiers.damageModifier);
             projectile.source = unitType;
             projectile.rangeLeft = attackPreset.projectileRange;
             IDTriggerEnter idTriggerEnter = projectile.gameObject.GetComponent<IDTriggerEnter>();

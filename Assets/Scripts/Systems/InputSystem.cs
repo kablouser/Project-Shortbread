@@ -26,7 +26,7 @@ public struct InputSystem
 
         if (main.playerControls.ActionMap.Reload.WasPressedThisFrame())
         {
-            main.player.attack.Reload(main.attackSystem.player);
+            main.player.attack.Reload(main.attackSystem.player, main.player.statModifiers);
         }
     }
 
