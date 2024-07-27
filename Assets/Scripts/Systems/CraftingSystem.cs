@@ -85,6 +85,8 @@ public struct CraftItem
     public ForEachElement<int> costs;
     [TextArea(1,3)]
     public string description;
+    public UpgradeType upgradeType;
+    public float upgradeValue;
 }
 
 [System.Serializable]
@@ -256,6 +258,8 @@ public struct CraftingSystem
 
         if (!enoughElements)
             return;
+
+        mainScript.upgradeSystem.ApplyUpgrade(mainScript, ref mainScript.player, craftItem.upgradeType, craftItem.upgradeValue);
 
         craftItem.isCrafted = true;
         resources.fire.AddValue(-craftItem.costs[0], mainScript, false);

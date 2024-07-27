@@ -270,6 +270,144 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[1].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: a209d00bdece57e44b37a2fd24e4c3d7, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[2].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: cadd6d9933604514d83b88ae63130bb3, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[3].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: 44922b29bc6399744bd458e6974cad32, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[4].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: 77b18ff0edd5b5f4d99a0bc324c758c9, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[1].costs.air
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[3].costs.air
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[4].costs.air
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[1].costs.fire
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[4].costs.fire
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[0].description
+      value: 'Damage
+
+        +100%'
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[1].costs.earth
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[1].costs.water
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[1].description
+      value: 'Reload Time
+
+        -50%'
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[1].upgradeType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[2].costs.earth
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[2].costs.water
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[2].description
+      value: 'Health
+
+        +100%'
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[2].upgradeType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[3].costs.water
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[3].description
+      value: 'Move Speed
+
+        +100%'
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[3].upgradeType
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[4].costs.earth
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[4].costs.water
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[4].description
+      value: 'Light Radius
+
+        +100%'
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[4].upgradeType
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[5].upgradeType
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[0].upgradeValue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[1].upgradeValue
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[2].upgradeValue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[3].upgradeValue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[4].upgradeValue
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7995831551003652219, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
