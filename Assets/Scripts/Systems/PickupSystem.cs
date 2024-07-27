@@ -93,16 +93,16 @@ public struct PickupSystem
                         mainScript.AddLightPower(pickup.value);
                         break;
                     case PickupType.Fire:
-                        mainScript.fire.SetValue(mainScript.fire.value + Mathf.RoundToInt(pickup.value));
+                        mainScript.craftingSystem.resources.fire.AddValue(Mathf.RoundToInt(pickup.value), mainScript);
                         break;
                     case PickupType.Earth:
-                        mainScript.earth.SetValue(mainScript.earth.value + Mathf.RoundToInt(pickup.value));
+                        mainScript.craftingSystem.resources.earth.AddValue(Mathf.RoundToInt(pickup.value), mainScript);
                         break;
                     case PickupType.Air:
-                        mainScript.air.SetValue(mainScript.air.value + Mathf.RoundToInt(pickup.value));
+                        mainScript.craftingSystem.resources.air.AddValue(Mathf.RoundToInt(pickup.value), mainScript);
                         break;
                     case PickupType.Water:
-                        mainScript.water.SetValue(mainScript.water.value + Mathf.RoundToInt(pickup.value));
+                        mainScript.craftingSystem.resources.water.AddValue(Mathf.RoundToInt(pickup.value), mainScript);
                         break;
                 }
                 pickup.transform.gameObject.SetActive(false);

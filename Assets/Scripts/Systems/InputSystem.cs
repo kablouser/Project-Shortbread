@@ -1,10 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
+[System.Serializable]
 public struct InputSystem
 {
-    private Vector3 lastMousePosition;
+    public Vector3 lastMousePosition;
+    public InputDevice usingDevice;
+    public bool isInteractDown;
+    public bool isEscapeDown;
+    public bool isUINavigateDown;
 
     public void Update(MainScript main)
     {
@@ -27,6 +31,61 @@ public struct InputSystem
         if (main.playerControls.ActionMap.Reload.WasPressedThisFrame())
         {
             main.player.attack.Reload(main.attackSystem.player, main.player.statModifiers);
+        }
+
+        // dynamically updated button prompts:
+
+        // detect most recently using device
+        bool isDeviceChanged = false;
+        foreach (var deviceI in UnityEngine.InputSystem.InputSystem.devices)
+        {
+            if (deviceI != null)
+            {
+                if (deviceI.noisy)
+                {
+                    foreach (var controlI in deviceI.allControls)
+                    {
+                        if (controlI.IsActuated(0.05f))
+                        {
+                            if (usingDevice == null || usingDevice.lastUpdateTime < deviceI.lastUpdateTime)
+                            {
+                                usingDevice = deviceI;
+                                isDeviceChanged = true;
+                            }
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    if (usingDevice == null || usingDevice.lastUpdateTime < deviceI.lastUpdateTime)
+                    {
+                        usingDevice = deviceI;
+                        isDeviceChanged = true;
+                    }
+                }
+            }
+        }
+
+        if (isDeviceChanged && usingDevice != null)
+        {
+            foreach (var control in main.playerControls.ActionMap.Interact.controls)
+            {
+                if (control.device == usingDevice)
+                {
+                    main.craftingSystem.interactPrompt.text = $"[{control.displayName}] Interact";
+                    break;
+                }
+            }
+        }
+
+        isInteractDown = main.playerControls.ActionMap.Interact.WasPressedThisFrame();
+        isEscapeDown = main.playerControls.ActionMap.Escape.WasPressedThisFrame();
+        isUINavigateDown = main.playerControls.UI.Navigate.WasPressedThisFrame();
+        // reselect when navigating and nothing is selected
+        if (isUINavigateDown && !main.eventSystem.currentSelectedGameObject && main.eventSystem.firstSelectedGameObject)
+        {
+            main.eventSystem.SetSelectedGameObject(main.eventSystem.firstSelectedGameObject);
         }
     }
 

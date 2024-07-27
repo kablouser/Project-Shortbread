@@ -344,37 +344,19 @@ public struct Boss0Entity
 }
 
 [Serializable]
-public struct CraftingResource
-{
-    public int value;
-    public GameObject textParent;
-    public TextMeshProUGUI text;
-    public Sprite pickupSprite;
-
-    public void SetValue(int newValue)
-    {
-        value = newValue;
-        textParent.SetActive(0 < value);
-        if (0 < value)
-        {
-            text.text = value.ToString();
-        }
-    }
-}
-
-[Serializable]
 public struct GameOverScreen
 {
     public GameObject gameOverScreen;
     public TMP_Text gameOverText;
     public Button restartButton;
-    public String winText;
-    public String loseText;
+    public string winText;
+    public string loseText;
 
-    public void Enable(String text)
+    public void Enable(bool isWin, MainScript mainScript)
     {
-        gameOverText.SetText(text);
+        gameOverText.SetText(isWin ? winText : loseText);
         gameOverScreen.SetActive(true);
+        mainScript.eventSystem.SetSelectedGameObject(mainScript.eventSystem.firstSelectedGameObject = restartButton.gameObject);
     }
 }
 

@@ -32,9 +32,9 @@ public class MainScript : MonoBehaviour
     public GameTimer gameTimer;
     public GameOverScreen gameOverScreen;
 
-    public CraftingResource
-        fire, earth, air, water;
     public PickupSystem pickupSystem;
+
+    public CraftingSystem craftingSystem;
 
     [Header("Game Settings")]
     public Vector2 mapBoundsMax = Vector2.zero;
@@ -43,6 +43,7 @@ public class MainScript : MonoBehaviour
     public float spawnOutsideCameraDistance = 0.1f;
 
     public PlayerControls playerControls;
+    public UnityEngine.EventSystems.EventSystem eventSystem;
 
     public bool isGameOver = false;
 
@@ -80,10 +81,7 @@ public class MainScript : MonoBehaviour
         healthBar.UpdateHealthBar(player.health);
         ammoBar.UpdateAmmoBar(player.attack.ammoShot, attackSystem.player.fullMagazineAmmo);
 
-        fire.SetValue(0);
-        earth.SetValue(0);
-        air.SetValue(0);
-        water.SetValue(0);
+        craftingSystem.Start(this);
 
         playerLight.light.pointLightOuterRadius = playerLight.baseLightRange;
 
@@ -91,7 +89,7 @@ public class MainScript : MonoBehaviour
         gameOverScreen.restartButton.onClick.AddListener(() =>
         {
             // Useing this to restart the game for now
-            SceneManager.LoadScene(SceneManager.GetSceneByBuildIndex(0).name);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         });
     }
 
@@ -159,11 +157,21 @@ public class MainScript : MonoBehaviour
         }
 
         // Time Update
+        if (Time.timeScale == 0f)
+        {
+            gameTimer.timerText.SetText($"{gameTimer.GetTimeLeftString()}\nPAUSED");
+            inputSystem.Update(this);
+            // crafting relies on inputSystem update first
+            craftingSystem.Update(this);
+            return;
+        }
+        else if (!isGameOver)
         {
             gameTimer.currentTime += Time.deltaTime;
-            if(gameTimer.currentTime >= gameTimer.timeToSurvive)
+            if (gameTimer.currentTime >= gameTimer.timeToSurvive)
             {
-                gameOverScreen.Enable(gameOverScreen.winText);
+                craftingSystem.ExitMenu(this);
+                gameOverScreen.Enable(true, this);
                 isGameOver = true;
             }
 
@@ -174,11 +182,14 @@ public class MainScript : MonoBehaviour
         if (player.transform.gameObject.activeInHierarchy)
         {
             inputSystem.Update(this);
+            // crafting relies on inputSystem update first
+            craftingSystem.Update(this);
             ReplenishCrystalsNumber();
         }
-        else
+        else if (!isGameOver)
         {
-            gameOverScreen.Enable(gameOverScreen.loseText);
+            craftingSystem.ExitMenu(this);
+            gameOverScreen.Enable(false, this);
             isGameOver = true;
         }
 

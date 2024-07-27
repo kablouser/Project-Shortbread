@@ -89,4 +89,17 @@ public static class Extensions
         x += y;
         return x;
     }
+
+    public static Transform GetParentUntil(this Transform transform, Transform untilThisIsParent)
+    {
+        Transform current = transform;
+        Transform parent = transform.parent;
+        while (parent != untilThisIsParent)
+        {
+            current = parent;
+            parent = current.parent;
+        }
+
+        return current;
+    }
 }

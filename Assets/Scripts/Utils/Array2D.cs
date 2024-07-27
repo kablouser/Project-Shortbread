@@ -27,7 +27,7 @@ public struct Array2D<T>
             }
 #endif
             return ref elements[index0 + index1 * dimension0];
-        }      
+        }
     }
 
     public ref T this[in Vector2Int index]
