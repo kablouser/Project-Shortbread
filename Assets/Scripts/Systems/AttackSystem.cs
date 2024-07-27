@@ -295,7 +295,7 @@ public struct AttackSystem
         if (crystal.health.current <= 0)
         {
             crystal.transform.gameObject.SetActive(false);
-            pool.TryDespawn(id, out _);
+            pool.TryDespawn(id);
             return true;
         }
         return false;
@@ -330,6 +330,11 @@ public struct AttackSystem
                     if (DamageCrystal(ref mainScript.lightCrystals[id.index], damage, id, ref mainScript.lightCrystals))
                     {
                         mainScript.pickupSystem.SpawnLightShards(mainScript, position, mainScript.lightCrystals[id.index].lightPower);
+                        if (mainScript.shootTutorialText)
+                        {
+                            UnityEngine.Object.Destroy(mainScript.shootTutorialText.transform.parent.gameObject);
+                            mainScript.shootTutorialText = null;
+                        }
                         return true;
                     }
                 }

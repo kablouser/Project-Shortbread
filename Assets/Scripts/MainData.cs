@@ -178,9 +178,8 @@ public struct Boss0SpawnData
     public GameObject prefab;
     public Boss0Entity presetUnit;
 
-    // Number required to have spawned over the game time.
-    public AnimationCurve spawnRate;
-    public int numberSpawned;
+    public float spawnTimeLeft;
+    public float timeBetweenSpawns;
     // min distance gap to player when spawned
     public float minDistanceToPlayer;
 
@@ -275,12 +274,12 @@ public struct TextAndSlider
 
     public void UpdateHealthBar(in HealthComponent health)
     {
-        UpdateBar("HP:", health.current, health.max);
+        UpdateBar("Health:", health.current, health.max);
     }
 
     public void UpdateAmmoBar(int ammoShot, int ammoCapacity)
     {
-        UpdateBar("Ammo:", ammoCapacity - ammoShot, ammoCapacity);
+        UpdateBar("Blasts:", ammoCapacity - ammoShot, ammoCapacity);
     }
 
     public void UpdateBar(string labelPrefix, int currentValue, int maxValue)
@@ -349,12 +348,24 @@ public struct GameOverScreen
     public GameObject gameOverScreen;
     public TMP_Text gameOverText;
     public Button restartButton;
-    public string winText;
-    public string loseText;
+    public string winText, deathText, noPowerText;
 
-    public void Enable(bool isWin, MainScript mainScript)
+    public void Enable(MainScript mainScript)
     {
-        gameOverText.SetText(isWin ? winText : loseText);
+        string chooseText;
+        switch (mainScript.gameState)
+        {
+            case GameState.Win:
+                chooseText = winText; break;
+            case GameState.Death:
+                chooseText = deathText; break;
+            case GameState.NoPower:
+                chooseText = noPowerText; break;
+            default:
+                Debug.LogError("Not a game over state");
+                return;
+        }
+        gameOverText.SetText(chooseText);
         gameOverScreen.SetActive(true);
         mainScript.eventSystem.SetSelectedGameObject(mainScript.eventSystem.firstSelectedGameObject = restartButton.gameObject);
     }
@@ -371,6 +382,8 @@ public struct GameTimer
     public string GetTimeLeftString()
     {
         float timeLeft = (timeToSurvive - currentTime);
-        return Mathf.FloorToInt(timeLeft / 60) + ":" + Mathf.FloorToInt(timeLeft % 60);
+        return $"{Mathf.FloorToInt(timeLeft / 60):00}:{Mathf.FloorToInt(timeLeft % 60):00}";
     }
 }
+
+public enum GameState { Tutorial, Survive, Win, Death, NoPower };

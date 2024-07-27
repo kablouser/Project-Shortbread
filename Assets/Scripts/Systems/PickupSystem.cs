@@ -123,7 +123,7 @@ public struct PickupSystem
 
     public void SpawnPickup(
         PickupType type,
-        Vector3 position,
+        Vector2 position,
         float value)
     {
         ID id = pickups.Spawn();

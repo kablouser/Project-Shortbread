@@ -69,12 +69,31 @@ public struct InputSystem
 
         if (isDeviceChanged && usingDevice != null)
         {
+            string GetDisplayName(InputControl ic)
+            {
+                return ic.shortDisplayName == null ?
+                    ic.displayName :
+                    ic.shortDisplayName;
+            }
+
             foreach (var control in main.playerControls.ActionMap.Interact.controls)
             {
                 if (control.device == usingDevice)
                 {
-                    main.craftingSystem.interactPrompt.text = $"[{control.displayName}] Interact";
+                    main.craftingSystem.interactPrompt.text = $"[{GetDisplayName(control)}] Interact";
                     break;
+                }
+            }
+
+            if (main.shootTutorialText != null)
+            {
+                foreach (var control in main.playerControls.ActionMap.Shoot.controls)
+                {
+                    if (control.device == usingDevice)
+                    {
+                        main.shootTutorialText.text = $"[{GetDisplayName(control)}] Blast";
+                        break;
+                    }
                 }
             }
         }

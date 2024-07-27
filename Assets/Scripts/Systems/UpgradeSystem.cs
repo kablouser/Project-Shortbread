@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum UpgradeType
@@ -38,16 +36,13 @@ public struct UpgradeSystem
                 int healthAdded = newMaxHealth - unit.health.max;
                 unit.health.max = newMaxHealth;
                 unit.health.current += healthAdded;
-                Debug.Log("Health Modifier: " + unit.statModifiers.healthModifier);
                 break;
             case UpgradeType.MoveSpeed:
                 unit.statModifiers.moveSpeedModifier += valueChange;
                 unit.moveSpeed = unit.baseMoveSpeed * unit.statModifiers.moveSpeedModifier;
-                Debug.Log("Move Speed Modifier: " + unit.statModifiers.moveSpeedModifier);
                 break;
             case UpgradeType.Damage:
                 unit.statModifiers.damageModifier += valueChange;
-                Debug.Log("Damae Modifier: " + unit.statModifiers.damageModifier);
                 break;
             case UpgradeType.ReloadSpeed:
                 unit.statModifiers.reloadSpeedModifier += valueChange;
@@ -55,7 +50,6 @@ public struct UpgradeSystem
                 {
                     unit.statModifiers.reloadSpeedModifier = reloadSpeedModifierLimit;
                 }
-                Debug.Log("Reload Cooldown Modifier: " + unit.statModifiers.reloadSpeedModifier);
                 break;
             case UpgradeType.VisionRange:
                 unit.statModifiers.visionRangeModifier += valueChange;

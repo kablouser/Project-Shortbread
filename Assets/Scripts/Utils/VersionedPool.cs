@@ -152,6 +152,14 @@ public struct VersionedPool<T>
 
     public bool TryDespawn(in ID id)
     {
+#if UNITY_EDITOR
+        if (id.type != type)
+        {
+            UnityEngine.Debug.LogError("Wrong id type, probably using wrong variable");
+            return false;
+        }
+#endif
+
         if (IsValidID(id))
         {
             versions[id.index]++;

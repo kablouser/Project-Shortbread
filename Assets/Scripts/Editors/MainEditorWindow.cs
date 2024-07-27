@@ -10,6 +10,8 @@ public class MainEditorWindow : EditorWindow
     public MainScript mainScript;
     public bool alwaysDrawGizmos = true;
 
+    public ID selectedID;
+
     public void OnEnable()
     {
         Selection.selectionChanged += Selection_selectionChanged;
@@ -24,6 +26,30 @@ public class MainEditorWindow : EditorWindow
 
     public void Selection_selectionChanged()
     {
+        CacheMainScript();
+        GameObject go = Selection.activeGameObject;
+
+        selectedID = new ID();
+        foreach (int i in mainScript.lightCrystals)
+        {
+            if (go == mainScript.lightCrystals[i].transform.gameObject)
+            {
+                selectedID = mainScript.lightCrystals.GetCurrentID(i);
+                break;
+            }
+        }
+        if (selectedID.type == IDType.Invalid)
+        {
+            foreach (int i in mainScript.pickupSystem.pickups)
+            {
+                if (go == mainScript.pickupSystem.pickups[i].transform.gameObject)
+                {
+                    selectedID = mainScript.lightCrystals.GetCurrentID(i);
+                    break;
+                }
+            }
+        }
+
         Repaint();
     }
 
@@ -45,7 +71,11 @@ public class MainEditorWindow : EditorWindow
 
         if (sceneView.drawGizmos || alwaysDrawGizmos)
         {
-            mainScript.navigationGrid.OnSceneGUI();
+            Handles.DrawLine(mainScript.mapBoundsMin, new Vector3(mainScript.mapBoundsMax.x, mainScript.mapBoundsMin.y));
+            Handles.DrawLine(mainScript.mapBoundsMin, new Vector3(mainScript.mapBoundsMin.x, mainScript.mapBoundsMax.y));
+
+            Handles.DrawLine(mainScript.mapBoundsMax, new Vector3(mainScript.mapBoundsMax.x, mainScript.mapBoundsMin.y));
+            Handles.DrawLine(mainScript.mapBoundsMax, new Vector3(mainScript.mapBoundsMin.x, mainScript.mapBoundsMax.y));
         }
     }
 
@@ -122,6 +152,47 @@ public class MainEditorWindow : EditorWindow
             {
                 Undo.RecordObject(mainScript, "Correct PickupSystem arrays");
                 mainScript.pickupSystem.Validate();
+            }
+        }
+
+        bool isIDValid = true;
+
+        SerializedObject so = new SerializedObject(mainScript);
+        EditorGUI.BeginChangeCheck();
+        switch (selectedID.type)
+        {
+            default: isIDValid = false; break;
+
+            case IDType.LightCrystal:
+                if (mainScript.lightCrystals.IsValidID(selectedID))
+                {
+                    SerializedProperty listsp = so.FindProperty("lightCrystals.elements");
+                    EditorGUILayout.PropertyField(listsp.GetArrayElementAtIndex(selectedID.index), true);
+                }
+                break;
+            case IDType.Pickup:
+                break;
+        }
+        if (EditorGUI.EndChangeCheck())
+        {
+            so.ApplyModifiedProperties();
+        }
+
+        if (!isIDValid)
+        {
+            using (EditorGUI.DisabledScope ds = new EditorGUI.DisabledScope(true))
+            {
+                EditorGUILayout.ObjectField(Selection.activeGameObject, typeof(GameObject), true);
+            }
+
+            if (GUILayout.Button("Add GO as light crystal entity"))
+            {
+                Undo.RecordObject(mainScript, "Add GO as light crystal entity");
+                selectedID = mainScript.lightCrystals.Spawn();
+                mainScript.lightCrystals[selectedID.index] = new LightCrystal(
+                    Selection.activeGameObject,
+                    mainScript.lightCrystalSpawning.presetCrystal,
+                    selectedID);
             }
         }
 

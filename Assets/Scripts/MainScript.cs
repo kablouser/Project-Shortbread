@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,7 +13,6 @@ public class MainScript : MonoBehaviour
     public UpgradeSystem upgradeSystem;
     public AttackSystem attackSystem;
     public AISystem aiSystem;
-    public NavigationGrid navigationGrid;
     public UnitEntity player;
     public VersionedPool<UnitEntity> enemies;
     public VersionedPool<Boss0Entity> bosses0;
@@ -42,27 +40,23 @@ public class MainScript : MonoBehaviour
     public Vector2 mapBoundsMax = Vector2.zero;
     public Vector2 mapBoundsMin = Vector2.zero;
     public float centreRadius = 1f;
-    public float spawnOutsideCameraDistance = 0.1f;
 
     public PlayerControls playerControls;
     public UnityEngine.EventSystems.EventSystem eventSystem;
 
-    public bool isGameOver = false;
+    public GameState gameState;
 
-    // used for physics queries
-    private List<Collider2D> colliderCache;
+    public TMPro.TextMeshProUGUI shootTutorialText;
+    public TMPro.TextMeshProUGUI gameStartText;
 
     public void Awake()
     {
         playerControls = new PlayerControls();
-        colliderCache = new List<Collider2D>();
     }
 
     public void Start()
     {
-        // not just transparency, all sprites are sorted lowerest y first, then lowest x
-        //mainCamera.transparencySortMode = TransparencySortMode.CustomAxis;
-        //mainCamera.transparencySortAxis = new Vector3(0.2f, 1.0f, 0.0f);
+        gameState = GameState.Tutorial;
 
         QualitySettings.vSyncCount = 1;
 #if UNITY_EDITOR
@@ -73,12 +67,8 @@ public class MainScript : MonoBehaviour
 #endif
 
         // Light Bar Setup
-        centreLight.currentPower = centreLight.maxPower;
         centreLight.uiPowerBar.maxValue = centreLight.maxPower;
-        centreLight.uiPowerBar.value = centreLight.maxPower;
-
-        // Light Crystal Spawning
-        ReplenishCrystalsNumber();
+        centreLight.uiPowerBar.value = centreLight.currentPower;
 
         healthBar.UpdateHealthBar(player.health);
         ammoBar.UpdateAmmoBar(player.attack.ammoShot, attackSystem.player.fullMagazineAmmo);
@@ -93,6 +83,15 @@ public class MainScript : MonoBehaviour
             // Useing this to restart the game for now
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         });
+
+        // tutorial light crystal and elements
+        pickupSystem.SpawnPickup(PickupType.Fire, new Vector2(-0.5f, -9), 1f);
+        pickupSystem.SpawnPickup(PickupType.Earth, new Vector2(1, -10f), 1f);
+        pickupSystem.SpawnPickup(PickupType.Air, new Vector2(-1, -10f), 1f);
+        pickupSystem.SpawnPickup(PickupType.Water, new Vector2(0.5f, -9), 1f);
+        SpawnLightCrystal(new Vector2(0.7f, -5));
+
+        gameTimer.timerText.SetText(gameTimer.GetTimeLeftString());
     }
 
     public void OnValidate()
@@ -125,56 +124,23 @@ public class MainScript : MonoBehaviour
 
     public void Update()
     {
-        if(isGameOver)
-        {
-            return;
-        }
-
-        // Debug
-        {
-            //if(Input.GetKeyDown(KeyCode.Alpha1))
-            //{
-            //    upgradeSystem.ApplyUpgrade(this, ref player, UpgradeType.MoveSpeed, 0.1f);
-            //}
-
-            //if(Input.GetKeyDown(KeyCode.Alpha2))
-            //{
-            //    upgradeSystem.ApplyUpgrade(this, ref player, UpgradeType.Health, 1f);
-            //}
-
-            //if(Input.GetKeyDown(KeyCode.Alpha3))
-            //{
-            //    upgradeSystem.ApplyUpgrade(this, ref player, UpgradeType.Damage, 1f);
-            //}
-
-            //if(Input.GetKeyDown(KeyCode.Alpha4))
-            //{
-            //    upgradeSystem.ApplyUpgrade(this, ref player, UpgradeType.ReloadSpeed, -0.1f);
-            //}
-
-            //if(Input.GetKeyDown(KeyCode.Alpha5))
-            //{
-            //    upgradeSystem.ApplyUpgrade(this, ref player, UpgradeType.VisionRange, 0.1f);
-            //}
-        }
-
         // Time Update
         if (Time.timeScale == 0f)
         {
+            // paused
             gameTimer.timerText.SetText($"{gameTimer.GetTimeLeftString()}\nPAUSED");
             inputSystem.Update(this);
             // crafting relies on inputSystem update first
             craftingSystem.Update(this);
             return;
         }
-        else if (!isGameOver)
+        else if (gameState == GameState.Survive)
         {
+            // survive countdown
             gameTimer.currentTime += Time.deltaTime;
             if (gameTimer.currentTime >= gameTimer.timeToSurvive)
             {
-                craftingSystem.ExitMenu(this);
-                gameOverScreen.Enable(true, this);
-                isGameOver = true;
+                GameOver(GameState.Win);
             }
 
             gameTimer.timerText.SetText(gameTimer.GetTimeLeftString());
@@ -186,117 +152,64 @@ public class MainScript : MonoBehaviour
             inputSystem.Update(this);
             // crafting relies on inputSystem update first
             craftingSystem.Update(this);
+
             ReplenishCrystalsNumber();
         }
-        else if (!isGameOver)
+        else if (gameState == GameState.Survive)
         {
-            craftingSystem.ExitMenu(this);
-            gameOverScreen.Enable(false, this);
-            isGameOver = true;
+            GameOver(GameState.Death);
         }
 
-        // Enemy Spawning
+        if (gameState == GameState.Survive)
         {
-            List<int> SpawnPoints = new List<int> { 0, 1, 2, 3 };
-
-            // Camera Bounds
-            Vector3 cameraPosition = mainCamera.transform.position;
-            float verticleExtent = mainCamera.orthographicSize;
-            float horizontalExtent = verticleExtent * Screen.width / Screen.height;
-            Vector2 CameraMin = new Vector2(cameraPosition.x - horizontalExtent - spawnOutsideCameraDistance, cameraPosition.y - verticleExtent - spawnOutsideCameraDistance);
-            Vector2 CameraMax = new Vector2(cameraPosition.x + horizontalExtent + spawnOutsideCameraDistance, cameraPosition.y + verticleExtent + spawnOutsideCameraDistance);
-
-            if (CameraMin.x <= mapBoundsMin.x)
+            // Enemy Spawning
             {
-                SpawnPoints.Remove(0);
-            }
-
-            if (CameraMax.x >= mapBoundsMax.x)
-            {
-                SpawnPoints.Remove(1);
-            }
-
-            if (CameraMin.y <= mapBoundsMin.y)
-            {
-                SpawnPoints.Remove(2);
-            }
-
-            if (CameraMax.y >= mapBoundsMax.y)
-            {
-                SpawnPoints.Remove(3);
-            }
-
-            for (int i = 0; i < enemiesSpawnRates.Length; i++)
-            {
-                // Get the number of enemies that should be spawned
-                enemiesSpawnRates[i].currentNumberToSpawn += (enemiesSpawnRates[i].spawnRate.Evaluate(gameTimer.currentTime / gameTimer.timeToSurvive)) * Time.deltaTime;
-                int numberOfEnemiesToSpawn = Mathf.FloorToInt(enemiesSpawnRates[i].currentNumberToSpawn);
-                enemiesSpawnRates[i].currentNumberToSpawn -= numberOfEnemiesToSpawn;
-
-                // Dont try to spawn if no point avaliable
-                if (SpawnPoints.Count <= 0)
+                for (int i = 0; i < enemiesSpawnRates.Length; i++)
                 {
-                    continue;
-                }
+                    // Get the number of enemies that should be spawned
+                    enemiesSpawnRates[i].currentNumberToSpawn += (enemiesSpawnRates[i].spawnRate.Evaluate(gameTimer.currentTime / gameTimer.timeToSurvive)) * Time.deltaTime;
+                    int numberOfEnemiesToSpawn = Mathf.FloorToInt(enemiesSpawnRates[i].currentNumberToSpawn);
+                    enemiesSpawnRates[i].currentNumberToSpawn -= numberOfEnemiesToSpawn;
 
-                for (int j = 0; j < numberOfEnemiesToSpawn; j++)
-                {
-                    // Get a random point along the selected side
-                    Vector2 spawnPosition = new Vector2(0, 0);
-                    int SelectedSide = SpawnPoints[UnityEngine.Random.Range(0, SpawnPoints.Count - 1)];
-                    switch (SelectedSide)
+                    for (int j = 0; j < numberOfEnemiesToSpawn; j++)
                     {
-                        case 0: // Left edge
-                            spawnPosition.x = CameraMin.x;
-                            spawnPosition.y = UnityEngine.Random.Range(CameraMin.y, CameraMax.y);
-                            break;
-                        case 1: // Right edge
-                            spawnPosition.x = CameraMax.x;
-                            spawnPosition.y = UnityEngine.Random.Range(CameraMin.y, CameraMax.y);
-                            break;
-                        case 2: // Bottom edge
-                            spawnPosition.x = UnityEngine.Random.Range(CameraMin.x, CameraMax.x);
-                            spawnPosition.y = CameraMin.y;
-                            break;
-                        case 3: // Top edge
-                            spawnPosition.x = UnityEngine.Random.Range(CameraMin.x, CameraMax.x);
-                            spawnPosition.y = CameraMax.y;
-                            break;
-                    }
+                        if (!RandomPositionAwayFromPlayer(playerLight.light.pointLightOuterRadius, out Vector2 spawnPosition, 5, playerLight.light.pointLightOuterRadius * 3.0f))
+                            continue;
 
-                    ID id = enemies.Spawn();
-                    ref UnitEntity enemy = ref enemies[id.index];
+                        ID id = enemies.Spawn();
+                        ref UnitEntity enemy = ref enemies[id.index];
 
-                    if (enemy.IsValid())
-                    {
-                        enemy = new UnitEntity(enemy.transform.gameObject, enemiesSpawnRates[i].presetUnit, id);
-                        enemy.transform.position = spawnPosition;
-                        enemy.transform.gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        enemy = new UnitEntity(
-                            Instantiate(enemiesSpawnRates[i].enemyPrefab, spawnPosition, Quaternion.identity),
-                            enemiesSpawnRates[i].presetUnit,
-                            id);
+                        if (enemy.IsValid())
+                        {
+                            enemy = new UnitEntity(enemy.transform.gameObject, enemiesSpawnRates[i].presetUnit, id);
+                            enemy.transform.position = spawnPosition;
+                            enemy.transform.gameObject.SetActive(true);
+                        }
+                        else
+                        {
+                            enemy = new UnitEntity(
+                                Instantiate(enemiesSpawnRates[i].enemyPrefab, spawnPosition, Quaternion.identity),
+                                enemiesSpawnRates[i].presetUnit,
+                                id);
+                        }
                     }
                 }
             }
-        }
 
-        // Boss spawning
-        while (true)
-        {
-            // Get the number of enemies that should be spawned
-            int spawnRequirement = Mathf.FloorToInt(boss0SpawnData.spawnRate.Evaluate(gameTimer.currentTime / gameTimer.timeToSurvive));
-            if (spawnRequirement <= boss0SpawnData.numberSpawned)
-                break;
-
-            int numberToSpawn = spawnRequirement - boss0SpawnData.numberSpawned;
-            boss0SpawnData.numberSpawned = spawnRequirement;
-
-            for (int j = 0; j < numberToSpawn; j++)
+            // Boss spawning
+            do
             {
+                if (0 < bosses0.CountUsing())
+                    break;
+
+                boss0SpawnData.spawnTimeLeft -= Time.deltaTime;
+                if (0 < boss0SpawnData.spawnTimeLeft)
+                {
+                    break;
+                }
+
+                boss0SpawnData.spawnTimeLeft = boss0SpawnData.timeBetweenSpawns;
+
                 if (!RandomPositionAwayFromPlayer(boss0SpawnData.minDistanceToPlayer, out Vector2 randomPosition))
                     continue;
 
@@ -316,15 +229,22 @@ public class MainScript : MonoBehaviour
                         boss0SpawnData.presetUnit,
                         id);
                 }
-            }
 
-            break;
+                // despawn all crystals
+                foreach (int i in lightCrystals)
+                {
+                    lightCrystals[i].transform.gameObject.SetActive(false);
+                    lightCrystals.TryDespawn(i);
+                }
+            }
+            while (false);
+
+            // Light Shield drain
+            centreLight.currentPower -= centreLight.powerLossPerSecond * Time.deltaTime;
         }
 
-        // Light Shield
+        // Light Shield update
         {
-            centreLight.currentPower -= centreLight.powerLossPerSecond * Time.deltaTime;
-
             float lightPercentLeft = centreLight.currentPower / centreLight.maxPower;
             float lightRadius = centreLight.minLightRadius + ((centreLight.maxLightRadius - centreLight.minLightRadius) * lightPercentLeft);
 
@@ -336,7 +256,7 @@ public class MainScript : MonoBehaviour
 
             if (centreLight.currentPower <= 0f)
             {
-                isGameOver = true;
+                GameOver(GameState.NoPower);
             }
         }
 
@@ -466,7 +386,7 @@ public class MainScript : MonoBehaviour
         return GetTeam(a) != GetTeam(b);
     }
 
-    public bool RandomPositionAwayFromPlayer(float minDistanceToPlayer, out Vector2 randomPosition, int maxAttempts = 5)
+    public bool RandomPositionAwayFromPlayer(float minDistanceToPlayer, out Vector2 randomPosition, int maxAttempts = 5, float maxDistanceAway = -1f)
     {
         int attempts = 0;
         Vector2 playerPos = player.transform.position;
@@ -475,10 +395,15 @@ public class MainScript : MonoBehaviour
             randomPosition = new Vector2(
                 Random.Range(mapBoundsMin.x, mapBoundsMax.x),
                 Random.Range(mapBoundsMin.y, mapBoundsMax.y));
+            float distanceAway = Vector2.Distance(randomPosition, playerPos);
 
-            if (minDistanceToPlayer <
-                Vector2.Distance(randomPosition, playerPos))
+            if (minDistanceToPlayer < distanceAway)
             {
+                if (0f < maxDistanceAway && maxDistanceAway < distanceAway)
+                {
+                    randomPosition = playerPos + (randomPosition - playerPos) * maxDistanceAway / distanceAway;
+                }
+
                 return true;
             }
         } while (++attempts < maxAttempts);
@@ -487,28 +412,44 @@ public class MainScript : MonoBehaviour
 
     public void ReplenishCrystalsNumber()
     {
+        if (0 < bosses0.CountUsing() ||
+            gameState != GameState.Survive)
+            return;
+
         int crystalsToSpawn = lightCrystalSpawning.GetCrystalsNumber(mapBoundsMin, mapBoundsMax);
         for (int i = lightCrystals.CountUsing(); i < crystalsToSpawn; i++)
         {
             if (!RandomPositionAwayFromPlayer(lightCrystalSpawning.minDistanceToPlayer, out Vector2 spawnPosition))
                 continue;
 
-            ID id = lightCrystals.Spawn();
-            ref LightCrystal crystal = ref lightCrystals[id.index];
-
-            if (crystal.IsValid())
-            {
-                crystal = new LightCrystal(crystal.transform.gameObject, lightCrystalSpawning.presetCrystal, id);
-                crystal.transform.position = spawnPosition;
-                crystal.transform.gameObject.SetActive(true);
-            }
-            else
-            {
-                crystal = new LightCrystal(
-                        Instantiate(lightCrystalSpawning.crystalPrefab, spawnPosition, Quaternion.identity),
-                        lightCrystalSpawning.presetCrystal,
-                        id);
-            }
+            SpawnLightCrystal(spawnPosition);
         }
+    }
+
+    public void SpawnLightCrystal(Vector2 spawnPosition)
+    {
+        ID id = lightCrystals.Spawn();
+        ref LightCrystal crystal = ref lightCrystals[id.index];
+
+        if (crystal.IsValid())
+        {
+            crystal = new LightCrystal(crystal.transform.gameObject, lightCrystalSpawning.presetCrystal, id);
+            crystal.transform.position = spawnPosition;
+            crystal.transform.gameObject.SetActive(true);
+        }
+        else
+        {
+            crystal = new LightCrystal(
+                    Instantiate(lightCrystalSpawning.crystalPrefab, spawnPosition, Quaternion.identity),
+                    lightCrystalSpawning.presetCrystal,
+                    id);
+        }
+    }
+
+    public void GameOver(GameState endState)
+    {
+        gameState = endState;
+        craftingSystem.ExitMenu(this);
+        gameOverScreen.Enable(this);
     }
 }

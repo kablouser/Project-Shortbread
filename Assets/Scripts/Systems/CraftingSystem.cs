@@ -133,7 +133,8 @@ public struct CraftingSystem
 
         interactPrompt.enabled =
             !craftingPanel.activeSelf &&
-            inRange;
+            inRange &&
+            (mainScript.gameState == GameState.Tutorial || mainScript.gameState == GameState.Survive);
 
         if (craftingPanel.activeSelf)
         {
@@ -182,7 +183,7 @@ public struct CraftingSystem
             }
         }
 
-        if (interactPrompt.enabled && mainScript.inputSystem.isInteractDown && !mainScript.isGameOver)
+        if (interactPrompt.enabled && mainScript.inputSystem.isInteractDown)
         {
             EnterMenu(mainScript);
         }
@@ -207,6 +208,14 @@ public struct CraftingSystem
         Time.timeScale = 1.0f;
         mainScript.eventSystem.firstSelectedGameObject = null;
         mainScript.eventSystem.SetSelectedGameObject(null);
+
+        if (mainScript.gameState == GameState.Tutorial)
+        {
+            // start game
+            mainScript.gameState = GameState.Survive;
+            mainScript.gameStartText.enabled = true;
+            mainScript.gameStartText.CrossFadeAlpha(0.0f, 3.0f, true);
+        }
     }
 
     public enum UpdateCraftItemUIMode { Init, IsCrafted, Cost};
