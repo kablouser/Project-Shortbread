@@ -36,6 +36,8 @@ public class MainScript : MonoBehaviour
 
     public CraftingSystem craftingSystem;
 
+    public AudioSystem audioSystem;
+
     [Header("Game Settings")]
     public Vector2 mapBoundsMax = Vector2.zero;
     public Vector2 mapBoundsMin = Vector2.zero;
@@ -59,8 +61,8 @@ public class MainScript : MonoBehaviour
     public void Start()
     {
         // not just transparency, all sprites are sorted lowerest y first, then lowest x
-        mainCamera.transparencySortMode = TransparencySortMode.CustomAxis;
-        mainCamera.transparencySortAxis = new Vector3(0.2f, 1.0f, 0.0f);
+        //mainCamera.transparencySortMode = TransparencySortMode.CustomAxis;
+        //mainCamera.transparencySortAxis = new Vector3(0.2f, 1.0f, 0.0f);
 
         QualitySettings.vSyncCount = 1;
 #if UNITY_EDITOR
