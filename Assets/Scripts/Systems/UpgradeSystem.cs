@@ -9,6 +9,7 @@ public enum UpgradeType
     ReloadSpeed,
     Health,
     MoveSpeed,
+    VisionRange,
 };
 
 [Serializable]
@@ -18,6 +19,7 @@ public struct StatsModifierComponent
     public float moveSpeedModifier;
     public float damageModifier;
     public float reloadSpeedModifier;
+    public float visionRangeModifier;
 }
 
 [Serializable]
@@ -26,7 +28,7 @@ public struct UpgradeSystem
     // Should probably be a limit on the actual reload speed not the modifier
     public float reloadSpeedModifierLimit;
 
-    public void ApplyUpgrade(ref UnitEntity unit, UpgradeType type, float valueChange)
+    public void ApplyUpgrade(MainScript mainScript, ref UnitEntity unit, UpgradeType type, float valueChange)
     {
         switch (type)
         {
@@ -54,6 +56,10 @@ public struct UpgradeSystem
                     unit.statModifiers.reloadSpeedModifier = reloadSpeedModifierLimit;
                 }
                 Debug.Log("Reload Cooldown Modifier: " + unit.statModifiers.reloadSpeedModifier);
+                break;
+            case UpgradeType.VisionRange:
+                unit.statModifiers.visionRangeModifier += valueChange;
+                mainScript.playerLight.light.pointLightOuterRadius = mainScript.playerLight.baseLightRange * unit.statModifiers.visionRangeModifier;
                 break;
         }
     }

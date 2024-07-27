@@ -20,6 +20,7 @@ public class MainScript : MonoBehaviour
     public VersionedPool<Boss0Entity> bosses0;
     public EnemyData[] enemiesSpawnRates;
     public Boss0SpawnData boss0SpawnData;
+    public PlayerLight playerLight;
     public CentreLight centreLight;
     public LightCrystalSpawning lightCrystalSpawning;
     public VersionedPool<LightCrystal> lightCrystals;
@@ -84,6 +85,8 @@ public class MainScript : MonoBehaviour
         air.SetValue(0);
         water.SetValue(0);
 
+        playerLight.light.pointLightOuterRadius = playerLight.baseLightRange;
+
         // Assign Buttons
         gameOverScreen.restartButton.onClick.AddListener(() =>
         {
@@ -129,24 +132,29 @@ public class MainScript : MonoBehaviour
 
         // Debug
         {
-            //if (Input.GetKeyDown(KeyCode.Alpha1))
+            //if(Input.GetKeyDown(KeyCode.Alpha1))
             //{
-            //    upgradeSystem.ApplyUpgrade(ref player, UpgradeType.MoveSpeed, 0.1f);
+            //    upgradeSystem.ApplyUpgrade(this, ref player, UpgradeType.MoveSpeed, 0.1f);
             //}
 
-            //if (Input.GetKeyDown(KeyCode.Alpha2))
+            //if(Input.GetKeyDown(KeyCode.Alpha2))
             //{
-            //    upgradeSystem.ApplyUpgrade(ref player, UpgradeType.Health, 1f);
+            //    upgradeSystem.ApplyUpgrade(this, ref player, UpgradeType.Health, 1f);
             //}
 
-            //if (Input.GetKeyDown(KeyCode.Alpha3))
+            //if(Input.GetKeyDown(KeyCode.Alpha3))
             //{
-            //    upgradeSystem.ApplyUpgrade(ref player, UpgradeType.Damage, 1f);
+            //    upgradeSystem.ApplyUpgrade(this, ref player, UpgradeType.Damage, 1f);
             //}
 
-            //if (Input.GetKeyDown(KeyCode.Alpha4))
+            //if(Input.GetKeyDown(KeyCode.Alpha4))
             //{
-            //    upgradeSystem.ApplyUpgrade(ref player, UpgradeType.ReloadSpeed, -0.1f);
+            //    upgradeSystem.ApplyUpgrade(this, ref player, UpgradeType.ReloadSpeed, -0.1f);
+            //}
+
+            //if(Input.GetKeyDown(KeyCode.Alpha5))
+            //{
+            //    upgradeSystem.ApplyUpgrade(this, ref player, UpgradeType.VisionRange, 0.1f);
             //}
         }
 

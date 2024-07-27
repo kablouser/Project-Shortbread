@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
 using TMPro;
 using Unity.VisualScripting.FullSerializer;
+using JetBrains.Annotations;
 
 public enum Team { Neutral, Player, Enemy };
 
@@ -190,6 +191,13 @@ public struct Boss0SpawnData
     public float earth;
     public float air;
     public float water;
+}
+
+[Serializable]
+public struct PlayerLight
+{
+    public Light2D light;
+    public float baseLightRange;
 }
 
 [Serializable]
