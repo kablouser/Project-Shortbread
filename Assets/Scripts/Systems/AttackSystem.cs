@@ -319,9 +319,7 @@ public struct AttackSystem
 
             case IDType.Player:
                 DamageWithoutDespawn(ref mainScript.player, damage);
-                ref HealthComponent health = ref mainScript.player.health;
-                mainScript.healthBar.slider.value = health.current / (float)health.max;
-                mainScript.healthBar.text.text = $"HP={health.current}/{health.max}";
+                mainScript.healthBar.UpdateHealthBar(mainScript.player.health);
                 return true;
 
             case IDType.Enemy:
