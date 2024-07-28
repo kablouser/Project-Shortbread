@@ -57,5 +57,7 @@ public struct UpgradeSystem
                 mainScript.playerLight.light.pointLightOuterRadius = mainScript.playerLight.baseLightRange * unit.statModifiers.visionRangeModifier;
                 break;
         }
+
+        mainScript.shakeSystem.Shake(1.0f);
     }
 }

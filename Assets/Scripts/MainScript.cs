@@ -35,6 +35,7 @@ public class MainScript : MonoBehaviour
     public CraftingSystem craftingSystem;
 
     public AudioSystem audioSystem;
+    public ShakeSystem shakeSystem;
 
     [Header("Game Settings")]
     public Vector2 mapBoundsMax = Vector2.zero;
@@ -95,6 +96,13 @@ public class MainScript : MonoBehaviour
         pickupSystem.SpawnPickup(PickupType.Air, new Vector2(-1, -10f), 1f);
         pickupSystem.SpawnPickup(PickupType.Water, new Vector2(0.5f, -9), 1f);
         SpawnLightCrystal(new Vector2(0.7f, -5));
+
+        shakeSystem.Start(this);
+    }
+
+    public void OnDestroy()
+    {
+        shakeSystem.OnDestroy();
     }
 
     public void OnValidate()
@@ -135,6 +143,8 @@ public class MainScript : MonoBehaviour
             inputSystem.Update(this);
             // crafting relies on inputSystem update first
             craftingSystem.Update(this);
+            // rumble and screenshake needs to run
+            shakeSystem.UpdateEvenWhenPaused(this, Time.unscaledDeltaTime /*please use unscaled*/);
             return;
         }
         else if (gameState == GameState.Survive)
@@ -306,7 +316,7 @@ public class MainScript : MonoBehaviour
 
     public void FixedUpdate()
     {
-        mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, player.transform.position, Time.fixedDeltaTime * 5f);
+        shakeSystem.UpdateEvenWhenPaused(this, Time.fixedDeltaTime);
 
         aiSystem.FixedUpdate(this);
 
@@ -362,6 +372,9 @@ public class MainScript : MonoBehaviour
 
     public void AddLightPower(float amount)
     {
+        if (gameState == GameState.NoPower)
+            return;
+
         centreLight.currentPower += amount;
         if(centreLight.currentPower > centreLight.maxPower)
         {

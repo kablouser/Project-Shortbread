@@ -675,6 +675,18 @@ PrefabInstance:
       propertyPath: m_SpriteTilingProperty.oldSize.y
       value: 0.16
       objectReference: {fileID: 0}
+    - target: {fileID: 7559519298007080854, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.b
+      value: 0.78431374
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559519298007080854, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559519298007080854, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.r
+      value: 0.78431374
+      objectReference: {fileID: 0}
     - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: backupListener
       value: 
@@ -684,8 +696,36 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 525294809357136992}
     - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: shakeSystem.fadeRate
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: gameOverScreen.winText
       value: You've defeated the darkness
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: boss0SpawnData.spawnTimeLeft
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: shakeSystem.cameraShakeLerpRate
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: shakeSystem.gamepadLowFrequency
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: shakeSystem.gamepadHighFrequency
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: shakeSystem.cameraShakeDistanceScale
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: shakeSystem.cameraShakeMaxAcceleration
+      value: 0.03
       objectReference: {fileID: 0}
     - target: {fileID: 7995831551003652219, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: m_AnchorMax.x

@@ -315,6 +315,11 @@ public struct AttackSystem
             default: break;
 
             case IDType.Player:
+                if (mainScript.player.health.current <= 0)
+                {
+                    return true;
+                }
+
                 if (DamageWithoutDespawn(ref mainScript.player, damage))
                 {
                     // player's listener is disabled.
@@ -322,6 +327,11 @@ public struct AttackSystem
                     mainScript.backupListener.SetActive(true);
                 }
                 mainScript.healthBar.UpdateHealthBar(mainScript.player.health);
+
+                if (0 < damage)
+                {
+                    mainScript.shakeSystem.Shake(1.5f);
+                }
                 return true;
 
             case IDType.Enemy:
@@ -346,6 +356,7 @@ public struct AttackSystem
                         }
 
                         mainScript.audioSystem.PlayDeathVFX(IDType.LightCrystal, position);
+                        mainScript.shakeSystem.Shake(0.5f);
                         return true;
                     }
                     else
@@ -391,6 +402,8 @@ public struct AttackSystem
                                 mainScript.audioSystem.PlayDeathVFX(IDType.Boss0, bossPos);
                             }
                         }
+
+                        mainScript.shakeSystem.Shake(0.7f);
                     }
                     return true;
                 }

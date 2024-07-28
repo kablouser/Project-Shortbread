@@ -90,28 +90,28 @@ public struct PickupSystem
                 switch (pickup.type)
                 {
                     case PickupType.Light:
-                        mainScript.audioSystem.PlayVFXAtLocation(mainScript.audioSystem.shardCollectVFX, pickup.transform.position);
+                        mainScript.audioSystem.PlayVFX(mainScript.audioSystem.shardCollectVFX);
                         mainScript.AddLightPower(pickup.value);
                         break;
                     case PickupType.Fire:
-                        mainScript.audioSystem.PlayVFXAtLocation(mainScript.audioSystem.elementalShardCollectVFX, pickup.transform.position);
+                        mainScript.audioSystem.PlayVFX(mainScript.audioSystem.elementalShardCollectVFX);
                         mainScript.craftingSystem.resources.fire.AddValue(Mathf.RoundToInt(pickup.value), mainScript);
                         break;
                     case PickupType.Earth:
-                        mainScript.audioSystem.PlayVFXAtLocation(mainScript.audioSystem.elementalShardCollectVFX, pickup.transform.position);
+                        mainScript.audioSystem.PlayVFX(mainScript.audioSystem.elementalShardCollectVFX);
                         mainScript.craftingSystem.resources.earth.AddValue(Mathf.RoundToInt(pickup.value), mainScript);
                         break;
                     case PickupType.Air:
-                        mainScript.audioSystem.PlayVFXAtLocation(mainScript.audioSystem.elementalShardCollectVFX, pickup.transform.position);
+                        mainScript.audioSystem.PlayVFX(mainScript.audioSystem.elementalShardCollectVFX);
                         mainScript.craftingSystem.resources.air.AddValue(Mathf.RoundToInt(pickup.value), mainScript);
                         break;
                     case PickupType.Water:
-                        mainScript.audioSystem.PlayVFXAtLocation(mainScript.audioSystem.elementalShardCollectVFX, pickup.transform.position);
+                        mainScript.audioSystem.PlayVFX(mainScript.audioSystem.elementalShardCollectVFX);
                         mainScript.craftingSystem.resources.water.AddValue(Mathf.RoundToInt(pickup.value), mainScript);
                         break;
                 }
                 pickup.transform.gameObject.SetActive(false);
-                pickups.TryDespawn(pickup.transform.GetComponent<IDComponent>().id, out _);
+                pickups.TryDespawn(pickup.transform.GetComponent<IDComponent>().id);
                 continue;
             }
 

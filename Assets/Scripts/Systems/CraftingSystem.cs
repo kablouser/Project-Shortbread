@@ -109,9 +109,12 @@ public struct CraftingSystem
     public List<CraftItemUI> craftItemUIs;
 
     private GameObject lastSelected;
+    private bool isExitMenuThisFrame;
 
     public void Start(MainScript mainScript)
     {
+        isExitMenuThisFrame = false;
+
         resources.fire.Start();
         resources.earth.Start();
         resources.air.Start();
@@ -147,6 +150,7 @@ public struct CraftingSystem
                 y = craftItemUIsLayout.preferredHeight
             };
 
+            // moving the contents listParent to focus on the currently selected go
             if (lastSelected != mainScript.eventSystem.currentSelectedGameObject)
             {
                 lastSelected = mainScript.eventSystem.currentSelectedGameObject;
@@ -186,7 +190,7 @@ public struct CraftingSystem
             }
         }
 
-        if (interactPrompt.enabled && mainScript.inputSystem.isInteractDown)
+        if (interactPrompt.enabled && mainScript.inputSystem.isInteractDown && !isExitMenuThisFrame)
         {
             EnterMenu(mainScript);
         }
@@ -194,6 +198,8 @@ public struct CraftingSystem
         {
             ExitMenu(mainScript);
         }
+
+        isExitMenuThisFrame = false;
     }
 
     public void EnterMenu(MainScript mainScript)
@@ -217,6 +223,8 @@ public struct CraftingSystem
             // start game
             mainScript.SetGameState(GameState.Survive);
         }
+
+        isExitMenuThisFrame = true;
     }
 
     public enum UpdateCraftItemUIMode { Init, IsCrafted};
