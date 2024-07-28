@@ -1393,7 +1393,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -6759,9 +6759,9 @@ MonoBehaviour:
       baseMoveSpeed: 1.4
       moveSpeed: 1.4
       health:
-        baseHealth: 3
-        current: 3
-        max: 3
+        baseHealth: 2
+        current: 2
+        max: 2
       lightPower: 0
       statModifiers:
         healthModifier: 1
@@ -6830,7 +6830,7 @@ MonoBehaviour:
           reloadSpeedModifier: 1
           visionRangeModifier: 0
       hasAgro: 0
-    spawnTimeLeft: 1
+    spawnTimeLeft: 30
     timeBetweenSpawns: 30
     minDistanceToPlayer: 11
     dropResources: 5
@@ -7050,6 +7050,8 @@ MonoBehaviour:
     audioSourceMusic: {fileID: 1208565606333305442}
     audioSourceCentreLight: {fileID: 8984149625539855449}
     music: {fileID: 8300000, guid: f71c0236f49df6347bcf629eec214afd, type: 3}
+    craftingVFX: {fileID: 8300000, guid: b11f55f5eccf1864c8511b46bcf2ef66, type: 3}
+    craftingCompleteVFX: {fileID: 8300000, guid: 1ebf605aa6ec4784c9aef3b537c6f859, type: 3}
     shardCollectVFX: {fileID: 8300000, guid: cb4273e40692b4a44af04980709d9f9e, type: 3}
     elementalShardCollectVFX: {fileID: 8300000, guid: af90a6ac17a5a0b4c86405c415ea3c79, type: 3}
     playerGunShotVFX: {fileID: 8300000, guid: 70a32163611299b498e4377483e43bc9, type: 3}

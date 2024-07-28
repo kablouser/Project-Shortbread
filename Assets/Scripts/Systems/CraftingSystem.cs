@@ -62,7 +62,7 @@ public struct CraftingResource
 
         if (updateCraftingUI)
         {
-            main.craftingSystem.UpdateCraftItemUIs(CraftingSystem.UpdateCraftItemUIMode.Cost, main);
+            main.craftingSystem.UpdateCraftItemUIs(CraftingSystem.UpdateCraftItemUIMode.IsCrafted, main);
         }
     }
 
@@ -195,7 +195,7 @@ public struct CraftingSystem
 
     public void EnterMenu(MainScript mainScript)
     {
-        UpdateCraftItemUIs(UpdateCraftItemUIMode.Cost, mainScript, true);
+        UpdateCraftItemUIs(UpdateCraftItemUIMode.IsCrafted, mainScript, true);
         craftingPanel.SetActive(true);
         interactPrompt.enabled = false;
         Time.timeScale = 0f;
@@ -218,7 +218,7 @@ public struct CraftingSystem
         }
     }
 
-    public enum UpdateCraftItemUIMode { Init, IsCrafted, Cost};
+    public enum UpdateCraftItemUIMode { Init, IsCrafted};
     public void UpdateCraftItemUIs(UpdateCraftItemUIMode mode, MainScript mainScript, bool updateOnUIClosed = false)
     {
         if (!updateOnUIClosed && !craftingPanel.activeSelf)
@@ -234,8 +234,6 @@ public struct CraftingSystem
                         craftItemUIs[i].Init(items[i], i, mainScript); break;
                     case UpdateCraftItemUIMode.IsCrafted:
                         craftItemUIs[i].UpdateIsCrafted(items[i], this); break;
-                    case UpdateCraftItemUIMode.Cost:
-                        craftItemUIs[i].UpdateCosts(items[i], this); break;
                 }
             }
             else

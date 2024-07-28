@@ -162,7 +162,7 @@ public class MainScript : MonoBehaviour
             GameOver(GameState.Death);
         }
 
-        if (gameState == GameState.Survive)
+        if (gameState == GameState.Survive || gameState == GameState.Death || gameState == GameState.NoPower)
         {
             // Enemy Spawning
             {
@@ -240,7 +240,10 @@ public class MainScript : MonoBehaviour
                 }
             }
             while (false);
+        }
 
+        if (gameState == GameState.Survive)
+        {
             // Light Shield drain
             centreLight.currentPower -= centreLight.powerLossPerSecond * Time.deltaTime;
         }

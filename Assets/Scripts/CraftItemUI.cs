@@ -51,15 +51,6 @@ public class CraftItemUI : MonoBehaviour
 
     public void UpdateIsCrafted(in CraftItem craftItem, in CraftingSystem craftingSystem)
     {
-        UpdateCosts(craftItem, craftingSystem);
-
-        buttonText.text = craftItem.isCrafted ? "Acquired" : "Fuse";
-        if (craftItem.isCrafted)
-            craftButton.interactable = false;
-    }
-
-    public void UpdateCosts(in CraftItem craftItem, in CraftingSystem craftingSystem)
-    {
         bool allCostGood = true;
         for (int i = 0; i < ForEachElement<TextMeshProUGUI>.LENGTH; i++)
         {
@@ -71,6 +62,7 @@ public class CraftItemUI : MonoBehaviour
             allCostGood &= costGood;
         }
 
-        craftButton.interactable = allCostGood;
+        craftButton.interactable = allCostGood && !craftItem.isCrafted;
+        buttonText.text = craftItem.isCrafted ? "Acquired" : "Fuse";
     }
 }

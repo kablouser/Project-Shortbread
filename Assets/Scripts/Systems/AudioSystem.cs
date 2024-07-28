@@ -109,7 +109,8 @@ public struct AudioSystem
         switch (type)
         {
             case IDType.Player:
-                PlayVFXAtLocation(playerGunShotVFX, location);
+                // DONT USE LOCATION, location is global position, player can move out of it quickly, so it pans to the one ear when moving quickly
+                PlayVFX(playerGunShotVFX);
                 break;
             case IDType.Boss0:
                 PlayVFXAtLocation(boss0GunShotVFX, location);
