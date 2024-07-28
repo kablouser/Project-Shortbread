@@ -17,6 +17,9 @@ public struct AudioSystem
 
     public AudioClip music;
 
+    public AudioClip craftingVFX;
+    public AudioClip craftingCompleteVFX;
+
     public AudioClip shardCollectVFX;
     public AudioClip elementalShardCollectVFX;
 

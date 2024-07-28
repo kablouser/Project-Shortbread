@@ -269,6 +269,7 @@ public struct CraftingSystem
             return;
 
         mainScript.upgradeSystem.ApplyUpgrade(mainScript, ref mainScript.player, craftItem.upgradeType, craftItem.upgradeValue);
+        mainScript.audioSystem.PlayVFXAtLocation(mainScript.audioSystem.craftingCompleteVFX, mainScript.player.transform.position);
 
         craftItem.isCrafted = true;
         resources.fire.AddValue(-craftItem.costs[0], mainScript, false);

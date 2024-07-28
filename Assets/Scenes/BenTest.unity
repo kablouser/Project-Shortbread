@@ -270,6 +270,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: audioSystem.craftingVFX
+      value: 
+      objectReference: {fileID: 8300000, guid: b11f55f5eccf1864c8511b46bcf2ef66, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: audioSystem.craftingCompleteVFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 1ebf605aa6ec4784c9aef3b537c6f859, type: 3}
     - target: {fileID: 7995831551003652219, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
