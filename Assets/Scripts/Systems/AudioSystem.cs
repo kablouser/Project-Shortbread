@@ -8,6 +8,8 @@ public struct AudioSystem
     public float vfxVolume;
     public float musicVolume;
 
+    public GameObject audioListener;
+
     public AudioSource audioSourceVFX;
     public AudioSource audioSourceMusic;
     public AudioSource audioSourceCentreLight;
@@ -35,9 +37,10 @@ public struct AudioSystem
     public AudioClip boss0DeathVFX;
     public AudioClip LightCrystalDeathVFX;
 
-    public void Start()
+    public void Start(MainScript mainScript)
     {
-        audioSourceCentreLight.volume = masterVolume * vfxVolume;
+        audioListener.transform.SetParent(mainScript.player.transform, false);
+        audioSourceCentreLight.volume = masterVolume * vfxVolume * 0.5f;
         PlayMusic(music);
     }
 

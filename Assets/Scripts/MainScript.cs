@@ -51,8 +51,6 @@ public class MainScript : MonoBehaviour
     public TMPro.TextMeshProUGUI barrierTutorialText;
     public TMPro.TextMeshProUGUI gameStartText;
 
-    public GameObject backupListener;
-
     public void Awake()
     {
         playerControls = new PlayerControls();
@@ -81,7 +79,7 @@ public class MainScript : MonoBehaviour
 
         playerLight.light.pointLightOuterRadius = playerLight.baseLightRange;
 
-        audioSystem.Start();
+        audioSystem.Start(this);
 
         // Assign Buttons
         gameOverScreen.restartButton.onClick.AddListener(() =>

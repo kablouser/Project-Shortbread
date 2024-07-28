@@ -323,8 +323,7 @@ public struct AttackSystem
                 if (DamageWithoutDespawn(ref mainScript.player, damage))
                 {
                     // player's listener is disabled.
-                    mainScript.backupListener.transform.position = mainScript.player.transform.position;
-                    mainScript.backupListener.SetActive(true);
+                    mainScript.audioSystem.audioListener.transform.SetParent(null, true);
                 }
                 mainScript.healthBar.UpdateHealthBar(mainScript.player.health);
 
