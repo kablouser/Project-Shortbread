@@ -36,6 +36,7 @@ public struct UpgradeSystem
                 int healthAdded = newMaxHealth - unit.health.max;
                 unit.health.max = newMaxHealth;
                 unit.health.current += healthAdded;
+                mainScript.healthBar.UpdateHealthBar(mainScript.player.health);
                 break;
             case UpgradeType.MoveSpeed:
                 unit.statModifiers.moveSpeedModifier += valueChange;
