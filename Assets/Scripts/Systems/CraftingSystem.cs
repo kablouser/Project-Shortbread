@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 
 [System.Serializable]
 public struct ForEachElement<T>
@@ -59,11 +60,6 @@ public struct CraftingResource
         {
             text.text = value.ToString();
         }
-
-        if (updateCraftingUI)
-        {
-            main.craftingSystem.UpdateCraftItemUIs(CraftingSystem.UpdateCraftItemUIMode.IsCrafted, main);
-        }
     }
 
     public void Start()
@@ -99,14 +95,13 @@ public struct CraftingSystem
     public ForEachElement<CraftingResource> resources;
     public CraftItem[] items;
 
-    public GameObject craftItemUIPrefab;
     public GameObject craftingPanel;
-    public VerticalLayoutGroup craftItemUIsLayout;
-    public ScrollRect scrollRect;
-    public Color costGood, costBad;
 
-    // same order as items
-    public List<CraftItemUI> craftItemUIs;
+    public UpgradeIcon upgradeIconUIPrefab;
+    public List<UpgradeIcon> upgradeIconUIs;
+    public RectTransform upgradedItemsContainer;
+    public ElementSelectorUI[] elementSelectorsUI;
+    public CraftButtonUI craftButtonUI;
 
     private GameObject lastSelected;
     private bool isExitMenuThisFrame;
@@ -120,14 +115,21 @@ public struct CraftingSystem
         resources.air.Start();
         resources.water.Start();
 
-        craftItemUIs.Reserve(items.Length);
-        RectTransform listParent = craftItemUIsLayout.GetComponent<RectTransform>();
-        for (int i = 0; i < items.Length; i++)
+        foreach(ElementSelectorUI selector in elementSelectorsUI)
         {
-            craftItemUIs.Add(Object.Instantiate(craftItemUIPrefab, listParent).GetComponent<CraftItemUI>());
+            selector.Init(mainScript);
         }
 
-        UpdateCraftItemUIs(UpdateCraftItemUIMode.Init, mainScript, true);
+        craftButtonUI.Init(mainScript);
+
+        //craftItemUIs.Reserve(items.Length);
+        //RectTransform listParent = craftItemUIsLayout.GetComponent<RectTransform>();
+        //for (int i = 0; i < items.Length; i++)
+        //{
+        //    craftItemUIs.Add(Object.Instantiate(craftItemUIPrefab, listParent).GetComponent<CraftItemUI>());
+        //}
+
+        //UpdateCraftItemUIs(UpdateCraftItemUIMode.Init, mainScript, true);
     }
 
     public void Update(MainScript mainScript)
@@ -139,56 +141,52 @@ public struct CraftingSystem
             inRange &&
             (mainScript.gameState <= GameState.Survive);
 
-        if (craftingPanel.activeSelf)
-        {
-            RectTransform listParent = craftItemUIsLayout.GetComponent<RectTransform>();
+        //if (craftingPanel.activeSelf)
+        //{
+        //    RectTransform listParent = craftItemUIsLayout.GetComponent<RectTransform>();
 
-            listParent.sizeDelta = new Vector2
-            {
-                x = listParent.sizeDelta.x,
-                // only works when active :(
-                y = craftItemUIsLayout.preferredHeight
-            };
+        //    listParent.sizeDelta = new Vector2
+        //    {
+        //        x = listParent.sizeDelta.x,
+        //        // only works when active :(
+        //        y = craftItemUIsLayout.preferredHeight
+        //    };
 
-            // moving the contents listParent to focus on the currently selected go
-            if (lastSelected != mainScript.eventSystem.currentSelectedGameObject)
-            {
-                lastSelected = mainScript.eventSystem.currentSelectedGameObject;
-                if (lastSelected)
-                {
-                    // trial and error code:
+        //    if (lastSelected != mainScript.eventSystem.currentSelectedGameObject)
+        //    {
+        //        lastSelected = mainScript.eventSystem.currentSelectedGameObject;
+        //        if (lastSelected)
+        //        {
+        //            // trial and error code:
 
-                    // transform after the listParent
-                    RectTransform selectedRoot = (RectTransform)lastSelected.transform.GetParentUntil(listParent);
+        //            // transform after the listParent
+        //            RectTransform selectedRoot = (RectTransform)lastSelected.transform.GetParentUntil(listParent);
 
-                    if (selectedRoot)
-                    {
-                        Vector2 listParentAnchorPos = listParent.anchoredPosition;
+        //            Vector2 listParentAnchorPos = listParent.anchoredPosition;
 
-                        float viewHeight = scrollRect.GetComponent<RectTransform>().rect.height;
+        //            float viewHeight = scrollRect.GetComponent<RectTransform>().rect.height;
 
-                        Vector2 viewRange = new Vector2(listParentAnchorPos.y, listParentAnchorPos.y + viewHeight);
+        //            Vector2 viewRange = new Vector2(listParentAnchorPos.y, listParentAnchorPos.y + viewHeight);
 
-                        float minPos =
-                            -(selectedRoot.anchoredPosition.y + selectedRoot.sizeDelta.y / 2);
-                        float maxPos =
-                            -(selectedRoot.anchoredPosition.y - selectedRoot.sizeDelta.y / 2);
+        //            float minPos =
+        //                -(selectedRoot.anchoredPosition.y + selectedRoot.sizeDelta.y / 2);
+        //            float maxPos =
+        //                -(selectedRoot.anchoredPosition.y - selectedRoot.sizeDelta.y / 2);
 
-                        if (minPos < viewRange.x)
-                        {
-                            listParentAnchorPos.y = -(selectedRoot.anchoredPosition.y + selectedRoot.sizeDelta.y / 2);
-                        }
-                        if (viewRange.y < maxPos)
-                        {
-                            listParentAnchorPos.y = -viewHeight -
-                                (selectedRoot.anchoredPosition.y - selectedRoot.sizeDelta.y / 2);
-                        }
+        //            if (minPos < viewRange.x)
+        //            {
+        //                listParentAnchorPos.y = -(selectedRoot.anchoredPosition.y + selectedRoot.sizeDelta.y / 2);
+        //            }
+        //            if (viewRange.y < maxPos)
+        //            {
+        //                listParentAnchorPos.y = -viewHeight -
+        //                    (selectedRoot.anchoredPosition.y - selectedRoot.sizeDelta.y / 2);
+        //            }
 
-                        listParent.anchoredPosition = listParentAnchorPos;
-                    }
-                }
-            }
-        }
+        //            listParent.anchoredPosition = listParentAnchorPos;
+        //        }
+        //    }
+        //}
 
         if (interactPrompt.enabled && mainScript.inputSystem.isInteractDown && !isExitMenuThisFrame)
         {
@@ -204,11 +202,15 @@ public struct CraftingSystem
 
     public void EnterMenu(MainScript mainScript)
     {
-        UpdateCraftItemUIs(UpdateCraftItemUIMode.IsCrafted, mainScript, true);
         craftingPanel.SetActive(true);
         interactPrompt.enabled = false;
         Time.timeScale = 0f;
-        mainScript.eventSystem.SetSelectedGameObject(mainScript.eventSystem.firstSelectedGameObject = craftItemUIs[0].craftButton.gameObject);
+
+        foreach (ElementSelectorUI selector in elementSelectorsUI)
+        {
+            selector.ResetUI();
+        }
+        craftButtonUI.ResetUI();
     }
 
     public void ExitMenu(MainScript mainScript)
@@ -228,53 +230,59 @@ public struct CraftingSystem
     }
 
     public enum UpdateCraftItemUIMode { Init, IsCrafted};
-    public void UpdateCraftItemUIs(UpdateCraftItemUIMode mode, MainScript mainScript, bool updateOnUIClosed = false)
-    {
-        if (!updateOnUIClosed && !craftingPanel.activeSelf)
-            return;
 
-        for (int i = 0; i < items.Length; i++)
+    public void CraftItem(MainScript mainScript)
+    {
+        // FIRST FIND WHAT THE ELEMENTS WOULD CRAFT
+        ForEachElement<int> usedElements = new ForEachElement<int>();
+        foreach (ElementSelectorUI selector in elementSelectorsUI)
         {
-            if (i < craftItemUIs.Count)
+            if(selector.selectedResource > -1 && selector.selectedResource < ForEachElement<int>.LENGTH)
             {
-                switch (mode)
+                usedElements[selector.selectedResource] += 1;
+                if(resources[selector.selectedResource].value < usedElements[selector.selectedResource])
                 {
-                    case UpdateCraftItemUIMode.Init:
-                        craftItemUIs[i].Init(items[i], i, mainScript); break;
-                    case UpdateCraftItemUIMode.IsCrafted:
-                        craftItemUIs[i].UpdateIsCrafted(items[i], this); break;
+                    craftButtonUI.resultText.SetText("Not Enough Resources");
+                    return;
                 }
             }
-            else
-            {
-                Debug.LogError("items and craftItemUIs needs to be same size");
-                break;
-            }
         }
-    }
 
-    public void CraftItem(MainScript mainScript, int i)
-    {
-        if (!(0 <= i && i < items.Length))
-            return;
-
-        ref CraftItem craftItem = ref items[i];
-        if (craftItem.isCrafted)
-            return;
-
-        bool enoughElements = true;
-        for (int e = 0; e < ForEachElement<int>.LENGTH; e++)
+        int craftItemIndex = -1;
+        for(int i = 0; i < items.Length; i++)
         {
-            if (resources[e].value < craftItem.costs[e])
+            bool enoughElements = true;
+            for (int e = 0; e < ForEachElement<int>.LENGTH; e++)
             {
-                enoughElements = false;
+                if(usedElements[e] < items[i].costs[e])
+                {
+                    enoughElements = false;
+                    break;
+                }
+            }
+
+            if(enoughElements)
+            {
+                craftItemIndex = i;
                 break;
             }
         }
 
-        if (!enoughElements)
+        if(craftItemIndex == -1)
+        {
+            craftButtonUI.resultText.SetText("No Recipe");
             return;
+        }
 
+        // BACK OUT IF ALREADY CRAFTED
+        ref CraftItem craftItem = ref items[craftItemIndex];
+        if(craftItem.isCrafted)
+        {
+            craftButtonUI.resultText.SetText("Already Made!");
+            return;
+        }
+
+        // CRAFT ITEM AND RESET ALL SELECTORS 
         mainScript.upgradeSystem.ApplyUpgrade(mainScript, ref mainScript.player, craftItem.upgradeType, craftItem.upgradeValue);
         mainScript.audioSystem.PlayVFX(mainScript.audioSystem.craftingCompleteVFX);
 
@@ -283,7 +291,16 @@ public struct CraftingSystem
         resources.earth.AddValue(-craftItem.costs[1], mainScript, false);
         resources.air.AddValue(-craftItem.costs[2], mainScript, false);
         resources.water.AddValue(-craftItem.costs[3], mainScript, false);
-        UpdateCraftItemUIs(UpdateCraftItemUIMode.IsCrafted, mainScript);
-    }
 
+        UpgradeIcon newIcon = Object.Instantiate(upgradeIconUIPrefab, upgradedItemsContainer);
+        newIcon.Init(craftItem);
+        upgradeIconUIs.Add(newIcon);
+
+        craftButtonUI.resultText.SetText(craftItem.description);
+
+        foreach (ElementSelectorUI selector in elementSelectorsUI)
+        {
+            selector.ResetUI();
+        }
+    }
 }
