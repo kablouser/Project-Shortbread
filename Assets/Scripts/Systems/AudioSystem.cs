@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static UnityEditor.FilePathAttribute;
 
+[Serializable]
 public struct AudioSystem
 {
     public float masterVolume;
@@ -11,11 +13,17 @@ public struct AudioSystem
 
     public AudioSource audioSourceVFX;
     public AudioSource audioSourceMusic;
+    public AudioSource audioSourceCentreLight;
 
     public AudioClip music;
-     
-    public AudioClip gunShotVFX;
-    public AudioClip gunHitVFX;
+
+    public AudioClip shardCollectVFX;
+    public AudioClip elementalShardCollectVFX;
+
+    public AudioClip playerGunShotVFX;
+    public AudioClip playerGunHitVFX;
+
+    public AudioClip boss0GunShotVFX;
 
     public AudioClip playerHitVFX;
     public AudioClip enemyHitVFX;
@@ -26,6 +34,12 @@ public struct AudioSystem
     public AudioClip enemyDeathVFX;
     public AudioClip boss0DeathVFX;
     public AudioClip LightCrystalDeathVFX;
+
+    public void Start()
+    {
+        audioSourceCentreLight.volume = masterVolume * vfxVolume;
+        PlayMusic(music);
+    }
 
     public void PlayMusic(AudioClip music)
     {
@@ -81,6 +95,21 @@ public struct AudioSystem
                 break;
             case IDType.LightCrystal:
                 PlayVFXAtLocation(LightCrystalDeathVFX, location);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void PlayAttackSound(IDType type, Vector2 location)
+    {
+        switch (type)
+        {
+            case IDType.Player:
+                PlayVFXAtLocation(playerGunShotVFX, location);
+                break;
+            case IDType.Boss0:
+                PlayVFXAtLocation(boss0GunShotVFX, location);
                 break;
             default:
                 break;

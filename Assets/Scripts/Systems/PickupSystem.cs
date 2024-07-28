@@ -90,18 +90,23 @@ public struct PickupSystem
                 switch (pickup.type)
                 {
                     case PickupType.Light:
+                        mainScript.audioSystem.PlayVFXAtLocation(mainScript.audioSystem.shardCollectVFX, pickup.transform.position);
                         mainScript.AddLightPower(pickup.value);
                         break;
                     case PickupType.Fire:
+                        mainScript.audioSystem.PlayVFXAtLocation(mainScript.audioSystem.elementalShardCollectVFX, pickup.transform.position);
                         mainScript.craftingSystem.resources.fire.AddValue(Mathf.RoundToInt(pickup.value), mainScript);
                         break;
                     case PickupType.Earth:
+                        mainScript.audioSystem.PlayVFXAtLocation(mainScript.audioSystem.elementalShardCollectVFX, pickup.transform.position);
                         mainScript.craftingSystem.resources.earth.AddValue(Mathf.RoundToInt(pickup.value), mainScript);
                         break;
                     case PickupType.Air:
+                        mainScript.audioSystem.PlayVFXAtLocation(mainScript.audioSystem.elementalShardCollectVFX, pickup.transform.position);
                         mainScript.craftingSystem.resources.air.AddValue(Mathf.RoundToInt(pickup.value), mainScript);
                         break;
                     case PickupType.Water:
+                        mainScript.audioSystem.PlayVFXAtLocation(mainScript.audioSystem.elementalShardCollectVFX, pickup.transform.position);
                         mainScript.craftingSystem.resources.water.AddValue(Mathf.RoundToInt(pickup.value), mainScript);
                         break;
                 }

@@ -77,6 +77,8 @@ public class MainScript : MonoBehaviour
 
         playerLight.light.pointLightOuterRadius = playerLight.baseLightRange;
 
+        audioSystem.Start();
+
         // Assign Buttons
         gameOverScreen.restartButton.onClick.AddListener(() =>
         {

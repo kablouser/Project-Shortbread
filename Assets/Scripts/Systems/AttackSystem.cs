@@ -1,6 +1,8 @@
 using System;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static UnityEditor.FilePathAttribute;
 
 [Serializable]
 public struct ProjectileEntity
@@ -234,6 +236,8 @@ public struct AttackSystem
                 rotation);
             projectile.gameObject.GetComponent<Rigidbody2D>().velocity = forward * attackPreset.projectileSpeed;
             projectile.lastPosition = projectile.gameObject.transform.position;
+
+            mainScript.audioSystem.PlayAttackSound(unitType, unit.transform.position);
         }
     }
 
@@ -258,6 +262,11 @@ public struct AttackSystem
             if (idComp != null)
             {
                 Damage(idComp.id, projectile.damage, mainScript);
+
+                if(projectile.source == IDType.Player)
+                {
+                    mainScript.audioSystem.PlayVFXAtLocation(mainScript.audioSystem.playerGunHitVFX, collider.transform.position);
+                }
             }
         }
     }
@@ -335,7 +344,13 @@ public struct AttackSystem
                             UnityEngine.Object.Destroy(mainScript.shootTutorialText.transform.parent.gameObject);
                             mainScript.shootTutorialText = null;
                         }
+                        mainScript.audioSystem.PlayDeathVFX(IDType.LightCrystal, position);
                         return true;
+                    }
+                    else
+                    {
+                        //Still alive
+                        mainScript.audioSystem.PlayDamagedVFX(IDType.LightCrystal, position);
                     }
                 }
                 break;
@@ -372,6 +387,7 @@ public struct AttackSystem
                                     pickupType = PickupType.Water;
 
                                 mainScript.pickupSystem.SpawnPickup(pickupType, bossPos.AddRandom(0.05f), 1f);
+                                mainScript.audioSystem.PlayDeathVFX(IDType.Boss0, bossPos);
                             }
                         }
                     }
