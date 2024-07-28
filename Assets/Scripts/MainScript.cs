@@ -133,6 +133,8 @@ public class MainScript : MonoBehaviour
 
     public void Update()
     {
+        audioSystem.Update(this);
+
         // Time Update
         if (Time.timeScale == 0f)
         {

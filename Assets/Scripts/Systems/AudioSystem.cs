@@ -1,7 +1,6 @@
-using System;
 using UnityEngine;
 
-[Serializable]
+[System.Serializable]
 public struct AudioSystem
 {
     public float masterVolume;
@@ -14,7 +13,12 @@ public struct AudioSystem
     public AudioSource audioSourceMusic;
     public AudioSource audioSourceCentreLight;
 
-    public AudioClip music;
+    public AudioClip music0;
+    [Range(0f, 1f)]
+    public float music0VolumeFactor;
+    public AudioClip music1;
+    [Range(0f, 1f)]
+    public float music1VolumeFactor;
 
     public AudioClip craftingVFX;
     public AudioClip craftingCompleteVFX;
@@ -37,19 +41,47 @@ public struct AudioSystem
     public AudioClip boss0DeathVFX;
     public AudioClip LightCrystalDeathVFX;
 
+    private int lastPlayedMusic;
+
     public void Start(MainScript mainScript)
     {
         audioListener.transform.SetParent(mainScript.player.transform, false);
         audioSourceCentreLight.volume = masterVolume * vfxVolume * 0.5f;
-        PlayMusic(music);
+        lastPlayedMusic = -1;
     }
 
-    public void PlayMusic(AudioClip music)
+    public void Update(MainScript mainScript)
     {
-        audioSourceMusic.clip = music;
-        audioSourceMusic.volume = masterVolume * musicVolume;
-        audioSourceMusic.loop = true;
-        audioSourceMusic.Play();
+        if (!audioSourceMusic.isPlaying && GameState.Survive <= mainScript.gameState)
+        {
+            int chooseRandomMusic;
+            if (lastPlayedMusic < 0)
+            {
+                chooseRandomMusic = Random.Range(0, 2);
+            }
+            else
+            {
+                chooseRandomMusic = lastPlayedMusic == 1 ? 0 : 1;
+            }
+
+            float chooseVol;
+            AudioClip chooseMusic;
+            if (chooseRandomMusic == 0)
+            {
+                chooseVol = music0VolumeFactor;
+                chooseMusic = music0;
+            }
+            else
+            {
+                chooseVol = music1VolumeFactor;
+                chooseMusic = music1;
+            }
+
+            audioSourceMusic.clip = chooseMusic;
+            audioSourceMusic.volume = masterVolume * musicVolume * chooseVol;
+            audioSourceMusic.loop = false;
+            audioSourceMusic.Play();
+        }
     }
 
     public void PlayVFX(AudioClip vfx)

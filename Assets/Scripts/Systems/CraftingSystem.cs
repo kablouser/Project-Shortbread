@@ -103,7 +103,6 @@ public struct CraftingSystem
     public ElementSelectorUI[] elementSelectorsUI;
     public CraftButtonUI craftButtonUI;
 
-    private GameObject lastSelected;
     private bool isExitMenuThisFrame;
 
     public void Start(MainScript mainScript)
@@ -206,6 +205,10 @@ public struct CraftingSystem
         interactPrompt.enabled = false;
         Time.timeScale = 0f;
 
+        GameObject firstButton = elementSelectorsUI[0].button.gameObject;
+        mainScript.eventSystem.firstSelectedGameObject = firstButton;
+        mainScript.eventSystem.SetSelectedGameObject(firstButton);
+
         foreach (ElementSelectorUI selector in elementSelectorsUI)
         {
             selector.ResetUI();
@@ -242,7 +245,7 @@ public struct CraftingSystem
                 usedElements[selector.selectedResource] += 1;
                 if(resources[selector.selectedResource].value < usedElements[selector.selectedResource])
                 {
-                    craftButtonUI.resultText.SetText("Not Enough Resources");
+                    craftButtonUI.resultText.SetText("Insufficient elements");
                     return;
                 }
             }
@@ -254,7 +257,8 @@ public struct CraftingSystem
             bool enoughElements = true;
             for (int e = 0; e < ForEachElement<int>.LENGTH; e++)
             {
-                if(usedElements[e] < items[i].costs[e])
+                // needs exact number of elements for crafting
+                if(usedElements[e] != items[i].costs[e])
                 {
                     enoughElements = false;
                     break;
@@ -270,7 +274,7 @@ public struct CraftingSystem
 
         if(craftItemIndex == -1)
         {
-            craftButtonUI.resultText.SetText("No Recipe");
+            craftButtonUI.resultText.SetText("Nothing happened");
             return;
         }
 
@@ -278,7 +282,7 @@ public struct CraftingSystem
         ref CraftItem craftItem = ref items[craftItemIndex];
         if(craftItem.isCrafted)
         {
-            craftButtonUI.resultText.SetText("Already Made!");
+            craftButtonUI.resultText.SetText("Already discovered");
             return;
         }
 

@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MainEditorWindow : EditorWindow
 {
@@ -11,6 +12,17 @@ public class MainEditorWindow : EditorWindow
     public bool alwaysDrawGizmos = true;
 
     public ID selectedID;
+
+    public ColorBlock selectableColorBlock = new()
+    {
+        colorMultiplier = 1f,
+        fadeDuration = 0.1f,
+        normalColor = new Color(1f, 1f, 1f, 1f),
+        highlightedColor = new Color(245f / 255f, 245f / 255f, 245f / 255f, 245f / 255f),
+        pressedColor = new Color(200f / 255f, 200f / 255f, 200f / 255f),
+        selectedColor = new Color(200f/255f, 1f, 200f/255f),
+        disabledColor = new Color(200f / 255f, 200f / 255f, 200f / 255f, 128f / 255f)
+    };
 
     public void OnEnable()
     {
@@ -193,6 +205,26 @@ public class MainEditorWindow : EditorWindow
                     Selection.activeGameObject,
                     mainScript.lightCrystalSpawning.presetCrystal,
                     selectedID);
+            }
+        }
+
+        EditorGUILayout.LabelField("ColorBlock preset");
+        selectableColorBlock.normalColor = EditorGUILayout.ColorField("normalColor", selectableColorBlock.normalColor);
+        selectableColorBlock.highlightedColor = EditorGUILayout.ColorField("highlightedColor", selectableColorBlock.highlightedColor);
+        selectableColorBlock.pressedColor = EditorGUILayout.ColorField("pressedColor", selectableColorBlock.pressedColor);
+        selectableColorBlock.selectedColor = EditorGUILayout.ColorField("selectedColor", selectableColorBlock.selectedColor);
+        selectableColorBlock.disabledColor = EditorGUILayout.ColorField("disabledColor", selectableColorBlock.disabledColor);
+        selectableColorBlock.colorMultiplier = EditorGUILayout.FloatField("colorMultiplier", selectableColorBlock.colorMultiplier);
+        selectableColorBlock.fadeDuration = EditorGUILayout.FloatField("fadeDuration", selectableColorBlock.fadeDuration);
+
+        if (GUILayout.Button("Clean all selectables"))
+        {
+            Selectable[] selectables = Resources.FindObjectsOfTypeAll<Selectable>();
+
+            Undo.RecordObjects(selectables, "Clean all selectables");
+            foreach (Selectable selectable in selectables)
+            {
+                selectable.colors = selectableColorBlock;
             }
         }
 

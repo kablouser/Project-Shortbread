@@ -12,7 +12,11 @@ public class ElementSelectorUI : MonoBehaviour
 
     public void Init(MainScript mainScript)
     {
-        button.onClick.AddListener(() => SelectNextElement(mainScript.craftingSystem.resources));
+        button.onClick.AddListener(() =>
+        {
+            SelectNextElement(mainScript.craftingSystem.resources);
+            mainScript.audioSystem.PlayVFX(mainScript.audioSystem.craftingVFX);
+        });
     }
 
     public void ResetUI()
@@ -22,7 +26,7 @@ public class ElementSelectorUI : MonoBehaviour
         elementImage.enabled = false;
     }
 
-    public void SelectNextElement(ForEachElement<CraftingResource> resources)
+    public void SelectNextElement(in ForEachElement<CraftingResource> resources)
     {
         for (int e = 1; e < ForEachElement<int>.LENGTH + 1; e++)
         {
@@ -40,5 +44,6 @@ public class ElementSelectorUI : MonoBehaviour
                 return;
             }
         }
+        ResetUI();
     }
 }
