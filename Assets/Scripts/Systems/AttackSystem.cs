@@ -2,7 +2,6 @@ using System;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static UnityEditor.FilePathAttribute;
 
 [Serializable]
 public struct ProjectileEntity
