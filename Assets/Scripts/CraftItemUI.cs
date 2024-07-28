@@ -44,7 +44,7 @@ public class CraftItemUI : MonoBehaviour
         }
 
         craftItemI = inCraftItemI;
-        craftButton.onClick.AddListener(() => mainScript.craftingSystem.CraftItem(mainScript, craftItemI));
+        //craftButton.onClick.AddListener(() => mainScript.craftingSystem.CraftItem(mainScript, craftItemI));
 
         UpdateIsCrafted(craftItem, mainScript.craftingSystem);
     }
@@ -55,9 +55,9 @@ public class CraftItemUI : MonoBehaviour
         for (int i = 0; i < ForEachElement<TextMeshProUGUI>.LENGTH; i++)
         {
             bool costGood = craftItem.costs[i] <= craftingSystem.resources[i].value;
-            costDisplays[i].color = costGood ?
-                craftingSystem.costGood :
-                craftingSystem.costBad;
+            //costDisplays[i].color = costGood ?
+            //    craftingSystem.costGood :
+            //    craftingSystem.costBad;
 
             allCostGood &= costGood;
         }
