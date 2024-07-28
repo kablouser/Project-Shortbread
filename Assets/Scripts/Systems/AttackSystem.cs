@@ -315,7 +315,12 @@ public struct AttackSystem
             default: break;
 
             case IDType.Player:
-                DamageWithoutDespawn(ref mainScript.player, damage);
+                if (DamageWithoutDespawn(ref mainScript.player, damage))
+                {
+                    // player's listener is disabled.
+                    mainScript.backupListener.transform.position = mainScript.player.transform.position;
+                    mainScript.backupListener.SetActive(true);
+                }
                 mainScript.healthBar.UpdateHealthBar(mainScript.player.health);
                 return true;
 

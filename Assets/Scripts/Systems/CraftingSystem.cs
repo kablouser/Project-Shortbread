@@ -157,28 +157,31 @@ public struct CraftingSystem
                     // transform after the listParent
                     RectTransform selectedRoot = (RectTransform)lastSelected.transform.GetParentUntil(listParent);
 
-                    Vector2 listParentAnchorPos = listParent.anchoredPosition;
-
-                    float viewHeight = scrollRect.GetComponent<RectTransform>().rect.height;
-
-                    Vector2 viewRange = new Vector2(listParentAnchorPos.y, listParentAnchorPos.y + viewHeight);
-
-                    float minPos =
-                        -(selectedRoot.anchoredPosition.y + selectedRoot.sizeDelta.y / 2);
-                    float maxPos =
-                        -(selectedRoot.anchoredPosition.y - selectedRoot.sizeDelta.y / 2);
-
-                    if (minPos < viewRange.x)
+                    if (selectedRoot)
                     {
-                        listParentAnchorPos.y = -(selectedRoot.anchoredPosition.y + selectedRoot.sizeDelta.y / 2);
-                    }
-                    if (viewRange.y < maxPos)
-                    {
-                        listParentAnchorPos.y = -viewHeight -
-                            (selectedRoot.anchoredPosition.y - selectedRoot.sizeDelta.y / 2);
-                    }
+                        Vector2 listParentAnchorPos = listParent.anchoredPosition;
 
-                    listParent.anchoredPosition = listParentAnchorPos;
+                        float viewHeight = scrollRect.GetComponent<RectTransform>().rect.height;
+
+                        Vector2 viewRange = new Vector2(listParentAnchorPos.y, listParentAnchorPos.y + viewHeight);
+
+                        float minPos =
+                            -(selectedRoot.anchoredPosition.y + selectedRoot.sizeDelta.y / 2);
+                        float maxPos =
+                            -(selectedRoot.anchoredPosition.y - selectedRoot.sizeDelta.y / 2);
+
+                        if (minPos < viewRange.x)
+                        {
+                            listParentAnchorPos.y = -(selectedRoot.anchoredPosition.y + selectedRoot.sizeDelta.y / 2);
+                        }
+                        if (viewRange.y < maxPos)
+                        {
+                            listParentAnchorPos.y = -viewHeight -
+                                (selectedRoot.anchoredPosition.y - selectedRoot.sizeDelta.y / 2);
+                        }
+
+                        listParent.anchoredPosition = listParentAnchorPos;
+                    }
                 }
             }
         }

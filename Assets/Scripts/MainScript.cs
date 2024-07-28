@@ -50,6 +50,8 @@ public class MainScript : MonoBehaviour
     public TMPro.TextMeshProUGUI barrierTutorialText;
     public TMPro.TextMeshProUGUI gameStartText;
 
+    public GameObject backupListener;
+
     public void Awake()
     {
         playerControls = new PlayerControls();
@@ -509,6 +511,10 @@ public class MainScript : MonoBehaviour
                 gameOverScreen.Enable(this);
                 break;
         }
+    }
 
+    public void ExitCraftingMenu()
+    {
+        craftingSystem.ExitMenu(this);
     }
 }

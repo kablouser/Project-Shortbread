@@ -94,12 +94,14 @@ public static class Extensions
     {
         Transform current = transform;
         Transform parent = transform.parent;
-        while (parent != untilThisIsParent)
+        while (parent != null && parent != untilThisIsParent)
         {
             current = parent;
             parent = current.parent;
         }
 
+        if (parent == null)
+            return null;
         return current;
     }
 }
