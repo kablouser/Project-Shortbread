@@ -47,6 +47,7 @@ public class MainScript : MonoBehaviour
     public GameState gameState;
 
     public TMPro.TextMeshProUGUI shootTutorialText;
+    public TMPro.TextMeshProUGUI barrierTutorialText;
     public TMPro.TextMeshProUGUI gameStartText;
 
     public void Awake()
@@ -56,7 +57,7 @@ public class MainScript : MonoBehaviour
 
     public void Start()
     {
-        gameState = GameState.Tutorial;
+        SetGameState(GameState.TutorialBlast, true);
 
         QualitySettings.vSyncCount = 1;
 #if UNITY_EDITOR
@@ -92,8 +93,6 @@ public class MainScript : MonoBehaviour
         pickupSystem.SpawnPickup(PickupType.Air, new Vector2(-1, -10f), 1f);
         pickupSystem.SpawnPickup(PickupType.Water, new Vector2(0.5f, -9), 1f);
         SpawnLightCrystal(new Vector2(0.7f, -5));
-
-        gameTimer.timerText.SetText(gameTimer.GetTimeLeftString());
     }
 
     public void OnValidate()
@@ -142,7 +141,7 @@ public class MainScript : MonoBehaviour
             gameTimer.currentTime += Time.deltaTime;
             if (gameTimer.currentTime >= gameTimer.timeToSurvive)
             {
-                GameOver(GameState.Win);
+                SetGameState(GameState.Win);
             }
 
             gameTimer.timerText.SetText(gameTimer.GetTimeLeftString());
@@ -159,7 +158,7 @@ public class MainScript : MonoBehaviour
         }
         else if (gameState == GameState.Survive)
         {
-            GameOver(GameState.Death);
+            SetGameState(GameState.Death);
         }
 
         if (gameState == GameState.Survive || gameState == GameState.Death || gameState == GameState.NoPower)
@@ -261,7 +260,7 @@ public class MainScript : MonoBehaviour
 
             if (centreLight.currentPower <= 0f)
             {
-                GameOver(GameState.NoPower);
+                SetGameState(GameState.NoPower);
             }
         }
 
@@ -451,10 +450,65 @@ public class MainScript : MonoBehaviour
         }
     }
 
-    public void GameOver(GameState endState)
+    public void SetGameState(GameState newState, bool isStart = false)
     {
-        gameState = endState;
-        craftingSystem.ExitMenu(this);
-        gameOverScreen.Enable(this);
+        if (gameState == newState && !isStart)
+            return;
+
+        // old state
+        switch(gameState)
+        {
+            case GameState.TutorialBlast:
+                shootTutorialText.gameObject.SetActive(false);
+                centreLight.uiPowerBar.gameObject.SetActive(true);
+                break;
+
+            case GameState.TutorialBarrierPower:
+                barrierTutorialText.enabled = false;
+                break;
+
+            case GameState.Survive:
+                gameStartText.enabled = false;
+                break;
+
+            case GameState.Win:
+            case GameState.Death:
+            case GameState.NoPower:
+                craftingSystem.ExitMenu(this);
+                gameOverScreen.Enable(this);
+                break;
+        }
+
+        gameState = newState;
+
+        // new
+        switch (newState)
+        {
+            case GameState.TutorialBlast:
+                shootTutorialText.gameObject.SetActive(true);
+                centreLight.uiPowerBar.gameObject.SetActive(false);
+                break;
+
+            case GameState.TutorialBarrierPower:
+                barrierTutorialText.enabled = true;
+                barrierTutorialText.alpha = 1.0f;
+                barrierTutorialText.CrossFadeAlpha(0f, 5.0f, true);
+                break;
+
+
+            case GameState.Survive:
+                gameStartText.enabled = true;
+                gameStartText.alpha = 1.0f;
+                gameStartText.CrossFadeAlpha(0.0f, 3.0f, true);
+                break;
+
+            case GameState.Win:
+            case GameState.Death:
+            case GameState.NoPower:
+                craftingSystem.ExitMenu(this);
+                gameOverScreen.Enable(this);
+                break;
+        }
+
     }
 }

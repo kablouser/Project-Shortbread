@@ -386,4 +386,4 @@ public struct GameTimer
     }
 }
 
-public enum GameState { Tutorial, Survive, Win, Death, NoPower };
+public enum GameState { TutorialBlast, TutorialBarrierPower, Survive, Win, Death, NoPower };

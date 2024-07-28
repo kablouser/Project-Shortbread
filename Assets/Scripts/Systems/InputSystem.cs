@@ -41,7 +41,7 @@ public struct InputSystem
         {
             if (deviceI != null)
             {
-                if (deviceI.noisy)
+                if (deviceI.noisy || deviceI is Gamepad)
                 {
                     foreach (var controlI in deviceI.allControls)
                     {

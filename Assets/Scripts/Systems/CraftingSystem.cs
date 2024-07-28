@@ -134,7 +134,7 @@ public struct CraftingSystem
         interactPrompt.enabled =
             !craftingPanel.activeSelf &&
             inRange &&
-            (mainScript.gameState == GameState.Tutorial || mainScript.gameState == GameState.Survive);
+            (mainScript.gameState <= GameState.Survive);
 
         if (craftingPanel.activeSelf)
         {
@@ -209,12 +209,10 @@ public struct CraftingSystem
         mainScript.eventSystem.firstSelectedGameObject = null;
         mainScript.eventSystem.SetSelectedGameObject(null);
 
-        if (mainScript.gameState == GameState.Tutorial)
+        if (mainScript.gameState < GameState.Survive)
         {
             // start game
-            mainScript.gameState = GameState.Survive;
-            mainScript.gameStartText.enabled = true;
-            mainScript.gameStartText.CrossFadeAlpha(0.0f, 3.0f, true);
+            mainScript.SetGameState(GameState.Survive);
         }
     }
 

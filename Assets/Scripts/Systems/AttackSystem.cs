@@ -1,8 +1,5 @@
 using System;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
-using UnityEngine.UIElements;
-using static UnityEditor.FilePathAttribute;
 
 [Serializable]
 public struct ProjectileEntity
@@ -337,11 +334,12 @@ public struct AttackSystem
                     if (DamageCrystal(ref mainScript.lightCrystals[id.index], damage, id, ref mainScript.lightCrystals))
                     {
                         mainScript.pickupSystem.SpawnLightShards(mainScript, position, mainScript.lightCrystals[id.index].lightPower);
-                        if (mainScript.shootTutorialText)
+
+                        if (mainScript.gameState == GameState.TutorialBlast)
                         {
-                            UnityEngine.Object.Destroy(mainScript.shootTutorialText.transform.parent.gameObject);
-                            mainScript.shootTutorialText = null;
+                            mainScript.SetGameState(GameState.TutorialBarrierPower);
                         }
+
                         mainScript.audioSystem.PlayDeathVFX(IDType.LightCrystal, position);
                         return true;
                     }
