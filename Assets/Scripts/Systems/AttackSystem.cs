@@ -383,23 +383,38 @@ public struct AttackSystem
                         {
                             Vector3 bossPos = boss.unit.transform.position;
 
-                            for (int i = 0; i < spawnData.dropResources; i++)
+                            int dropAmount = UnityEngine.Random.Range(boss.pickupMin, boss.pickupMax + 1);
+                            for (int i = 0; i < dropAmount; i++)
                             {
-                                float choose = UnityEngine.Random.Range(0f, total);
-                                float sum = 0f;
-                                PickupType pickupType;
-                                if (choose < sum.Accumulate(spawnData.fire))
-                                    pickupType = PickupType.Fire;
-                                else if (choose < sum.Accumulate(spawnData.earth))
-                                    pickupType = PickupType.Earth;
-                                else if (choose < sum.Accumulate(spawnData.air))
-                                    pickupType = PickupType.Air;
-                                else
-                                    pickupType = PickupType.Water;
-
-                                mainScript.pickupSystem.SpawnPickup(pickupType, bossPos.AddRandom(0.05f), 1f);
-                                mainScript.audioSystem.PlayDeathVFX(IDType.Boss0, bossPos);
+                                mainScript.pickupSystem.SpawnPickup(boss.pickupType, bossPos.AddRandom(0.05f), 1f);
                             }
+                            mainScript.audioSystem.PlayDeathVFX(IDType.Boss0, bossPos);
+
+                            //for (int i = 0; i < spawnData.dropResources; i++)
+                            //{
+                            //    float choose = UnityEngine.Random.Range(0f, total);
+                            //    float sum = 0f;
+                            //    PickupType pickupType;
+                            //    if (choose < sum.Accumulate(spawnData.fire))
+                            //        pickupType = PickupType.Fire;
+                            //    else if (choose < sum.Accumulate(spawnData.earth))
+                            //        pickupType = PickupType.Earth;
+                            //    else if (choose < sum.Accumulate(spawnData.air))
+                            //        pickupType = PickupType.Air;
+                            //    else
+                            //        pickupType = PickupType.Water;
+
+                            //    mainScript.pickupSystem.SpawnPickup(pickupType, bossPos.AddRandom(0.05f), 1f);
+                            //    mainScript.audioSystem.PlayDeathVFX(IDType.Boss0, bossPos);
+                            //}
+                        }
+
+                        // Remove other bosses
+                        foreach(int i in mainScript.bosses0)
+                        {
+                            mainScript.bosses0[i].unit.transform.gameObject.SetActive(false);
+                            mainScript.bosses0[i].bossIndicator.indicatorHolder.gameObject.SetActive(false);
+                            mainScript.bosses0.TryDespawn(i);
                         }
 
                         mainScript.shakeSystem.Shake(0.7f);

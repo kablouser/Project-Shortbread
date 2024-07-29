@@ -4,8 +4,6 @@ using System;
 using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
 using TMPro;
-using Unity.VisualScripting.FullSerializer;
-using JetBrains.Annotations;
 
 public enum Team { Neutral, Player, Enemy };
 
@@ -293,8 +291,17 @@ public struct TextAndSlider
 public struct IndicatorAndLocation
 {
     public RectTransform indicatorHolder;
+    public Image indicatorImage;
     public Vector2 position;
     public float distance;
+
+    public IndicatorAndLocation(IndicatorUI indicator)
+    {
+        indicatorHolder = indicator.indicatorHolder;
+        indicatorImage = indicator.indicatorImage;
+        position = Vector2.zero;
+        distance = 0f;
+    }
 
     public void Update(MainScript main)
     {
@@ -332,13 +339,72 @@ public struct Boss0Entity
     // other components here
     // e.g. limbs system
 
+    public PickupType pickupType;
+    public int pickupMax;
+    public int pickupMin;
+
+    public IndicatorAndLocation bossIndicator;
+
     public Boss0Entity(
         GameObject go,
         in Boss0Entity template,
-        ID id)
+        ID id,
+        IndicatorAndLocation bossIndicator)
     {
         this = template;
         unit = new UnitEntity(go, template.unit, id);
+        this.bossIndicator = bossIndicator;
+    }
+
+    public Boss0Entity(
+        GameObject go,
+        in Boss0Entity template,
+        ID id,
+        IndicatorUI Indicator)
+    {
+        this = template;
+        unit = new UnitEntity(go, template.unit, id);
+        bossIndicator = new IndicatorAndLocation(Indicator);
+    }
+
+    public void UpdatePickupType(PickupType pickupType, int pickupMax, int pickupMin, MainScript mainScript)
+    {
+        this.pickupType = pickupType;
+        this.pickupMax = pickupMax;
+        this.pickupMin = pickupMin;
+
+        Color bossColor = mainScript.pickupColor.GetColor(pickupType);
+        bossIndicator.indicatorImage.color = bossColor;
+        unit.spriteRenderer.color = bossColor;
+    }
+}
+
+[Serializable]
+public struct PickupColor
+{
+    public Color Light;
+    public Color Fire;
+    public Color Earth;
+    public Color Air;
+    public Color Water;
+
+    public Color GetColor(PickupType pickupType)
+    {
+        switch (pickupType)
+        {
+            case PickupType.Light:
+                return Light;
+            case PickupType.Fire:
+                return Fire;
+            case PickupType.Earth:
+                return Earth;
+            case PickupType.Air:
+                return Air;
+            case PickupType.Water:
+                return Water;
+        }
+
+        return Color.white;
     }
 }
 

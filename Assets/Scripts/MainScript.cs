@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -25,7 +27,9 @@ public class MainScript : MonoBehaviour
     public LightShardData lightShardData;
     public IndicatorAndLocation lightCrystalIndicator;
     public IndicatorAndLocation centreIndicator;
-    public IndicatorAndLocation bossIndicator;
+    public IndicatorUI bossIndicatorUIPrefab;
+    public GameObject IndicatorHolder;
+    public PickupColor pickupColor;
 
     public GameTimer gameTimer;
     public GameOverScreen gameOverScreen;
@@ -41,6 +45,9 @@ public class MainScript : MonoBehaviour
     public Vector2 mapBoundsMax = Vector2.zero;
     public Vector2 mapBoundsMin = Vector2.zero;
     public float centreRadius = 1f;
+
+    // This is temporary
+    public Transform[] bossSpawnPositions;
 
     public PlayerControls playerControls;
     public UnityEngine.EventSystems.EventSystem eventSystem;
@@ -223,24 +230,41 @@ public class MainScript : MonoBehaviour
 
                 boss0SpawnData.spawnTimeLeft = boss0SpawnData.timeBetweenSpawns;
 
-                if (!RandomPositionAwayFromPlayer(boss0SpawnData.minDistanceToPlayer, out Vector2 randomPosition))
-                    continue;
+                //if (!RandomPositionAwayFromPlayer(boss0SpawnData.minDistanceToPlayer, out Vector2 randomPosition))
+                //    continue;
 
-                ID id = bosses0.Spawn();
-                ref Boss0Entity boss = ref bosses0[id.index];
+                List<Transform> tempbossSpawnPosition = bossSpawnPositions.ToList<Transform>();
+                List<int> elementTypeList = new List<int>{ 1, 2, 3, 4};
 
-                if (boss.unit.IsValid())
+                for(int i = 0; i < 3; i++)
                 {
-                    boss = new Boss0Entity(boss.unit.transform.gameObject, boss0SpawnData.presetUnit, id);
-                    boss.unit.transform.position = randomPosition;
-                    boss.unit.transform.gameObject.SetActive(true);
-                }
-                else
-                {
-                    boss = new Boss0Entity(
-                        Instantiate(boss0SpawnData.prefab, randomPosition, Quaternion.identity),
-                        boss0SpawnData.presetUnit,
-                        id);
+                    int randomIndex = Random.Range(0, tempbossSpawnPosition.Count);
+                    Vector2 randomPosition = tempbossSpawnPosition[randomIndex].position;
+                    tempbossSpawnPosition.RemoveAt(randomIndex);
+
+                    int randomElementIndex = Random.Range(0, elementTypeList.Count);
+                    PickupType elementType = (PickupType)elementTypeList[randomElementIndex];
+                    elementTypeList.RemoveAt(randomElementIndex);
+
+                    ID id = bosses0.Spawn();
+                    ref Boss0Entity boss = ref bosses0[id.index];
+
+                    if (boss.unit.IsValid())
+                    {
+                        boss = new Boss0Entity(boss.unit.transform.gameObject, boss0SpawnData.presetUnit, id, boss.bossIndicator);
+                        boss.unit.transform.position = randomPosition;
+                        boss.unit.transform.gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        boss = new Boss0Entity(
+                            Instantiate(boss0SpawnData.prefab, randomPosition, Quaternion.identity),
+                            boss0SpawnData.presetUnit,
+                            id,
+                            Instantiate(bossIndicatorUIPrefab, IndicatorHolder.transform));
+                    }
+
+                    boss.UpdatePickupType(elementType, 4, 2, this);
                 }
 
                 // despawn all crystals
@@ -294,19 +318,13 @@ public class MainScript : MonoBehaviour
 
             lightCrystalIndicator.Update(this);
 
-            // Find closest boss
-            bossIndicator.distance = float.PositiveInfinity;
+            // Update all boss indicators
             foreach (int Index in bosses0)
             {
-                float TempDistance = Vector2.SqrMagnitude(player.rigidbody.position - (Vector2)bosses0[Index].unit.transform.position);
-                if (TempDistance < bossIndicator.distance)
-                {
-                    bossIndicator.distance = TempDistance;
-                    bossIndicator.position = bosses0[Index].unit.transform.position;
-                }
+                bosses0[Index].bossIndicator.distance = Vector2.SqrMagnitude(player.rigidbody.position - (Vector2)bosses0[Index].unit.transform.position);
+                bosses0[Index].bossIndicator.position = bosses0[Index].unit.transform.position;
+                bosses0[Index].bossIndicator.Update(this);
             }
-
-            bossIndicator.Update(this);
         }
 
         attackSystem.Update(this);
