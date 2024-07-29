@@ -291,6 +291,7 @@ public struct TextAndSlider
 public struct IndicatorAndLocation
 {
     public RectTransform indicatorHolder;
+    public RectTransform indicatorArrowTransform;
     public Image indicatorImage;
     public Vector2 position;
     public float distance;
@@ -298,6 +299,7 @@ public struct IndicatorAndLocation
     public IndicatorAndLocation(IndicatorUI indicator)
     {
         indicatorHolder = indicator.indicatorHolder;
+        indicatorArrowTransform = indicator.indicatorArrowTransform;
         indicatorImage = indicator.indicatorImage;
         position = Vector2.zero;
         distance = 0f;
@@ -327,6 +329,10 @@ public struct IndicatorAndLocation
             Vector2 indicatorPosition = main.mainCamera.WorldToViewportPoint(cameraPosition + (position - cameraPosition).normalized * indicatorDistanceFromPlayer);
             indicatorHolder.anchorMin = indicatorPosition;
             indicatorHolder.anchorMax = indicatorPosition;
+
+            Vector3 arrowRotation = indicatorArrowTransform.rotation.eulerAngles;
+            arrowRotation.z = Mathf.Atan2(position.y - cameraPosition.y, position.x - cameraPosition.x) * Mathf.Rad2Deg - 90;
+            indicatorArrowTransform.rotation = Quaternion.Euler(arrowRotation);
         }
     }
 }
