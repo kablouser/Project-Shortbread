@@ -53,6 +53,8 @@ public class MainScript : MonoBehaviour
     public UnityEngine.EventSystems.EventSystem eventSystem;
 
     public GameState gameState;
+    // controls what types of enemies can spawn
+    public int numberBossesDefeated;
 
     public TMPro.TextMeshProUGUI shootTutorialText;
     public TMPro.TextMeshProUGUI barrierTutorialText;
@@ -212,6 +214,11 @@ public class MainScript : MonoBehaviour
                                 enemiesSpawnRates[i].presetUnit,
                                 id);
                         }
+
+                        if (0 < numberBossesDefeated)
+                            enemy.attack.variant = Random.value < 0.8f ? 0 : 1;
+                        else
+                            enemy.attack.variant = 0;
                     }
                 }
             }
@@ -230,17 +237,16 @@ public class MainScript : MonoBehaviour
 
                 boss0SpawnData.spawnTimeLeft = boss0SpawnData.timeBetweenSpawns;
 
-                //if (!RandomPositionAwayFromPlayer(boss0SpawnData.minDistanceToPlayer, out Vector2 randomPosition))
-                //    continue;
-
-                List<Transform> tempbossSpawnPosition = bossSpawnPositions.ToList<Transform>();
+                //List<Transform> tempbossSpawnPosition = bossSpawnPositions.ToList<Transform>();
                 List<int> elementTypeList = new List<int>{ 1, 2, 3, 4};
-
                 for(int i = 0; i < 3; i++)
                 {
-                    int randomIndex = Random.Range(0, tempbossSpawnPosition.Count);
-                    Vector2 randomPosition = tempbossSpawnPosition[randomIndex].position;
-                    tempbossSpawnPosition.RemoveAt(randomIndex);
+                    if (!RandomPositionAwayFromPlayer(boss0SpawnData.minDistanceToPlayer, out Vector2 randomPosition))
+                        continue;
+
+                    int randomIndex = Random.Range(0, elementTypeList.Count);
+                    //Vector2 randomPosition = tempbossSpawnPosition[randomIndex].position;
+                    //tempbossSpawnPosition.RemoveAt(randomIndex);
 
                     int randomElementIndex = Random.Range(0, elementTypeList.Count);
                     PickupType elementType = (PickupType)elementTypeList[randomElementIndex];
@@ -264,7 +270,7 @@ public class MainScript : MonoBehaviour
                             Instantiate(bossIndicatorUIPrefab, IndicatorHolder.transform));
                     }
 
-                    boss.UpdatePickupType(elementType, 4, 2, this);
+                    boss.UpdatePickupType(elementType, this);
                 }
 
                 // despawn all crystals

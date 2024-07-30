@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
 using TMPro;
@@ -21,7 +20,7 @@ public enum AnimationClipIndex
     Attack,
 };
 
-[Serializable]
+[System.Serializable]
 public struct SpriteSheet
 {
 #if UNITY_EDITOR
@@ -32,7 +31,7 @@ public struct SpriteSheet
     public List<Sprite> spriteSheet;
 }
 
-[Serializable]
+[System.Serializable]
 public struct AnimationClip
 {
 #if UNITY_EDITOR
@@ -50,7 +49,7 @@ public struct AnimationClip
     public readonly bool IsValid => startIndex <= endIndex;
 }
 
-[Serializable]
+[System.Serializable]
 public struct AnimationComponent
 {
     public SpriteSheetIndex spriteSheetIndex;
@@ -58,7 +57,7 @@ public struct AnimationComponent
     public int currentIndex;
 }
 
-[Flags]
+[System.Flags]
 public enum AnimationEventFlags
 {
     None,
@@ -66,7 +65,7 @@ public enum AnimationEventFlags
     Special,
 }
 
-[Serializable]
+[System.Serializable]
 public struct AnimationEvent
 {
     public ID id;
@@ -79,7 +78,7 @@ public enum ProjectileType
     Default,
 }
 
-[Serializable]
+[System.Serializable]
 public struct AttackComponent
 {
     public bool isAttacking;
@@ -92,11 +91,13 @@ public struct AttackComponent
     public float meleeAttackTime;
     public ID singleTarget;
 
+    public int variant;
+    public float attackDelay;
+
     public bool Reload(in ProjectileAttackPreset preset, StatsModifierComponent stats)
     {
         if (0 < ammoShot)
         {
-            attackCooldown = 0f;
             reloadCooldown = preset.reloadCooldown * stats.reloadSpeedModifier;
             return true;
         }
@@ -104,7 +105,10 @@ public struct AttackComponent
     }
 }
 
-[Serializable]
+public enum EnemyVariants { Melee, Ranged };
+public enum BossVariants { Ranged };
+
+[System.Serializable]
 public struct HealthComponent
 {
     public int baseHealth;
@@ -112,7 +116,7 @@ public struct HealthComponent
     public int max;
 }
 
-[Serializable]
+[System.Serializable]
 public struct UnitEntity
 {
     public Transform transform;
@@ -159,7 +163,7 @@ public struct UnitEntity
     }
 }
 
-[Serializable]
+[System.Serializable]
 public struct EnemyData
 {
     public GameObject enemyPrefab;
@@ -170,7 +174,7 @@ public struct EnemyData
     public float currentNumberToSpawn;
 }
 
-[Serializable]
+[System.Serializable]
 public struct Boss0SpawnData
 {
     public GameObject prefab;
@@ -190,14 +194,14 @@ public struct Boss0SpawnData
     public float water;
 }
 
-[Serializable]
+[System.Serializable]
 public struct PlayerLight
 {
     public Light2D light;
     public float baseLightRange;
 }
 
-[Serializable]
+[System.Serializable]
 public struct CentreLight
 {
     public Light2D light;
@@ -215,7 +219,7 @@ public struct CentreLight
     public float currentPower;
 }
 
-[Serializable]
+[System.Serializable]
 public struct LightCrystalSpawning
 {
     public float crystalsToSpawnPerArea;
@@ -231,7 +235,7 @@ public struct LightCrystalSpawning
     }
 }
 
-[Serializable]
+[System.Serializable]
 public struct LightCrystal
 {
     public Transform transform;
@@ -258,13 +262,13 @@ public struct LightCrystal
     }
 }
 
-[Serializable]
+[System.Serializable]
 public struct LightShardData
 {
     public float maxPowerPerShard;
 }
 
-[Serializable]
+[System.Serializable]
 public struct TextAndSlider
 {
     public TextMeshProUGUI text;
@@ -287,7 +291,7 @@ public struct TextAndSlider
     }
 }
 
-[Serializable]
+[System.Serializable]
 public struct IndicatorAndLocation
 {
     public RectTransform indicatorHolder;
@@ -310,7 +314,7 @@ public struct IndicatorAndLocation
         Vector2 cameraPosition = main.mainCamera.transform.position;
         float verticleExtent = main.mainCamera.orthographicSize;
         float horizontalExtent = verticleExtent * Screen.width / Screen.height;
-        float indicatorDistanceFromPlayer = 2f;
+        //float indicatorDistanceFromPlayer = 2f;
 
         if (!float.IsFinite(distance) ||
             ((cameraPosition.x - horizontalExtent) < position.x
@@ -326,7 +330,18 @@ public struct IndicatorAndLocation
             // lightCrystalIndicator.indicatorArrow.enabled = true;
             indicatorHolder.gameObject.SetActive(true);
 
-            Vector2 indicatorPosition = main.mainCamera.WorldToViewportPoint(cameraPosition + (position - cameraPosition).normalized * indicatorDistanceFromPlayer);
+            //Vector2 indicatorPosition = main.mainCamera.WorldToViewportPoint(cameraPosition + (position - cameraPosition).normalized * indicatorDistanceFromPlayer);
+            Vector2 indicatorPosition = main.mainCamera.WorldToViewportPoint(position);
+            {
+                // range from 0 to 1
+                const float DIST_FROM_EDGE = 0.1f;
+                Vector2 fromMiddle = indicatorPosition - new Vector2(0.5f, 0.5f);
+                float maxValue = Mathf.Max(Mathf.Abs(fromMiddle.x), Mathf.Abs(fromMiddle.y));
+                if (0.5f - DIST_FROM_EDGE < maxValue)
+                {
+                    indicatorPosition = fromMiddle / maxValue * (0.5f - DIST_FROM_EDGE) + new Vector2(0.5f, 0.5f);
+                }
+            }
             indicatorHolder.anchorMin = indicatorPosition;
             indicatorHolder.anchorMax = indicatorPosition;
 
@@ -337,7 +352,7 @@ public struct IndicatorAndLocation
     }
 }
 
-[Serializable]
+[System.Serializable]
 public struct Boss0Entity
 {
     public UnitEntity unit;
@@ -346,8 +361,6 @@ public struct Boss0Entity
     // e.g. limbs system
 
     public PickupType pickupType;
-    public int pickupMax;
-    public int pickupMin;
 
     public IndicatorAndLocation bossIndicator;
 
@@ -373,11 +386,9 @@ public struct Boss0Entity
         bossIndicator = new IndicatorAndLocation(Indicator);
     }
 
-    public void UpdatePickupType(PickupType pickupType, int pickupMax, int pickupMin, MainScript mainScript)
+    public void UpdatePickupType(PickupType pickupType, MainScript mainScript)
     {
         this.pickupType = pickupType;
-        this.pickupMax = pickupMax;
-        this.pickupMin = pickupMin;
 
         Color bossColor = mainScript.pickupColor.GetColor(pickupType);
         bossIndicator.indicatorImage.color = bossColor;
@@ -385,7 +396,7 @@ public struct Boss0Entity
     }
 }
 
-[Serializable]
+[System.Serializable]
 public struct PickupColor
 {
     public Color Light;
@@ -414,7 +425,7 @@ public struct PickupColor
     }
 }
 
-[Serializable]
+[System.Serializable]
 public struct GameOverScreen
 {
     public GameObject gameOverScreen;
@@ -443,7 +454,7 @@ public struct GameOverScreen
     }
 }
 
-[Serializable]
+[System.Serializable]
 public struct GameTimer
 {
     public TMP_Text timerText;

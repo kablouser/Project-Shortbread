@@ -21,6 +21,41 @@ public struct AISystem
         {
             ref UnitEntity enemy = ref mainScript.enemies[enemyID];
             Vector2 velocity = (playerPosition - (Vector2)enemy.transform.position).normalized * enemy.moveSpeed;
+
+            enemy.attack.isAttacking = true;
+
+            if (enemy.attack.variant == (int)EnemyVariants.Ranged)
+            {
+                enemy.SetRotationDegrees(velocity);
+                enemy.attack.isAttacking = false;
+                // attacked. now reloading
+                if (enemy.attack.reloadCooldown > 0f)
+                {
+                    enemy.rigidbody.velocity = Vector2.zero;
+                    continue;
+                }
+                // ready to attack, delay a little
+                else if (enemy.attack.attackCooldown <= 0f && enemy.attack.ammoShot == 0)
+                {
+                    if (0f < enemy.attack.attackDelay)
+                    {
+                        enemy.attack.attackDelay -= Time.fixedDeltaTime;
+                        if (enemy.attack.attackDelay <= 0f)
+                        {
+                            enemy.attack.isAttacking = true;
+                            enemy.attack.attackDelay = 0f;
+                        }
+                    }
+                    else
+                    {
+                        enemy.attack.attackDelay = 0.5f;
+                    }
+
+                    enemy.rigidbody.velocity = Vector2.zero;
+                    continue;
+                }
+            }
+
             enemy.rigidbody.velocity = velocity;
         }
 
@@ -47,9 +82,16 @@ public struct AISystem
             if (boss.hasAgro)
             {
                 // normalise
-                boss.unit.rigidbody.velocity = toPlayer / distanceToPlayer * boss.unit.moveSpeed;
+                if (boss.unit.attack.reloadCooldown == 0f)
+                {
+                    boss.unit.rigidbody.velocity = Vector2.zero;
+                }
+                else
+                {
+                    boss.unit.rigidbody.velocity = toPlayer / distanceToPlayer * boss.unit.moveSpeed;
+                }
                 boss.unit.attack.isAttacking = true;
-                boss.unit.SetRotationDegrees(boss.unit.rigidbody.velocity);
+                boss.unit.SetRotationDegrees(toPlayer);
             }
         }
     }

@@ -1,7 +1,6 @@
-using System;
 using UnityEngine;
 
-[Serializable]
+[System.Serializable]
 public struct ProjectileEntity
 {
     public GameObject gameObject;
@@ -11,14 +10,14 @@ public struct ProjectileEntity
     public Vector2 lastPosition;
 }
 
-[Serializable]
+[System.Serializable]
 public struct ProjectileGroup
 {
     public GameObject prefab;
     public VersionedPool<ProjectileEntity> pool;
 }
 
-[Serializable]
+[System.Serializable]
 public struct MeleeAttackPreset
 {
     public float attackCooldown;
@@ -31,7 +30,7 @@ public struct MeleeAttackPreset
     public float attackTime;
 }
 
-[Serializable]
+[System.Serializable]
 public struct ProjectileAttackPreset
 {
     public float attackCooldown;
@@ -47,13 +46,14 @@ public struct ProjectileAttackPreset
     public float projectileRange;
 }
 
-[Serializable]
+[System.Serializable]
 public struct AttackSystem
 {
     public ProjectileGroup defaultProjectile;
 
     public ProjectileAttackPreset player;
-    public MeleeAttackPreset enemy;
+    public MeleeAttackPreset enemyMelee;
+    public ProjectileAttackPreset enemyRanged;
     public ProjectileAttackPreset boss0;
 
     public void Update(MainScript mainScript)
@@ -69,13 +69,20 @@ public struct AttackSystem
 
         foreach (int i in mainScript.enemies)
         {
-            UpdateAttackMelee(ref mainScript.enemies[i], enemy, mainScript);
+            switch (mainScript.enemies[i].attack.variant)
+            {
+                case (int)EnemyVariants.Melee:
+                    UpdateAttackMelee(ref mainScript.enemies[i], enemyMelee, mainScript);
+                    break;
+                case (int)EnemyVariants.Ranged:
+                    UpdateAttackProjectile(ref mainScript.enemies[i], IDType.Enemy, enemyRanged, defaultProjectile, mainScript);
+                    break;
+            }
         }
 
         foreach (int i in mainScript.bosses0)
         {
-            UpdateAttackProjectile(ref mainScript.bosses0[i].unit, IDType.Boss0,
-                boss0, defaultProjectile, mainScript);
+            UpdateAttackProjectile(ref mainScript.bosses0[i].unit, IDType.Boss0, boss0, defaultProjectile, mainScript);
         }
     }
 
@@ -169,6 +176,7 @@ public struct AttackSystem
         bool wasReloading = 0f < unit.attack.reloadCooldown;
 
         unit.attack.reloadCooldown = Mathf.Max(unit.attack.reloadCooldown - Time.deltaTime, 0f);
+        unit.attack.attackCooldown = Mathf.Max(unit.attack.attackCooldown - Time.deltaTime, 0f);
         if (0f < unit.attack.reloadCooldown)
         {
             return;
@@ -184,7 +192,6 @@ public struct AttackSystem
             }
         }
 
-        unit.attack.attackCooldown = Mathf.Max(unit.attack.attackCooldown - Time.deltaTime, 0f);
         if (0f < unit.attack.attackCooldown)
         {
             return;
@@ -236,6 +243,11 @@ public struct AttackSystem
 
             mainScript.audioSystem.PlayAttackSound(unitType, unit.transform.position);
         }
+    }
+
+    public void UpdateCharger()
+    {
+
     }
 
     // Projectile on trigger enter
@@ -330,13 +342,17 @@ public struct AttackSystem
                 if (0 < damage)
                 {
                     mainScript.shakeSystem.Shake(1.5f);
+                    mainScript.audioSystem.PlayRandomVFX(mainScript.audioSystem.playerHitVFX);
                 }
                 return true;
 
             case IDType.Enemy:
                 if (mainScript.enemies.IsValidID(id))
                 {
-                    DamageInPool(ref mainScript.enemies[id.index], damage, id, ref mainScript.enemies);
+                    if (DamageInPool(ref mainScript.enemies[id.index], damage, id, ref mainScript.enemies))
+                    {
+                        mainScript.audioSystem.PlayDeathVFX(IDType.Enemy, mainScript.enemies[id.index].transform.position);
+                    }
                     return true;
                 }
                 break;
@@ -383,10 +399,16 @@ public struct AttackSystem
                         {
                             Vector3 bossPos = boss.unit.transform.position;
 
-                            int dropAmount = UnityEngine.Random.Range(boss.pickupMin, boss.pickupMax + 1);
-                            for (int i = 0; i < dropAmount; i++)
+                            for (int i = 0; i < 4; i++)
                             {
-                                mainScript.pickupSystem.SpawnPickup(boss.pickupType, bossPos.AddRandom(0.05f), 1f);
+                                // randomise what elements are dropped. not how many. you should be able to craft after defeating a boss.
+                                if (Random.value < 0.7f)
+                                    // drop boss element
+                                    mainScript.pickupSystem.SpawnPickup(boss.pickupType, bossPos.AddRandom(0.05f), 1f);
+                                else
+                                    // drop other element
+                                    mainScript.pickupSystem.SpawnPickup(
+                                        (PickupType)Random.Range((int)PickupType.Fire, (int)PickupType.Water + 1), bossPos.AddRandom(0.05f), 1f);
                             }
                             mainScript.audioSystem.PlayDeathVFX(IDType.Boss0, bossPos);
 
@@ -409,8 +431,11 @@ public struct AttackSystem
                             //}
                         }
 
+                        // need to do this. maybe boss got killed far away
+                        boss.bossIndicator.indicatorHolder.gameObject.SetActive(false);
+
                         // Remove other bosses
-                        foreach(int i in mainScript.bosses0)
+                        foreach (int i in mainScript.bosses0)
                         {
                             mainScript.bosses0[i].unit.transform.gameObject.SetActive(false);
                             mainScript.bosses0[i].bossIndicator.indicatorHolder.gameObject.SetActive(false);
@@ -418,6 +443,7 @@ public struct AttackSystem
                         }
 
                         mainScript.shakeSystem.Shake(0.7f);
+                        mainScript.numberBossesDefeated++;
                     }
                     return true;
                 }
