@@ -55,6 +55,10 @@ public struct AISystem
                     continue;
                 }
             }
+            else if (enemy.attack.variant == (int)EnemyVariants.Charger && 0f < enemy.attack.chargeDistanceLeft)
+            {
+                continue;
+            }
 
             enemy.rigidbody.velocity = velocity;
         }

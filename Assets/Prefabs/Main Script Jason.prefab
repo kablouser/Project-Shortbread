@@ -60,6 +60,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 264
       objectReference: {fileID: 0}
+    - target: {fileID: 2812802433703517313, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: orthographic size
+      value: 5.4
+      objectReference: {fileID: 0}
     - target: {fileID: 6995138111374264186, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -67,6 +71,54 @@ PrefabInstance:
     - target: {fileID: 6995138111374264186, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: enemyCharger
+      value: 
+      objectReference: {fileID: 21300000, guid: 891c2714082986741999bad371824d30, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: pickupColor.Earth.b
+      value: 0.03529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: pickupColor.Earth.g
+      value: 0.1764706
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: pickupColor.Earth.r
+      value: 0.26666668
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: pickupColor.Water.b
+      value: 0.86274517
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: pickupColor.Water.g
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: attackSystem.charger.damage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: attackSystem.charger.hitRange
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: attackSystem.charger.attackCooldown
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: attackSystem.charger.chargeDistance
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: attackSystem.charger.chargeSpeedBuff
+      value: 1.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: attackSystem.charger.startChargeDistance
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: lightCrystalSpawning.crystalsToSpawnPerArea
@@ -79,6 +131,10 @@ PrefabInstance:
     - target: {fileID: 7995831551003652219, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8665461091293245458, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8890481135724435722, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: m_Name

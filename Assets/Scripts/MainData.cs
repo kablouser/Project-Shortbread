@@ -97,7 +97,8 @@ public struct AttackComponent
 
     // charger
     public Vector2 chargeDirection;
-    public float chargeDistanceCurrent;
+    public float chargeDistanceLeft;
+    public bool hasHit;
 
     public bool Reload(in ProjectileAttackPreset preset, StatsModifierComponent stats)
     {
@@ -110,7 +111,7 @@ public struct AttackComponent
     }
 }
 
-public enum EnemyVariants { Melee, Ranged };
+public enum EnemyVariants { Melee, Ranged, Charger };
 public enum BossVariants { Ranged };
 
 [System.Serializable]
@@ -151,7 +152,7 @@ public struct UnitEntity
 
         // Set stats
         health.max = Mathf.FloorToInt(health.baseHealth * statModifiers.healthModifier);
-        health.current += health.max;
+        health.current = health.max;
         moveSpeed = baseMoveSpeed * statModifiers.moveSpeedModifier;
     }
 

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 [System.Serializable]
 public struct ProjectileEntity
@@ -58,6 +59,8 @@ public struct ChargerAttackPreset
 {
     public float startChargeDistance;
     public float chargeDistance;
+    public float chargeSpeedBuff;
+    public float hitRange;
     public float attackCooldown;
     public int damage;
 }
@@ -93,6 +96,9 @@ public struct AttackSystem
                     break;
                 case (int)EnemyVariants.Ranged:
                     UpdateAttackProjectile(ref mainScript.enemies[i], IDType.Enemy, enemyRanged, defaultProjectile, mainScript);
+                    break;
+                case (int)EnemyVariants.Charger:
+                    UpdateCharger(ref mainScript.enemies[i], mainScript);
                     break;
             }
         }
@@ -138,7 +144,7 @@ public struct AttackSystem
         {
             // remove freeze pos
             unit.rigidbody.constraints &= ~RigidbodyConstraints2D.FreezePosition;
-            
+
             break;
         }
 
@@ -234,7 +240,7 @@ public struct AttackSystem
 
                 if (projectile.gameObject == null)
                 {
-                    projectile.gameObject = UnityEngine.Object.Instantiate(group.prefab);
+                    projectile.gameObject = Object.Instantiate(group.prefab);
                 }
                 else
                 {
@@ -247,6 +253,22 @@ public struct AttackSystem
                 IDTriggerEnter idTriggerEnter = projectile.gameObject.GetComponent<IDTriggerEnter>();
                 idTriggerEnter.id = projectileID;
                 idTriggerEnter.mainScript = mainScript;
+
+                void SwitchColor(GameObject projectileGO, Color color)
+                {
+                    projectileGO.GetComponent<SpriteRenderer>().color = color;
+                    projectileGO.GetComponent<Light2D>().color = color;
+                }
+
+                switch (unitType)
+                {
+                    case IDType.Player:
+                        SwitchColor(projectile.gameObject, new Color(1f, 1f, 0f)); break;
+                    case IDType.Enemy:
+                        SwitchColor(projectile.gameObject, new Color(0.3f, 0.3f, 0.3f)); break;
+                    case IDType.Boss0:
+                        SwitchColor(projectile.gameObject, unit.spriteRenderer.color); break;
+                }
 
                 // shoot at unit's forward direction
                 Quaternion rotation = Quaternion.Euler(0f, 0f, unit.rotationDegrees - startSpreadAngle + attackPreset.spreadAngle * i);
@@ -264,13 +286,41 @@ public struct AttackSystem
 
     public void UpdateCharger(
         ref UnitEntity unit,
-        IDType unitType,
         MainScript mainScript)
     {
         if (!unit.transform.gameObject.activeInHierarchy)
             return;
 
-        bool wasAttacking = 0f < unit.attack.attackCooldown;
+        if (0f < unit.attack.chargeDistanceLeft)
+        {
+            while (!unit.attack.hasHit)
+            {
+                ref UnitEntity targetUnit = ref mainScript.GetUnit(unit.attack.singleTarget, out bool isTargetValid);
+                if (!isTargetValid)
+                {
+                    break;
+                }
+
+                if (charger.hitRange < Vector3.Distance(targetUnit.transform.position, unit.transform.position))
+                {
+                    break;
+                }
+
+                Damage(unit.attack.singleTarget, charger.damage, mainScript);
+                unit.attack.hasHit = true;
+            }
+
+            unit.attack.chargeDistanceLeft -= Time.deltaTime * unit.moveSpeed * charger.chargeSpeedBuff;
+            if (unit.attack.chargeDistanceLeft <= 0f)
+                unit.rigidbody.velocity = Vector2.zero;
+            else
+            {
+                unit.rigidbody.velocity = charger.chargeSpeedBuff * unit.moveSpeed * unit.attack.chargeDirection;
+                unit.attack.attackCooldown = charger.attackCooldown;
+                return;
+            }
+        }
+
         unit.attack.attackCooldown = Mathf.Max(unit.attack.attackCooldown - Time.deltaTime, 0f);
 
         if (0f < unit.attack.attackCooldown)
@@ -278,11 +328,7 @@ public struct AttackSystem
             return;
         }
 
-        if (0f < unit.attack.chargeDistanceCurrent)
-        {
-
-        }
-        else if (unit.attack.isAttacking)
+        if (unit.attack.isAttacking)
         {
             ref UnitEntity targetUnit = ref mainScript.GetUnit(unit.attack.singleTarget, out bool isTargetValid);
             if (!isTargetValid)
@@ -298,10 +344,10 @@ public struct AttackSystem
             }
 
             unit.attack.chargeDirection = toTarget / distance;
-            unit.attack.chargeDistanceCurrent = 0f;
-            //unit.attack.attackCooldown = attackPreset.attackTime;
-            unit.rigidbody.constraints |= RigidbodyConstraints2D.FreezePosition;
+            unit.attack.chargeDistanceLeft = charger.chargeDistance;
+            unit.attack.hasHit = false;
 
+            unit.rigidbody.velocity = charger.chargeSpeedBuff * unit.moveSpeed * unit.attack.chargeDirection;
         }
     }
 

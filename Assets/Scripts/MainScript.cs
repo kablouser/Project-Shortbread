@@ -62,6 +62,7 @@ public class MainScript : MonoBehaviour
 
     public Sprite enemyMeele;
     public Sprite enemyRange;
+    public Sprite enemyCharger;
 
     public void Awake()
     {
@@ -218,18 +219,34 @@ public class MainScript : MonoBehaviour
                                 id);
                         }
 
-                        if (0 < numberBossesDefeated)
+                        if (1 < numberBossesDefeated)
+                        {
+                            float val = Random.value;
+                            if (val < 0.6f)
+                                enemy.attack.variant = 0;
+                            else if (val < 0.8f)
+                                enemy.attack.variant = 1;
+                            else
+                                enemy.attack.variant = 2;
+                        }
+                        else if (0 < numberBossesDefeated)
                             enemy.attack.variant = Random.value < 0.8f ? 0 : 1;
                         else
                             enemy.attack.variant = 0;
 
-                        switch(enemy.attack.variant)
+                        switch (enemy.attack.variant)
                         {
                             case 0:
                                 enemy.spriteRenderer.sprite = enemyMeele;
+                                enemy.transform.GetComponent<CircleCollider2D>().radius = 0.1f;
                                 break;
                             case 1:
                                 enemy.spriteRenderer.sprite = enemyRange;
+                                enemy.transform.GetComponent<CircleCollider2D>().radius = 0.1385505f;
+                                break;
+                            case 2:
+                                enemy.spriteRenderer.sprite = enemyCharger;
+                                enemy.transform.GetComponent<CircleCollider2D>().radius = 0.2199812f;
                                 break;
                         }
 
