@@ -197,7 +197,7 @@ public struct AttackSystem
             }
         }
 
-        if (0f < unit.attack.attackCooldown)
+        if (0f < unit.attack.attackCooldown || unit.statModifiers.fireRateModifier <= 0f)
         {
             return;
         }
@@ -206,7 +206,7 @@ public struct AttackSystem
         {
             int numberOfShots = 1 + attackPreset.extraProjectiles + unit.statModifiers.extraProjectiles;
 
-            unit.attack.attackCooldown = attackPreset.attackCooldown;
+            unit.attack.attackCooldown = attackPreset.attackCooldown / unit.statModifiers.fireRateModifier;
             if (attackPreset.usesAmmo)
             {
                 unit.attack.ammoShot += numberOfShots;
