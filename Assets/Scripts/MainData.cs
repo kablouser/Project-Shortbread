@@ -96,6 +96,7 @@ public struct AttackComponent
 
     // charger
     public Vector2 chargeDirection;
+    public float chargeDistanceCurrent;
 
     public bool Reload(in ProjectileAttackPreset preset, StatsModifierComponent stats)
     {

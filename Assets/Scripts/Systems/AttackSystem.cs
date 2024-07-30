@@ -131,20 +131,7 @@ public struct AttackSystem
         {
             // remove freeze pos
             unit.rigidbody.constraints &= ~RigidbodyConstraints2D.FreezePosition;
-
-            ref UnitEntity targetUnit = ref mainScript.GetUnit(unit.attack.singleTarget, out bool isTargetValid);
-            if (!isTargetValid)
-            {
-                break;
-            }
-
-            if (attackPreset.damageRange < Vector3.Distance(targetUnit.transform.position, unit.transform.position))
-            {
-                break;
-            }
-
-            // damage when in range
-            Damage(unit.attack.singleTarget, attackPreset.damage, mainScript);
+            
             break;
         }
 
@@ -170,6 +157,7 @@ public struct AttackSystem
             unit.attack.meleeAttackTime = attackPreset.attackTime;
             unit.rigidbody.constraints |= RigidbodyConstraints2D.FreezePosition;
 
+            Damage(unit.attack.singleTarget, attackPreset.damage, mainScript);
         }
     }
 
@@ -271,23 +259,29 @@ public struct AttackSystem
             return;
         }
 
-        if (unit.attack.isAttacking)
+        if (0f < unit.attack.chargeDistanceCurrent)
         {
-/*            ref UnitEntity targetUnit = ref mainScript.GetUnit(unit.attack.singleTarget, out bool isTargetValid);
+
+        }
+        else if (unit.attack.isAttacking)
+        {
+            ref UnitEntity targetUnit = ref mainScript.GetUnit(unit.attack.singleTarget, out bool isTargetValid);
             if (!isTargetValid)
             {
                 return;
             }
 
-            targetUnit.transform.position, unit.transform.position;
-            if (charger.startChargeDistance < Vector3.Distance())
+            Vector2 toTarget = targetUnit.transform.position - unit.transform.position;
+            float distance = toTarget.magnitude;
+            if (charger.startChargeDistance < distance)
             {
                 return;
             }
 
-            unit.attack.chargeDirection = attackPreset.attackCooldown;
-            unit.attack.meleeAttackTime = attackPreset.attackTime;
-            unit.rigidbody.constraints |= RigidbodyConstraints2D.FreezePosition;*/
+            unit.attack.chargeDirection = toTarget / distance;
+            unit.attack.chargeDistanceCurrent = 0f;
+            //unit.attack.attackCooldown = attackPreset.attackTime;
+            unit.rigidbody.constraints |= RigidbodyConstraints2D.FreezePosition;
 
         }
     }
