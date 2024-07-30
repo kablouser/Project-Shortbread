@@ -1007,9 +1007,9 @@ RectTransform:
   - {fileID: 5614962539210820508}
   m_Father: {fileID: 3115572395486781208}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 270, y: -50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1832759758142589945
@@ -3318,9 +3318,9 @@ RectTransform:
   - {fileID: 2238740216149627429}
   m_Father: {fileID: 2719077502006890979}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 1364.125, y: -540}
   m_SizeDelta: {x: 854, y: 720}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4754992464903313284
@@ -3396,9 +3396,9 @@ RectTransform:
   - {fileID: 8474269877330339615}
   m_Father: {fileID: 3115572395486781208}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 160, y: -50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1287647158957009732
@@ -3957,7 +3957,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 427, y: -460}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 400, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6364402115473345891
 CanvasRenderer:
@@ -4300,9 +4300,9 @@ RectTransform:
   - {fileID: 835739109077447316}
   m_Father: {fileID: 3115572395486781208}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1173549149759682490
@@ -6467,9 +6467,9 @@ RectTransform:
   - {fileID: 6786712083591125594}
   m_Father: {fileID: 2719077502006890979}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 449.125, y: -540}
   m_SizeDelta: {x: 640.5, y: 720}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1637636352707628712
@@ -6943,10 +6943,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 5686772992781299062}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 320.25, y: -5}
+  m_SizeDelta: {x: 640.5, y: 37.066666}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &4428568128265585849
 CanvasRenderer:
@@ -8426,10 +8426,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 5686772992781299062}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 320.25, y: -386.03333}
+  m_SizeDelta: {x: 640.5, y: 667.93335}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2073324581148453612
 CanvasRenderer:
@@ -8658,6 +8658,8 @@ MonoBehaviour:
     charger:
       startChargeDistance: 0
       chargeDistance: 0
+      chargeSpeedBuff: 0
+      hitRange: 0
       attackCooldown: 0
       damage: 0
     boss0:
@@ -8697,7 +8699,8 @@ MonoBehaviour:
       variant: 0
       attackDelay: 0
       chargeDirection: {x: 0, y: 0}
-      chargeDistanceCurrent: 0
+      chargeDistanceLeft: 0
+      hasHit: 0
     baseMoveSpeed: 1.5
     moveSpeed: 1.5
     health:
@@ -8748,7 +8751,8 @@ MonoBehaviour:
         variant: 0
         attackDelay: 0
         chargeDirection: {x: 0, y: 0}
-        chargeDistanceCurrent: 0
+        chargeDistanceLeft: 0
+        hasHit: 0
       baseMoveSpeed: 1.4
       moveSpeed: 1.4
       health:
@@ -8815,7 +8819,8 @@ MonoBehaviour:
           variant: 0
           attackDelay: 0
           chargeDirection: {x: 0, y: 0}
-          chargeDistanceCurrent: 0
+          chargeDistanceLeft: 0
+          hasHit: 0
         baseMoveSpeed: 1
         moveSpeed: 1
         health:
@@ -9175,6 +9180,7 @@ MonoBehaviour:
   gameStartText: {fileID: 1754404346244192261}
   enemyMeele: {fileID: 21300000, guid: 76616bcc0336f614f8cf7890892fdf74, type: 3}
   enemyRange: {fileID: 21300000, guid: ebfdff326b3bd134d890f72abfe63583, type: 3}
+  enemyCharger: {fileID: 0}
 --- !u!1 &8974552201042103813
 GameObject:
   m_ObjectHideFlags: 0
