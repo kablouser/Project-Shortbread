@@ -8,7 +8,8 @@ public enum UpgradeType
     Health,
     MoveSpeed,
     VisionRange,
-    Piercing
+    Piercing,
+    ExtraProjectile
 };
 
 [Serializable]
@@ -20,6 +21,7 @@ public struct StatsModifierComponent
     public float reloadSpeedModifier;
     public float visionRangeModifier;
     public int piercingNumber;
+    public int extraProjectiles;
 }
 
 [Serializable]
@@ -60,6 +62,9 @@ public struct UpgradeSystem
                 break;
             case UpgradeType.Piercing:
                 unit.statModifiers.piercingNumber += Mathf.FloorToInt(valueChange);
+                break;
+            case UpgradeType.ExtraProjectile:
+                unit.statModifiers.extraProjectiles += Mathf.FloorToInt(valueChange);
                 break;
         }
 

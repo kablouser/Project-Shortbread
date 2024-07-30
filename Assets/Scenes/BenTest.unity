@@ -262,22 +262,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1768513642065807327, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: m_AssetsPPU
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 1768513642065807327, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: m_RefResolutionX
-      value: 1920
-      objectReference: {fileID: 0}
-    - target: {fileID: 1768513642065807327, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: m_RefResolutionY
-      value: 1080
-      objectReference: {fileID: 0}
-    - target: {fileID: 1969815861608421285, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: c2fac035ea2585e4e85276577487f729, type: 2}
     - target: {fileID: 6995138111374264186, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -285,68 +269,6 @@ PrefabInstance:
     - target: {fileID: 6995138111374264186, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: craftingSystem.items.Array.size
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: animationSystem.spriteSheets.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: craftingSystem.items.Array.data[5].icon
-      value: 
-      objectReference: {fileID: 2800000, guid: ebfdff326b3bd134d890f72abfe63583, type: 3}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: craftingSystem.items.Array.data[4].costs.fire
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: craftingSystem.items.Array.data[5].costs.fire
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: craftingSystem.items.Array.data[4].costs.earth
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: craftingSystem.items.Array.data[4].costs.water
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: craftingSystem.items.Array.data[5].costs.earth
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: craftingSystem.items.Array.data[5].description
-      value: 'Piercing
-
-        +1'
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: craftingSystem.items.Array.data[5].upgradeType
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: animationSystem.spriteSheets.Array.data[3].name
-      value: Boss0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: boss0SpawnData.presetUnit.unit.animation.spriteSheetIndex
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: animationSystem.spriteSheets.Array.data[3].spriteSheet.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: animationSystem.spriteSheets.Array.data[3].spriteSheet.Array.data[0]
-      value: 
-      objectReference: {fileID: 21300000, guid: 0d22577d458f5d141a4113538214dbf9, type: 3}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: enemiesSpawnRates.Array.data[0].presetUnit.animation.spriteSheetIndex
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7995831551003652219, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: m_AnchorMax.x
