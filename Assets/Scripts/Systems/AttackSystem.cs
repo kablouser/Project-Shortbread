@@ -204,10 +204,12 @@ public struct AttackSystem
 
         if (unit.attack.isAttacking)
         {
+            int numberOfShots = 1 + attackPreset.extraProjectiles + unit.statModifiers.extraProjectiles;
+
             unit.attack.attackCooldown = attackPreset.attackCooldown;
             if (attackPreset.usesAmmo)
             {
-                ++unit.attack.ammoShot;
+                unit.attack.ammoShot += numberOfShots;
                 if (unitType == IDType.Player)
                 {
                     mainScript.ammoBar.UpdateAmmoBar(unit.attack.ammoShot, attackPreset.fullMagazineAmmo);
@@ -219,13 +221,10 @@ public struct AttackSystem
                 }
             }
 
-            int numberOfShots = 1 + attackPreset.extraProjectiles + unit.statModifiers.extraProjectiles;
-            float spreadAngle = attackPreset.spreadAngle / numberOfShots;
-            float startSpreadAngle = attackPreset.spreadAngle / 2;
+            float startSpreadAngle = (attackPreset.spreadAngle * (numberOfShots - 1)) / 2;
             if(numberOfShots == 1)
             {
                 startSpreadAngle = 0;
-                spreadAngle = 0;
             }
 
             for (int i = 0; i < numberOfShots; i++)
@@ -250,7 +249,7 @@ public struct AttackSystem
                 idTriggerEnter.mainScript = mainScript;
 
                 // shoot at unit's forward direction
-                Quaternion rotation = Quaternion.Euler(0f, 0f, unit.rotationDegrees - startSpreadAngle + spreadAngle * i);
+                Quaternion rotation = Quaternion.Euler(0f, 0f, unit.rotationDegrees - startSpreadAngle + attackPreset.spreadAngle * i);
                 Vector3 forward = rotation * Vector2.up;
                 projectile.gameObject.transform.SetPositionAndRotation(
                     unit.transform.position + forward * attackPreset.projectileOffset,
@@ -260,35 +259,6 @@ public struct AttackSystem
 
                 mainScript.audioSystem.PlayAttackSound(unitType, unit.transform.position);
             }
-            //ID projectileID = group.pool.Spawn();
-            //ref ProjectileEntity projectile = ref group.pool[projectileID.index];
-
-            //if (projectile.gameObject == null)
-            //{
-            //    projectile.gameObject = UnityEngine.Object.Instantiate(group.prefab);
-            //}
-            //else
-            //{
-            //    projectile.gameObject.SetActive(true);
-            //}
-            //projectile.damage = Mathf.FloorToInt(attackPreset.damage * unit.statModifiers.damageModifier);
-            //projectile.source = unitType;
-            //projectile.rangeLeft = attackPreset.projectileRange;
-            //projectile.piercingNumber = attackPreset.piercingNumber + unit.statModifiers.piercingNumber;
-            //IDTriggerEnter idTriggerEnter = projectile.gameObject.GetComponent<IDTriggerEnter>();
-            //idTriggerEnter.id = projectileID;
-            //idTriggerEnter.mainScript = mainScript;
-
-            //// shoot at unit's forward direction
-            //Quaternion rotation = Quaternion.Euler(0f, 0f, unit.rotationDegrees);
-            //Vector3 forward = rotation * Vector2.up;
-            //projectile.gameObject.transform.SetPositionAndRotation(
-            //    unit.transform.position + forward * attackPreset.projectileOffset,
-            //    rotation);
-            //projectile.gameObject.GetComponent<Rigidbody2D>().velocity = forward * attackPreset.projectileSpeed;
-            //projectile.lastPosition = projectile.gameObject.transform.position;
-
-            //mainScript.audioSystem.PlayAttackSound(unitType, unit.transform.position);
         }
     }
 

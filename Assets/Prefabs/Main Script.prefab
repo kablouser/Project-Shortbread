@@ -8711,6 +8711,7 @@ MonoBehaviour:
       damageModifier: 1
       reloadSpeedModifier: 1
       visionRangeModifier: 1
+      fireRateModifier: 0
       piercingNumber: 0
       extraProjectiles: 0
   enemies:
@@ -8761,6 +8762,7 @@ MonoBehaviour:
         damageModifier: 1
         reloadSpeedModifier: 1
         visionRangeModifier: 0
+        fireRateModifier: 0
         piercingNumber: 0
         extraProjectiles: 0
     spawnRate:
@@ -8827,6 +8829,7 @@ MonoBehaviour:
           damageModifier: 1
           reloadSpeedModifier: 1
           visionRangeModifier: 0
+          fireRateModifier: 0
           piercingNumber: 0
           extraProjectiles: 0
       hasAgro: 0
@@ -9060,7 +9063,7 @@ MonoBehaviour:
       description: 'Piercing
 
         +1'
-      upgradeType: 5
+      upgradeType: 6
       upgradeValue: 1
     - isCrafted: 0
       icon: {fileID: 2800000, guid: ebfdff326b3bd134d890f72abfe63583, type: 3}
@@ -9072,7 +9075,7 @@ MonoBehaviour:
       description: 'Extra Shot
 
         +1'
-      upgradeType: 6
+      upgradeType: 7
       upgradeValue: 1
     craftingPanel: {fileID: 5433697135985032409}
     upgradeIconUIPrefab: {fileID: 6489552767344459860, guid: 28a8a6f756f7d4a48a0418ee8e819f83, type: 3}
