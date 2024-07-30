@@ -47,6 +47,15 @@ public struct ProjectileAttackPreset
 }
 
 [System.Serializable]
+public struct ChargerAttackPreset
+{
+    public float startChargeDistance;
+    public float chargeDistance;
+    public float attackCooldown;
+    public int damage;
+}
+
+[System.Serializable]
 public struct AttackSystem
 {
     public ProjectileGroup defaultProjectile;
@@ -54,6 +63,7 @@ public struct AttackSystem
     public ProjectileAttackPreset player;
     public MeleeAttackPreset enemyMelee;
     public ProjectileAttackPreset enemyRanged;
+    public ChargerAttackPreset charger;
     public ProjectileAttackPreset boss0;
 
     public void Update(MainScript mainScript)
@@ -245,9 +255,41 @@ public struct AttackSystem
         }
     }
 
-    public void UpdateCharger()
+    public void UpdateCharger(
+        ref UnitEntity unit,
+        IDType unitType,
+        MainScript mainScript)
     {
+        if (!unit.transform.gameObject.activeInHierarchy)
+            return;
 
+        bool wasAttacking = 0f < unit.attack.attackCooldown;
+        unit.attack.attackCooldown = Mathf.Max(unit.attack.attackCooldown - Time.deltaTime, 0f);
+
+        if (0f < unit.attack.attackCooldown)
+        {
+            return;
+        }
+
+        if (unit.attack.isAttacking)
+        {
+/*            ref UnitEntity targetUnit = ref mainScript.GetUnit(unit.attack.singleTarget, out bool isTargetValid);
+            if (!isTargetValid)
+            {
+                return;
+            }
+
+            targetUnit.transform.position, unit.transform.position;
+            if (charger.startChargeDistance < Vector3.Distance())
+            {
+                return;
+            }
+
+            unit.attack.chargeDirection = attackPreset.attackCooldown;
+            unit.attack.meleeAttackTime = attackPreset.attackTime;
+            unit.rigidbody.constraints |= RigidbodyConstraints2D.FreezePosition;*/
+
+        }
     }
 
     // Projectile on trigger enter

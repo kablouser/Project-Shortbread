@@ -94,6 +94,9 @@ public struct AttackComponent
     public int variant;
     public float attackDelay;
 
+    // charger
+    public Vector2 chargeDirection;
+
     public bool Reload(in ProjectileAttackPreset preset, StatsModifierComponent stats)
     {
         if (0 < ammoShot)
