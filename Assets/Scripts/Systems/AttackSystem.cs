@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
@@ -8,6 +9,8 @@ public struct ProjectileEntity
     public int damage;
     public float rangeLeft;
     public Vector2 lastPosition;
+    public int piercingNumber;
+    public List<IDComponent> hitIDs;
 }
 
 [System.Serializable]
@@ -226,6 +229,7 @@ public struct AttackSystem
             projectile.damage = Mathf.FloorToInt(attackPreset.damage * unit.statModifiers.damageModifier);
             projectile.source = unitType;
             projectile.rangeLeft = attackPreset.projectileRange;
+            projectile.piercingNumber = unit.statModifiers.piercingNumber;
             IDTriggerEnter idTriggerEnter = projectile.gameObject.GetComponent<IDTriggerEnter>();
             idTriggerEnter.id = projectileID;
             idTriggerEnter.mainScript = mainScript;
@@ -300,10 +304,18 @@ public struct AttackSystem
                 MainScript.IsOppositeTeams(projectile.source, idComp.id.type) &&
                 //enemy can only damage player, nothing else, enemy projectiles pass through other objects
                 (MainScript.GetTeam(projectile.source) != Team.Enemy || MainScript.GetTeam(idComp.id.type) == Team.Player)
-            ) &&
-            defaultProjectile.pool.TryDespawn(source.id.index))
+            ))
         {
-            projectile.gameObject.SetActive(false);
+            if(projectile.piercingNumber > 0)
+            {
+                projectile.piercingNumber--;
+            }
+            else
+            {
+                defaultProjectile.pool.TryDespawn(source.id.index);
+                projectile.gameObject.SetActive(false);
+            }
+
             if (idComp != null)
             {
                 Damage(idComp.id, projectile.damage, mainScript);

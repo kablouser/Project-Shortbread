@@ -60,6 +60,9 @@ public class MainScript : MonoBehaviour
     public TMPro.TextMeshProUGUI barrierTutorialText;
     public TMPro.TextMeshProUGUI gameStartText;
 
+    public Sprite enemyMeele;
+    public Sprite enemyRange;
+
     public void Awake()
     {
         playerControls = new PlayerControls();
@@ -219,6 +222,17 @@ public class MainScript : MonoBehaviour
                             enemy.attack.variant = Random.value < 0.8f ? 0 : 1;
                         else
                             enemy.attack.variant = 0;
+
+                        switch(enemy.attack.variant)
+                        {
+                            case 0:
+                                enemy.spriteRenderer.sprite = enemyMeele;
+                                break;
+                            case 1:
+                                enemy.spriteRenderer.sprite = enemyRange;
+                                break;
+                        }
+
                     }
                 }
             }
@@ -335,7 +349,7 @@ public class MainScript : MonoBehaviour
 
         attackSystem.Update(this);
 
-        animationSystem.Update(this);
+        //animationSystem.Update(this);
     }
 
     public void FixedUpdate()

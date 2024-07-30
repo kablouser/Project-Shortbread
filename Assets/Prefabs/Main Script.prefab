@@ -795,6 +795,7 @@ GameObject:
   - component: {fileID: 9067309242590239064}
   - component: {fileID: 2812802433703517313}
   - component: {fileID: 6983980773321378738}
+  - component: {fileID: 1768513642065807327}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -912,6 +913,30 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &1768513642065807327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1163004221944321767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c88f5cead0c0b2a4eb05b5900433f8d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ComponentVersion: 1
+  m_AssetsPPU: 100
+  m_RefResolutionX: 320
+  m_RefResolutionY: 180
+  m_CropFrame: 0
+  m_GridSnapping: 0
+  m_FilterMode: 0
+  m_UpscaleRT: 0
+  m_PixelSnapping: 0
+  m_CropFrameX: 0
+  m_CropFrameY: 0
+  m_StretchFill: 0
 --- !u!1 &1268140762671247063
 GameObject:
   m_ObjectHideFlags: 0
@@ -1453,7 +1478,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.7, y: 0}
   m_AnchorMax: {x: 0.7, y: 0}
-  m_AnchoredPosition: {x: 0, y: 50}
+  m_AnchoredPosition: {x: -10, y: 50}
   m_SizeDelta: {x: 200, y: 25}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &470029321852396007
@@ -1931,7 +1956,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 38}
+  m_AnchoredPosition: {x: 0, y: 215}
   m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &862207998942997255
@@ -2140,7 +2165,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.7, y: 0}
   m_AnchorMax: {x: 0.7, y: 0}
-  m_AnchoredPosition: {x: 0, y: 100}
+  m_AnchoredPosition: {x: -10, y: 100}
   m_SizeDelta: {x: 200, y: 25}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &4252684793748231183
@@ -2854,7 +2879,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: adad7ae874079d04b827087da3de279b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2875,7 +2900,7 @@ SpriteRenderer:
   m_SortingLayerID: 1964593707
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 3537751bff555834ea2e2c67404ddbdf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -3293,9 +3318,9 @@ RectTransform:
   - {fileID: 2238740216149627429}
   m_Father: {fileID: 2719077502006890979}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1364.125, y: -540}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 854, y: 720}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4754992464903313284
@@ -4707,13 +4732,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50
-  m_fontSizeBase: 50
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
@@ -6394,7 +6419,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.001618579, y: 0.03796819}
+  m_Offset: {x: 0.001618579, y: 0.063126884}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.2658304, y: 0.1320191}
@@ -6405,7 +6430,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.20645115, y: 0.24492091}
+  m_Size: {x: 0.20645115, y: 0.29523838}
   m_EdgeRadius: 0
 --- !u!1 &7086899937180176561
 GameObject:
@@ -6442,9 +6467,9 @@ RectTransform:
   - {fileID: 6786712083591125594}
   m_Father: {fileID: 2719077502006890979}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 449.125, y: -540}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 640.5, y: 720}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1637636352707628712
@@ -6918,10 +6943,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 5686772992781299062}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 320.25, y: -5}
-  m_SizeDelta: {x: 640.5, y: 37.066666}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &4428568128265585849
 CanvasRenderer:
@@ -8401,10 +8426,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 5686772992781299062}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 320.25, y: -386.03333}
-  m_SizeDelta: {x: 640.5, y: 667.93335}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2073324581148453612
 CanvasRenderer:
@@ -8563,10 +8588,10 @@ MonoBehaviour:
     spriteSheets:
     - name: Player
       spriteSheet:
-      - {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+      - {fileID: 21300000, guid: 3537751bff555834ea2e2c67404ddbdf, type: 3}
     - name: Enemy
       spriteSheet:
-      - {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+      - {fileID: 21300000, guid: 76616bcc0336f614f8cf7890892fdf74, type: 3}
     - name: Light Crystal
       spriteSheet:
       - {fileID: 21300000, guid: 81c9fa05c62ea084e8f67a3f5ee1f49d, type: 3}
@@ -8613,12 +8638,12 @@ MonoBehaviour:
       damageRange: 0.7
       attackTime: 0.6
     enemyRanged:
-      attackCooldown: 0.1
+      attackCooldown: 3
       projectileOffset: 0.1
-      projectileSpeed: 5
-      usesAmmo: 1
-      reloadCooldown: 3
-      fullMagazineAmmo: 12
+      projectileSpeed: 3
+      usesAmmo: 0
+      reloadCooldown: 0
+      fullMagazineAmmo: 0
       damage: 1
       projectileRange: 15
     boss0:
@@ -8653,6 +8678,7 @@ MonoBehaviour:
         index: 0
         version: 0
       variant: 0
+      attackDelay: 0
     baseMoveSpeed: 1.5
     moveSpeed: 1.5
     health:
@@ -8698,6 +8724,7 @@ MonoBehaviour:
           index: 0
           version: 0
         variant: 0
+        attackDelay: 0
       baseMoveSpeed: 1.4
       moveSpeed: 1.4
       health:
@@ -8717,20 +8744,20 @@ MonoBehaviour:
       - serializedVersion: 3
         time: 0
         value: 0.49944997
-        inSlope: 0.50055003
-        outSlope: 0.50055003
-        tangentMode: 34
+        inSlope: 0.0006890414
+        outSlope: 0.0006890414
+        tangentMode: 0
         weightedMode: 0
         inWeight: 0
-        outWeight: 0.33333334
+        outWeight: 1
       - serializedVersion: 3
         time: 1
         value: 1
-        inSlope: 0.50055003
-        outSlope: 0.50055003
-        tangentMode: 34
+        inSlope: 1.1058785
+        outSlope: 1.1058785
+        tangentMode: 0
         weightedMode: 0
-        inWeight: 0.33333334
+        inWeight: 0.2162022
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -8759,6 +8786,7 @@ MonoBehaviour:
             index: 0
             version: 0
           variant: 0
+          attackDelay: 0
         baseMoveSpeed: 1
         moveSpeed: 1
         health:
@@ -8774,8 +8802,6 @@ MonoBehaviour:
           visionRangeModifier: 0
       hasAgro: 0
       pickupType: 0
-      pickupMax: 0
-      pickupMin: 0
       bossIndicator:
         indicatorHolder: {fileID: 0}
         indicatorArrowTransform: {fileID: 0}
@@ -8805,7 +8831,7 @@ MonoBehaviour:
     maxPower: 1
     currentPower: 0.9
   lightCrystalSpawning:
-    crystalsToSpawnPerArea: 0.01
+    crystalsToSpawnPerArea: 0.007
     crystalPrefab: {fileID: 2466001976614605658, guid: 83d6d020a52922f46b5fc8169012a06a, type: 3}
     presetCrystal:
       transform: {fileID: 0}
@@ -8844,9 +8870,9 @@ MonoBehaviour:
   pickupColor:
     Light: {r: 1, g: 0.9721711, b: 0, a: 1}
     Fire: {r: 1, g: 0.1273585, b: 0.1273585, a: 1}
-    Earth: {r: 0.6226415, g: 0.39186642, b: 0.1967782, a: 1}
+    Earth: {r: 0.26666668, g: 0.18039216, b: 0.03529412, a: 1}
     Air: {r: 1, g: 1, b: 1, a: 1}
-    Water: {r: 0, g: 0.34345746, b: 1, a: 1}
+    Water: {r: 0, g: 0.6, b: 0.8627451, a: 1}
   gameTimer:
     timerText: {fileID: 3446914976120063876}
     timeToSurvive: 900
@@ -9062,6 +9088,7 @@ MonoBehaviour:
     LightCrystalHitVFX: {fileID: 8300000, guid: bebc9306a46e09e44bd303e8c0d98112, type: 3}
     playerDeathVFX: {fileID: 0}
     enemyDeathVFX: {fileID: 8300000, guid: ec42f57dae4dffd4f8319146f82bce93, type: 3}
+    enemyDeathVolume: 3
     boss0DeathVFX: {fileID: 8300000, guid: 7315dcf552435364aa8e2c94a574eb30, type: 3}
     LightCrystalDeathVFX: {fileID: 8300000, guid: 3ff85a680403e4749890c449c4e2b378, type: 3}
     gameStart: {fileID: 8300000, guid: 8f3baf747d658514ab2221b31b88b6e9, type: 3}
@@ -9090,6 +9117,8 @@ MonoBehaviour:
   shootTutorialText: {fileID: 7846430421304096047}
   barrierTutorialText: {fileID: 6567141769821100002}
   gameStartText: {fileID: 1754404346244192261}
+  enemyMeele: {fileID: 21300000, guid: 76616bcc0336f614f8cf7890892fdf74, type: 3}
+  enemyRange: {fileID: 21300000, guid: ebfdff326b3bd134d890f72abfe63583, type: 3}
 --- !u!1 &8974552201042103813
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,6 +11,7 @@ public enum SpriteSheetIndex
     Player,
     Enemy,
     LightCrystal,
+    Boss0
 };
 
 public enum AnimationClipIndex

@@ -8,6 +8,7 @@ public enum UpgradeType
     Health,
     MoveSpeed,
     VisionRange,
+    Piercing
 };
 
 [Serializable]
@@ -18,6 +19,7 @@ public struct StatsModifierComponent
     public float damageModifier;
     public float reloadSpeedModifier;
     public float visionRangeModifier;
+    public int piercingNumber;
 }
 
 [Serializable]
@@ -55,6 +57,9 @@ public struct UpgradeSystem
             case UpgradeType.VisionRange:
                 unit.statModifiers.visionRangeModifier += valueChange;
                 mainScript.playerLight.light.pointLightOuterRadius = mainScript.playerLight.baseLightRange * unit.statModifiers.visionRangeModifier;
+                break;
+            case UpgradeType.Piercing:
+                unit.statModifiers.piercingNumber += Mathf.FloorToInt(valueChange);
                 break;
         }
 
