@@ -270,6 +270,44 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7127101083637915000, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: m_PointLightOuterRadius
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: player.moveSpeed
+      value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: player.baseMoveSpeed
+      value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: playerHealthCanRegen
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: playerLight.baseLightRange
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: attackSystem.player.attackCooldown
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: player.statModifiers.healthRegenPerMinute
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[7].description
+      value: 'Health Regen
+
+        +2'
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[7].upgradeValue
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7995831551003652219, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

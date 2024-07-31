@@ -69,7 +69,7 @@ public class MainScript : MonoBehaviour
     public ParticleSystem lightCrystalDamagedVFX;
     public ParticleSystem playerDamagedVFX;
 
-    public bool playerHealthCanRegen = false;
+    public bool playerHealthCanRegen = true;
 
     public void Awake()
     {
@@ -253,19 +253,23 @@ public class MainScript : MonoBehaviour
                         else
                             enemy.attack.variant = 0;
 
+                        CircleCollider2D enemyCollider = enemy.transform.GetComponent<CircleCollider2D>();
                         switch (enemy.attack.variant)
                         {
                             case 0:
                                 enemy.spriteRenderer.sprite = enemyMeele;
-                                enemy.transform.GetComponent<CircleCollider2D>().radius = 0.1f;
+                                enemyCollider.radius = 0.08365758f;
+                                enemyCollider.offset = new Vector2(0, -0.0163253918f);
                                 break;
                             case 1:
                                 enemy.spriteRenderer.sprite = enemyRange;
-                                enemy.transform.GetComponent<CircleCollider2D>().radius = 0.1385505f;
+                                enemyCollider.radius = 0.1193566f;
+                                enemyCollider.offset = new Vector2(0.00247123837f, -0.0283010602f);
                                 break;
                             case 2:
                                 enemy.spriteRenderer.sprite = enemyCharger;
-                                enemy.transform.GetComponent<CircleCollider2D>().radius = 0.2199812f;
+                                enemyCollider.radius = 0.1990417f;
+                                enemyCollider.offset = new Vector2(0.00247123837f, -0.00133603811f);
                                 break;
                         }
 

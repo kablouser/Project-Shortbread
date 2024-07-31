@@ -3001,7 +3001,7 @@ MonoBehaviour:
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
-  m_PointLightOuterRadius: 2.5
+  m_PointLightOuterRadius: 3
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1
@@ -8626,7 +8626,7 @@ MonoBehaviour:
         isUsing: 
         type: 6
     player:
-      attackCooldown: 0.4
+      attackCooldown: 0.25
       projectileOffset: 0.25
       projectileSpeed: 10
       usesAmmo: 1
@@ -8718,8 +8718,8 @@ MonoBehaviour:
       chargeDistanceLeft: 0
       hasHit: 0
       limbShotI: 0
-    baseMoveSpeed: 1.5
-    moveSpeed: 1.5
+    baseMoveSpeed: 1.6
+    moveSpeed: 1.6
     health:
       baseHealth: 10
       current: 10
@@ -8734,7 +8734,7 @@ MonoBehaviour:
       fireRateModifier: 1
       piercingNumber: 0
       extraProjectiles: 0
-      healthRegenPerMinute: 0
+      healthRegenPerMinute: 1
   enemies:
     elements: []
     versions: 
@@ -8952,7 +8952,7 @@ MonoBehaviour:
     water: 1
   playerLight:
     light: {fileID: 7127101083637915000}
-    baseLightRange: 2.5
+    baseLightRange: 3
   centreLight:
     light: {fileID: 4480302817564232865}
     collider: {fileID: 584863892776297943}
@@ -9189,9 +9189,9 @@ MonoBehaviour:
         water: 1
       description: 'Health Regen
 
-        +1'
+        +2'
       upgradeType: 8
-      upgradeValue: 1
+      upgradeValue: 2
     - isCrafted: 0
       icon: {fileID: 2800000, guid: c8b69470b6ce5e14fb30c79156d59b90, type: 3}
       costs:
@@ -9429,7 +9429,7 @@ MonoBehaviour:
   boss0DamagedVFX: {fileID: 8911251432671140686, guid: 738c02d79d2453545be34eca75b9bf61, type: 3}
   lightCrystalDamagedVFX: {fileID: 8911251432671140686, guid: 06ca204e72f8a5b4e99aacb5d43c09a2, type: 3}
   playerDamagedVFX: {fileID: 8911251432671140686, guid: d02e00ebf66503d4985b62060fdd8b66, type: 3}
-  playerHealthCanRegen: 0
+  playerHealthCanRegen: 1
 --- !u!1 &8974552201042103813
 GameObject:
   m_ObjectHideFlags: 0
