@@ -56,14 +56,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1975675044840123878, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 264
-      objectReference: {fileID: 0}
-    - target: {fileID: 2812802433703517313, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: orthographic size
-      value: 5.4
-      objectReference: {fileID: 0}
     - target: {fileID: 6995138111374264186, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -72,138 +64,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: limbPrefab
-      value: 
-      objectReference: {fileID: 4522603035634653842, guid: cfd2b7dddbef77f4b8ad346e695fef50, type: 3}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: enemyCharger
-      value: 
-      objectReference: {fileID: 21300000, guid: 891c2714082986741999bad371824d30, type: 3}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: pickupColor.Earth.b
-      value: 0.03529412
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: pickupColor.Earth.g
-      value: 0.1764706
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: pickupColor.Earth.r
-      value: 0.26666668
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: pickupColor.Water.b
-      value: 0.86274517
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: pickupColor.Water.g
-      value: 0.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: attackSystem.charger.damage
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: boss0SpawnData.spawnTimeLeft
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: attackSystem.charger.hitRange
-      value: 0.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: attackSystem.bossLimbAttack.damage
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: attackSystem.charger.attackCooldown
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: attackSystem.charger.chargeDistance
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: attackSystem.bossLimbAttack.isLimbed
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: attackSystem.charger.chargeSpeedBuff
-      value: 1.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: attackSystem.charger.startChargeDistance
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: attackSystem.bossLimbAttack.attackCooldown
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: attackSystem.bossLimbAttack.projectileRange
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: attackSystem.bossLimbAttack.projectileSpeed
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: lightCrystalSpawning.crystalsToSpawnPerArea
-      value: 0.005
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: attackSystem.bossLimbAttack.projectileOffset
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: boss0SpawnData.limbsBossPreset.unit.moveSpeed
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: boss0SpawnData.limbsBossPreset.unit.health.max
-      value: 35
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: boss0SpawnData.limbsBossPreset.unit.baseMoveSpeed
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: boss0SpawnData.limbsBossPreset.unit.health.current
-      value: 35
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: boss0SpawnData.limbsBossPreset.unit.health.baseHealth
-      value: 35
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: boss0SpawnData.limbsBossPreset.unit.attack.singleTarget.type
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: boss0SpawnData.limbsBossPreset.unit.animation.spriteSheetIndex
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: boss0SpawnData.limbsBossPreset.unit.statModifiers.damageModifier
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: boss0SpawnData.limbsBossPreset.unit.statModifiers.healthModifier
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: boss0SpawnData.limbsBossPreset.unit.statModifiers.fireRateModifier
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: boss0SpawnData.limbsBossPreset.unit.statModifiers.moveSpeedModifier
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: boss0SpawnData.limbsBossPreset.unit.statModifiers.reloadSpeedModifier
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7995831551003652219, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -211,10 +71,6 @@ PrefabInstance:
     - target: {fileID: 7995831551003652219, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8665461091293245458, guid: 0c2bd523df203d148941186a806d3330, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8890481135724435722, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: m_Name
