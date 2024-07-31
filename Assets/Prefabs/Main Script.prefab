@@ -8626,7 +8626,7 @@ MonoBehaviour:
         isUsing: 
         type: 6
     player:
-      attackCooldown: 0.2
+      attackCooldown: 0.4
       projectileOffset: 0.25
       projectileSpeed: 10
       usesAmmo: 1
@@ -8636,7 +8636,7 @@ MonoBehaviour:
       projectileRange: 10
       piercingNumber: 0
       extraProjectiles: 0
-      spreadAngle: 60
+      spreadAngle: 30
       isLimbed: 0
     enemyMelee:
       attackCooldown: 1
