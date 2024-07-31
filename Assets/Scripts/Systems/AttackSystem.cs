@@ -244,6 +244,7 @@ public struct AttackSystem
 
             for (int i = 0; i < numberOfShots; i++)
             {
+                // calc rotation and position first
                 Quaternion rotation;
                 Vector3 position;
                 if (attackPreset.isLimbed)
@@ -605,7 +606,7 @@ public struct AttackSystem
                         // remove limbs
                         for (int limbI = 0; limbI < 3; limbI++)
                         {
-                            if (!mainScript.limbs.TryDespawn(boss.GetLimb(limbI), out LimbEntity despawned))
+                            if (mainScript.limbs.TryDespawn(boss.GetLimb(limbI), out LimbEntity despawned))
                             {
                                 despawned.go.transform.SetParent(null, false);
                                 despawned.go.SetActive(false);
