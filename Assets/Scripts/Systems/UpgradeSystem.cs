@@ -11,6 +11,7 @@ public enum UpgradeType
     FireRate,
     Piercing,
     ExtraProjectile,
+    HealthRegenPerMinute
 };
 
 [Serializable]
@@ -24,6 +25,7 @@ public struct StatsModifierComponent
     public float fireRateModifier;
     public int piercingNumber;
     public int extraProjectiles;
+    public int healthRegenPerMinute;
 }
 
 [Serializable]
@@ -70,6 +72,14 @@ public struct UpgradeSystem
                 break;
             case UpgradeType.ExtraProjectile:
                 unit.statModifiers.extraProjectiles += Mathf.FloorToInt(valueChange);
+                break;
+            case UpgradeType.HealthRegenPerMinute:
+                unit.statModifiers.healthRegenPerMinute += Mathf.FloorToInt(valueChange);
+                if(unit.statModifiers.healthRegenPerMinute == 1)
+                {
+                    mainScript.gameTimer.healthRegenTime = mainScript.gameTimer.currentTime + 60;
+                    mainScript.playerHealthCanRegen = true;
+                }
                 break;
         }
 

@@ -853,7 +853,7 @@ Camera:
   far clip plane: 10
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 5.4
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -1007,9 +1007,9 @@ RectTransform:
   - {fileID: 5614962539210820508}
   m_Father: {fileID: 3115572395486781208}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 270, y: -50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1832759758142589945
@@ -3318,9 +3318,9 @@ RectTransform:
   - {fileID: 2238740216149627429}
   m_Father: {fileID: 2719077502006890979}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 1364.125, y: -540}
   m_SizeDelta: {x: 854, y: 720}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4754992464903313284
@@ -3396,9 +3396,9 @@ RectTransform:
   - {fileID: 8474269877330339615}
   m_Father: {fileID: 3115572395486781208}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 160, y: -50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1287647158957009732
@@ -3957,7 +3957,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 427, y: -460}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 400, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6364402115473345891
 CanvasRenderer:
@@ -4300,9 +4300,9 @@ RectTransform:
   - {fileID: 835739109077447316}
   m_Father: {fileID: 3115572395486781208}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1173549149759682490
@@ -6467,9 +6467,9 @@ RectTransform:
   - {fileID: 6786712083591125594}
   m_Father: {fileID: 2719077502006890979}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 449.125, y: -540}
   m_SizeDelta: {x: 640.5, y: 720}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1637636352707628712
@@ -6943,10 +6943,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 5686772992781299062}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 320.25, y: -5}
+  m_SizeDelta: {x: 640.5, y: 37.066666}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &4428568128265585849
 CanvasRenderer:
@@ -8426,10 +8426,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 5686772992781299062}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 320.25, y: -386.03333}
+  m_SizeDelta: {x: 640.5, y: 667.93335}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2073324581148453612
 CanvasRenderer:
@@ -8658,6 +8658,8 @@ MonoBehaviour:
     charger:
       startChargeDistance: 0
       chargeDistance: 0
+      chargeSpeedBuff: 0
+      hitRange: 0
       attackCooldown: 0
       damage: 0
     boss0:
@@ -8697,7 +8699,8 @@ MonoBehaviour:
       variant: 0
       attackDelay: 0
       chargeDirection: {x: 0, y: 0}
-      chargeDistanceCurrent: 0
+      chargeDistanceLeft: 0
+      hasHit: 0
     baseMoveSpeed: 1.5
     moveSpeed: 1.5
     health:
@@ -8714,6 +8717,7 @@ MonoBehaviour:
       fireRateModifier: 1
       piercingNumber: 0
       extraProjectiles: 0
+      healthRegenPerMinute: 0
   enemies:
     elements: []
     versions: 
@@ -8748,7 +8752,8 @@ MonoBehaviour:
         variant: 0
         attackDelay: 0
         chargeDirection: {x: 0, y: 0}
-        chargeDistanceCurrent: 0
+        chargeDistanceLeft: 0
+        hasHit: 0
       baseMoveSpeed: 1.4
       moveSpeed: 1.4
       health:
@@ -8765,6 +8770,7 @@ MonoBehaviour:
         fireRateModifier: 1
         piercingNumber: 0
         extraProjectiles: 0
+        healthRegenPerMinute: 0
     spawnRate:
       serializedVersion: 2
       m_Curve:
@@ -8815,7 +8821,8 @@ MonoBehaviour:
           variant: 0
           attackDelay: 0
           chargeDirection: {x: 0, y: 0}
-          chargeDistanceCurrent: 0
+          chargeDistanceLeft: 0
+          hasHit: 0
         baseMoveSpeed: 1
         moveSpeed: 1
         health:
@@ -8832,6 +8839,7 @@ MonoBehaviour:
           fireRateModifier: 1
           piercingNumber: 0
           extraProjectiles: 0
+          healthRegenPerMinute: 0
       hasAgro: 0
       pickupType: 0
       bossIndicator:
@@ -8909,6 +8917,7 @@ MonoBehaviour:
     timerText: {fileID: 3446914976120063876}
     timeToSurvive: 900
     currentTime: 0
+    healthRegenTime: 0
   gameOverScreen:
     gameOverScreen: {fileID: 245037710274572785}
     gameOverText: {fileID: 3476229942539148145}
@@ -9002,21 +9011,45 @@ MonoBehaviour:
         water: 0
       description: 'Damage
 
-        +100%'
+        +50%'
       upgradeType: 0
+      upgradeValue: 0.5
+    - isCrafted: 0
+      icon: {fileID: 2800000, guid: b8eed4638cd1dec478393d7d95f421fd, type: 3}
+      costs:
+        fire: 2
+        earth: 1
+        air: 0
+        water: 0
+      description: 'Extra Projectile
+
+        +1'
+      upgradeType: 7
       upgradeValue: 1
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: a209d00bdece57e44b37a2fd24e4c3d7, type: 3}
+      icon: {fileID: 2800000, guid: b8eed4638cd1dec478393d7d95f421fd, type: 3}
       costs:
-        fire: 0
+        fire: 2
+        earth: 0
+        air: 1
+        water: 0
+      description: 'Light Radius
+
+        +50%'
+      upgradeType: 4
+      upgradeValue: 0.5
+    - isCrafted: 0
+      icon: {fileID: 2800000, guid: b8eed4638cd1dec478393d7d95f421fd, type: 3}
+      costs:
+        fire: 2
         earth: 0
         air: 0
-        water: 3
-      description: 'Reload Time
+        water: 1
+      description: 'Damage
 
-        -50%'
-      upgradeType: 1
-      upgradeValue: -0.5
+        +20%'
+      upgradeType: 0
+      upgradeValue: 0.2
     - isCrafted: 0
       icon: {fileID: 2800000, guid: cadd6d9933604514d83b88ae63130bb3, type: 3}
       costs:
@@ -9030,34 +9063,22 @@ MonoBehaviour:
       upgradeType: 2
       upgradeValue: 1
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: 44922b29bc6399744bd458e6974cad32, type: 3}
-      costs:
-        fire: 0
-        earth: 1
-        air: 2
-        water: 0
-      description: 'Move Speed
-
-        +100%'
-      upgradeType: 3
-      upgradeValue: 1
-    - isCrafted: 0
-      icon: {fileID: 2800000, guid: 77b18ff0edd5b5f4d99a0bc324c758c9, type: 3}
-      costs:
-        fire: 2
-        earth: 0
-        air: 1
-        water: 0
-      description: 'Light Radius
-
-        +100%'
-      upgradeType: 4
-      upgradeValue: 1
-    - isCrafted: 0
-      icon: {fileID: 2800000, guid: ebfdff326b3bd134d890f72abfe63583, type: 3}
+      icon: {fileID: 2800000, guid: cadd6d9933604514d83b88ae63130bb3, type: 3}
       costs:
         fire: 1
-        earth: 1
+        earth: 2
+        air: 0
+        water: 0
+      description: 'Extra Projectile
+
+        +1'
+      upgradeType: 7
+      upgradeValue: 1
+    - isCrafted: 0
+      icon: {fileID: 2800000, guid: cadd6d9933604514d83b88ae63130bb3, type: 3}
+      costs:
+        fire: 0
+        earth: 2
         air: 1
         water: 0
       description: 'Piercing
@@ -9066,19 +9087,19 @@ MonoBehaviour:
       upgradeType: 6
       upgradeValue: 1
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: ebfdff326b3bd134d890f72abfe63583, type: 3}
+      icon: {fileID: 2800000, guid: cadd6d9933604514d83b88ae63130bb3, type: 3}
       costs:
         fire: 0
-        earth: 1
-        air: 1
+        earth: 2
+        air: 0
         water: 1
-      description: 'Extra Shot
+      description: 'Health Regen
 
         +1'
-      upgradeType: 7
+      upgradeType: 8
       upgradeValue: 1
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: ebfdff326b3bd134d890f72abfe63583, type: 3}
+      icon: {fileID: 2800000, guid: 44922b29bc6399744bd458e6974cad32, type: 3}
       costs:
         fire: 0
         earth: 0
@@ -9086,9 +9107,141 @@ MonoBehaviour:
         water: 0
       description: 'Fire Rate
 
-        +100%'
+        +50%'
       upgradeType: 5
+      upgradeValue: 0.5
+    - isCrafted: 0
+      icon: {fileID: 2800000, guid: 44922b29bc6399744bd458e6974cad32, type: 3}
+      costs:
+        fire: 1
+        earth: 0
+        air: 2
+        water: 0
+      description: 'Fire Rate
+
+        +25%'
+      upgradeType: 5
+      upgradeValue: 0.25
+    - isCrafted: 0
+      icon: {fileID: 2800000, guid: 44922b29bc6399744bd458e6974cad32, type: 3}
+      costs:
+        fire: 0
+        earth: 1
+        air: 2
+        water: 0
+      description: 'Piercing
+
+        +1'
+      upgradeType: 6
       upgradeValue: 1
+    - isCrafted: 0
+      icon: {fileID: 2800000, guid: 44922b29bc6399744bd458e6974cad32, type: 3}
+      costs:
+        fire: 0
+        earth: 0
+        air: 2
+        water: 1
+      description: 'Reload Speed
+
+        +25%'
+      upgradeType: 1
+      upgradeValue: 0.5
+    - isCrafted: 0
+      icon: {fileID: 2800000, guid: a209d00bdece57e44b37a2fd24e4c3d7, type: 3}
+      costs:
+        fire: 0
+        earth: 0
+        air: 0
+        water: 3
+      description: 'Piercing
+
+        +1'
+      upgradeType: 6
+      upgradeValue: 1
+    - isCrafted: 0
+      icon: {fileID: 2800000, guid: a209d00bdece57e44b37a2fd24e4c3d7, type: 3}
+      costs:
+        fire: 1
+        earth: 0
+        air: 0
+        water: 2
+      description: 'Damage
+
+        +10%'
+      upgradeType: 0
+      upgradeValue: 0.1
+    - isCrafted: 0
+      icon: {fileID: 2800000, guid: a209d00bdece57e44b37a2fd24e4c3d7, type: 3}
+      costs:
+        fire: 0
+        earth: 1
+        air: 0
+        water: 2
+      description: 'Health Regen
+
+        +2'
+      upgradeType: 8
+      upgradeValue: 2
+    - isCrafted: 0
+      icon: {fileID: 2800000, guid: a209d00bdece57e44b37a2fd24e4c3d7, type: 3}
+      costs:
+        fire: 0
+        earth: 0
+        air: 1
+        water: 2
+      description: 'Reload Speed
+
+        +50%'
+      upgradeType: 1
+      upgradeValue: 0.5
+    - isCrafted: 0
+      icon: {fileID: 2800000, guid: b8eed4638cd1dec478393d7d95f421fd, type: 3}
+      costs:
+        fire: 1
+        earth: 1
+        air: 1
+        water: 0
+      description: 'Move Speed
+
+        +10%'
+      upgradeType: 3
+      upgradeValue: 0.1
+    - isCrafted: 0
+      icon: {fileID: 2800000, guid: b8eed4638cd1dec478393d7d95f421fd, type: 3}
+      costs:
+        fire: 1
+        earth: 1
+        air: 0
+        water: 1
+      description: 'Move Speed
+
+        +10%'
+      upgradeType: 3
+      upgradeValue: 0.1
+    - isCrafted: 0
+      icon: {fileID: 2800000, guid: b8eed4638cd1dec478393d7d95f421fd, type: 3}
+      costs:
+        fire: 1
+        earth: 0
+        air: 1
+        water: 1
+      description: 'Move Speed
+
+        +10%'
+      upgradeType: 3
+      upgradeValue: 0.1
+    - isCrafted: 0
+      icon: {fileID: 2800000, guid: b8eed4638cd1dec478393d7d95f421fd, type: 3}
+      costs:
+        fire: 0
+        earth: 1
+        air: 1
+        water: 1
+      description: 'Move Speed
+
+        +10%'
+      upgradeType: 3
+      upgradeValue: 0.1
     craftingPanel: {fileID: 5433697135985032409}
     upgradeIconUIPrefab: {fileID: 6489552767344459860, guid: 28a8a6f756f7d4a48a0418ee8e819f83, type: 3}
     upgradeIconUIs: []
@@ -9175,6 +9328,12 @@ MonoBehaviour:
   gameStartText: {fileID: 1754404346244192261}
   enemyMeele: {fileID: 21300000, guid: 76616bcc0336f614f8cf7890892fdf74, type: 3}
   enemyRange: {fileID: 21300000, guid: ebfdff326b3bd134d890f72abfe63583, type: 3}
+  enemyCharger: {fileID: 0}
+  enemyDamagedVFX: {fileID: 8911251432671140686, guid: 40827e34116858a43bebe2a1ac6418e1, type: 3}
+  boss0DamagedVFX: {fileID: 8911251432671140686, guid: 738c02d79d2453545be34eca75b9bf61, type: 3}
+  lightCrystalDamagedVFX: {fileID: 8911251432671140686, guid: 06ca204e72f8a5b4e99aacb5d43c09a2, type: 3}
+  playerDamagedVFX: {fileID: 8911251432671140686, guid: d02e00ebf66503d4985b62060fdd8b66, type: 3}
+  playerHealthCanRegen: 0
 --- !u!1 &8974552201042103813
 GameObject:
   m_ObjectHideFlags: 0

@@ -64,6 +64,13 @@ public class MainScript : MonoBehaviour
     public Sprite enemyRange;
     public Sprite enemyCharger;
 
+    public ParticleSystem enemyDamagedVFX;
+    public ParticleSystem boss0DamagedVFX;
+    public ParticleSystem lightCrystalDamagedVFX;
+    public ParticleSystem playerDamagedVFX;
+
+    public bool playerHealthCanRegen = false;
+
     public void Awake()
     {
         playerControls = new PlayerControls();
@@ -168,6 +175,17 @@ public class MainScript : MonoBehaviour
             if (gameTimer.currentTime >= gameTimer.timeToSurvive)
             {
                 SetGameState(GameState.Win);
+            }
+
+            // Health regen
+            if(playerHealthCanRegen && gameTimer.currentTime >= gameTimer.healthRegenTime)
+            {
+                gameTimer.healthRegenTime = gameTimer.currentTime + 60;
+                player.health.current += player.statModifiers.healthRegenPerMinute;
+                if(player.health.current > player.health.max)
+                {
+                    player.health.current = player.health.max;
+                }
             }
 
             gameTimer.timerText.SetText(gameTimer.GetTimeLeftString());
@@ -621,5 +639,24 @@ public class MainScript : MonoBehaviour
     public void ExitCraftingMenu()
     {
         craftingSystem.ExitMenu(this);
+    }
+
+    public void SpawnHitVFX(IDType idType, Vector3 position)
+    {
+        switch (idType)
+        {
+            case IDType.Player:
+                Instantiate(playerDamagedVFX, position, Quaternion.identity);
+                break;
+            case IDType.LightCrystal:
+                Instantiate(lightCrystalDamagedVFX, position, Quaternion.identity);
+                break;
+            case IDType.Enemy:
+                Instantiate(enemyDamagedVFX, position, Quaternion.identity);
+                break;
+            case IDType.Boss0:
+                Instantiate(boss0DamagedVFX, position, Quaternion.identity);
+                break;
+        }
     }
 }
