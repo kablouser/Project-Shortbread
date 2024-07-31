@@ -270,6 +270,86 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[0].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: 32eaeed0d1a73c5499bbcffc33ac0758, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[1].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: c5ca171c06936a948aaca3401fb0fd1d, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[2].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: 0970bef3adc93cb42a11c9a6364053fc, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[3].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: 32eaeed0d1a73c5499bbcffc33ac0758, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[4].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: 286fe02cdb85ed4498fba0c7b4a5cb64, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[5].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: c5ca171c06936a948aaca3401fb0fd1d, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[6].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: 7ebdf119ec665b14386e0c464545f86f, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[7].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: 7320a074b98cef84ba51f6f40bc3aee1, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[8].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: c8b69470b6ce5e14fb30c79156d59b90, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[9].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: c8b69470b6ce5e14fb30c79156d59b90, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[10].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: 7ebdf119ec665b14386e0c464545f86f, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[11].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: 1985a2fbf3404de4facaf83cf08bf93d, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[12].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: 7ebdf119ec665b14386e0c464545f86f, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[13].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: 32eaeed0d1a73c5499bbcffc33ac0758, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[14].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: 7320a074b98cef84ba51f6f40bc3aee1, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[15].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: 1985a2fbf3404de4facaf83cf08bf93d, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[16].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: 97afdce7f309e274290a9f152a446eeb, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[17].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: 97afdce7f309e274290a9f152a446eeb, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[18].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: 97afdce7f309e274290a9f152a446eeb, type: 3}
+    - target: {fileID: 7863157616502942289, guid: 0c2bd523df203d148941186a806d3330, type: 3}
+      propertyPath: craftingSystem.items.Array.data[19].icon
+      value: 
+      objectReference: {fileID: 2800000, guid: 97afdce7f309e274290a9f152a446eeb, type: 3}
     - target: {fileID: 7995831551003652219, guid: 0c2bd523df203d148941186a806d3330, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

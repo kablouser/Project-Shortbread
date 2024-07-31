@@ -8637,6 +8637,7 @@ MonoBehaviour:
       piercingNumber: 0
       extraProjectiles: 0
       spreadAngle: 60
+      isLimbed: 0
     enemyMelee:
       attackCooldown: 1
       damage: 1
@@ -8655,6 +8656,7 @@ MonoBehaviour:
       piercingNumber: 0
       extraProjectiles: 0
       spreadAngle: 0
+      isLimbed: 0
     charger:
       startChargeDistance: 0
       chargeDistance: 0
@@ -8674,6 +8676,20 @@ MonoBehaviour:
       piercingNumber: 0
       extraProjectiles: 0
       spreadAngle: 0
+      isLimbed: 0
+    bossLimbAttack:
+      attackCooldown: 0
+      projectileOffset: 0
+      projectileSpeed: 0
+      usesAmmo: 0
+      reloadCooldown: 0
+      fullMagazineAmmo: 0
+      damage: 0
+      projectileRange: 0
+      piercingNumber: 0
+      extraProjectiles: 0
+      spreadAngle: 0
+      isLimbed: 0
   aiSystem:
     boss0:
       agroRange: 5
@@ -8701,6 +8717,7 @@ MonoBehaviour:
       chargeDirection: {x: 0, y: 0}
       chargeDistanceLeft: 0
       hasHit: 0
+      limbShotI: 0
     baseMoveSpeed: 1.5
     moveSpeed: 1.5
     health:
@@ -8754,6 +8771,7 @@ MonoBehaviour:
         chargeDirection: {x: 0, y: 0}
         chargeDistanceLeft: 0
         hasHit: 0
+        limbShotI: 0
       baseMoveSpeed: 1.4
       moveSpeed: 1.4
       health:
@@ -8823,6 +8841,7 @@ MonoBehaviour:
           chargeDirection: {x: 0, y: 0}
           chargeDistanceLeft: 0
           hasHit: 0
+          limbShotI: 0
         baseMoveSpeed: 1
         moveSpeed: 1
         health:
@@ -8848,6 +8867,81 @@ MonoBehaviour:
         indicatorImage: {fileID: 0}
         position: {x: 0, y: 0}
         distance: 0
+      limb0:
+        type: 0
+        index: 0
+        version: 0
+      limb1:
+        type: 0
+        index: 0
+        version: 0
+      limb2:
+        type: 0
+        index: 0
+        version: 0
+    limbsBossPreset:
+      unit:
+        transform: {fileID: 0}
+        rigidbody: {fileID: 0}
+        spriteRenderer: {fileID: 0}
+        rotationDegrees: 0
+        animation:
+          spriteSheetIndex: 0
+          animationClipIndex: 0
+          currentIndex: 0
+        attack:
+          isAttacking: 0
+          attackCooldown: 0
+          ammoShot: 0
+          reloadCooldown: 0
+          meleeAttackTime: 0
+          singleTarget:
+            type: 0
+            index: 0
+            version: 0
+          variant: 0
+          attackDelay: 0
+          chargeDirection: {x: 0, y: 0}
+          chargeDistanceLeft: 0
+          hasHit: 0
+          limbShotI: 0
+        baseMoveSpeed: 0
+        moveSpeed: 0
+        health:
+          baseHealth: 0
+          current: 0
+          max: 0
+        lightPower: 0
+        statModifiers:
+          healthModifier: 0
+          moveSpeedModifier: 0
+          damageModifier: 0
+          reloadSpeedModifier: 0
+          visionRangeModifier: 0
+          fireRateModifier: 0
+          piercingNumber: 0
+          extraProjectiles: 0
+          healthRegenPerMinute: 0
+      hasAgro: 0
+      pickupType: 0
+      bossIndicator:
+        indicatorHolder: {fileID: 0}
+        indicatorArrowTransform: {fileID: 0}
+        indicatorImage: {fileID: 0}
+        position: {x: 0, y: 0}
+        distance: 0
+      limb0:
+        type: 0
+        index: 0
+        version: 0
+      limb1:
+        type: 0
+        index: 0
+        version: 0
+      limb2:
+        type: 0
+        index: 0
+        version: 0
     spawnTimeLeft: 30
     timeBetweenSpawns: 30
     minDistanceToPlayer: 11
@@ -9003,7 +9097,7 @@ MonoBehaviour:
         pickupSprite: {fileID: 21300000, guid: a209d00bdece57e44b37a2fd24e4c3d7, type: 3}
     items:
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: b8eed4638cd1dec478393d7d95f421fd, type: 3}
+      icon: {fileID: 2800000, guid: 32eaeed0d1a73c5499bbcffc33ac0758, type: 3}
       costs:
         fire: 3
         earth: 0
@@ -9015,7 +9109,7 @@ MonoBehaviour:
       upgradeType: 0
       upgradeValue: 0.5
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: b8eed4638cd1dec478393d7d95f421fd, type: 3}
+      icon: {fileID: 2800000, guid: c5ca171c06936a948aaca3401fb0fd1d, type: 3}
       costs:
         fire: 2
         earth: 1
@@ -9027,7 +9121,7 @@ MonoBehaviour:
       upgradeType: 7
       upgradeValue: 1
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: b8eed4638cd1dec478393d7d95f421fd, type: 3}
+      icon: {fileID: 2800000, guid: 0970bef3adc93cb42a11c9a6364053fc, type: 3}
       costs:
         fire: 2
         earth: 0
@@ -9039,7 +9133,7 @@ MonoBehaviour:
       upgradeType: 4
       upgradeValue: 0.5
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: b8eed4638cd1dec478393d7d95f421fd, type: 3}
+      icon: {fileID: 2800000, guid: 32eaeed0d1a73c5499bbcffc33ac0758, type: 3}
       costs:
         fire: 2
         earth: 0
@@ -9051,7 +9145,7 @@ MonoBehaviour:
       upgradeType: 0
       upgradeValue: 0.2
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: cadd6d9933604514d83b88ae63130bb3, type: 3}
+      icon: {fileID: 2800000, guid: 286fe02cdb85ed4498fba0c7b4a5cb64, type: 3}
       costs:
         fire: 0
         earth: 3
@@ -9063,7 +9157,7 @@ MonoBehaviour:
       upgradeType: 2
       upgradeValue: 1
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: cadd6d9933604514d83b88ae63130bb3, type: 3}
+      icon: {fileID: 2800000, guid: c5ca171c06936a948aaca3401fb0fd1d, type: 3}
       costs:
         fire: 1
         earth: 2
@@ -9075,7 +9169,7 @@ MonoBehaviour:
       upgradeType: 7
       upgradeValue: 1
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: cadd6d9933604514d83b88ae63130bb3, type: 3}
+      icon: {fileID: 2800000, guid: 7ebdf119ec665b14386e0c464545f86f, type: 3}
       costs:
         fire: 0
         earth: 2
@@ -9087,7 +9181,7 @@ MonoBehaviour:
       upgradeType: 6
       upgradeValue: 1
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: cadd6d9933604514d83b88ae63130bb3, type: 3}
+      icon: {fileID: 2800000, guid: 7320a074b98cef84ba51f6f40bc3aee1, type: 3}
       costs:
         fire: 0
         earth: 2
@@ -9099,7 +9193,7 @@ MonoBehaviour:
       upgradeType: 8
       upgradeValue: 1
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: 44922b29bc6399744bd458e6974cad32, type: 3}
+      icon: {fileID: 2800000, guid: c8b69470b6ce5e14fb30c79156d59b90, type: 3}
       costs:
         fire: 0
         earth: 0
@@ -9111,7 +9205,7 @@ MonoBehaviour:
       upgradeType: 5
       upgradeValue: 0.5
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: 44922b29bc6399744bd458e6974cad32, type: 3}
+      icon: {fileID: 2800000, guid: c8b69470b6ce5e14fb30c79156d59b90, type: 3}
       costs:
         fire: 1
         earth: 0
@@ -9123,7 +9217,7 @@ MonoBehaviour:
       upgradeType: 5
       upgradeValue: 0.25
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: 44922b29bc6399744bd458e6974cad32, type: 3}
+      icon: {fileID: 2800000, guid: 7ebdf119ec665b14386e0c464545f86f, type: 3}
       costs:
         fire: 0
         earth: 1
@@ -9135,7 +9229,7 @@ MonoBehaviour:
       upgradeType: 6
       upgradeValue: 1
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: 44922b29bc6399744bd458e6974cad32, type: 3}
+      icon: {fileID: 2800000, guid: 1985a2fbf3404de4facaf83cf08bf93d, type: 3}
       costs:
         fire: 0
         earth: 0
@@ -9147,7 +9241,7 @@ MonoBehaviour:
       upgradeType: 1
       upgradeValue: 0.5
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: a209d00bdece57e44b37a2fd24e4c3d7, type: 3}
+      icon: {fileID: 2800000, guid: 7ebdf119ec665b14386e0c464545f86f, type: 3}
       costs:
         fire: 0
         earth: 0
@@ -9159,7 +9253,7 @@ MonoBehaviour:
       upgradeType: 6
       upgradeValue: 1
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: a209d00bdece57e44b37a2fd24e4c3d7, type: 3}
+      icon: {fileID: 2800000, guid: 32eaeed0d1a73c5499bbcffc33ac0758, type: 3}
       costs:
         fire: 1
         earth: 0
@@ -9171,7 +9265,7 @@ MonoBehaviour:
       upgradeType: 0
       upgradeValue: 0.1
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: a209d00bdece57e44b37a2fd24e4c3d7, type: 3}
+      icon: {fileID: 2800000, guid: 7320a074b98cef84ba51f6f40bc3aee1, type: 3}
       costs:
         fire: 0
         earth: 1
@@ -9183,7 +9277,7 @@ MonoBehaviour:
       upgradeType: 8
       upgradeValue: 2
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: a209d00bdece57e44b37a2fd24e4c3d7, type: 3}
+      icon: {fileID: 2800000, guid: 1985a2fbf3404de4facaf83cf08bf93d, type: 3}
       costs:
         fire: 0
         earth: 0
@@ -9195,7 +9289,7 @@ MonoBehaviour:
       upgradeType: 1
       upgradeValue: 0.5
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: b8eed4638cd1dec478393d7d95f421fd, type: 3}
+      icon: {fileID: 2800000, guid: 97afdce7f309e274290a9f152a446eeb, type: 3}
       costs:
         fire: 1
         earth: 1
@@ -9207,7 +9301,7 @@ MonoBehaviour:
       upgradeType: 3
       upgradeValue: 0.1
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: b8eed4638cd1dec478393d7d95f421fd, type: 3}
+      icon: {fileID: 2800000, guid: 97afdce7f309e274290a9f152a446eeb, type: 3}
       costs:
         fire: 1
         earth: 1
@@ -9219,7 +9313,7 @@ MonoBehaviour:
       upgradeType: 3
       upgradeValue: 0.1
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: b8eed4638cd1dec478393d7d95f421fd, type: 3}
+      icon: {fileID: 2800000, guid: 97afdce7f309e274290a9f152a446eeb, type: 3}
       costs:
         fire: 1
         earth: 0
@@ -9231,7 +9325,7 @@ MonoBehaviour:
       upgradeType: 3
       upgradeValue: 0.1
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: b8eed4638cd1dec478393d7d95f421fd, type: 3}
+      icon: {fileID: 2800000, guid: 97afdce7f309e274290a9f152a446eeb, type: 3}
       costs:
         fire: 0
         earth: 1
@@ -9313,13 +9407,15 @@ MonoBehaviour:
     cameraPositionWithoutShake: {x: 0, y: 0, z: 0}
     cameraShakeOffset: {x: 0, y: 0}
     cameraShakeLastVelocity: {x: 0, y: 0}
+  limbs:
+    elements: []
+    versions: 
+    isUsing: 
+    type: 7
+  limbPrefab: {fileID: 0}
   mapBoundsMax: {x: 15, y: 15}
   mapBoundsMin: {x: -15, y: -15}
   centreRadius: 1
-  bossSpawnPositions:
-  - {fileID: 2829030988587730585}
-  - {fileID: 6081573203551436352}
-  - {fileID: 1528375288879417442}
   eventSystem: {fileID: 5423922021913735894}
   gameState: 0
   numberBossesDefeated: 0
