@@ -242,43 +242,44 @@ public struct AttackSystem
                 startSpreadAngle = 0;
             }
 
-            for (int i = 0; i < numberOfShots; i++)
+            // calc rotation and position first
+            Quaternion rotation = Quaternion.identity;
+            Vector3 position = new Vector3();
+            if (attackPreset.isLimbed)
             {
-                // calc rotation and position first
-                Quaternion rotation;
-                Vector3 position;
-                if (attackPreset.isLimbed)
+                // limbs could be all cut off, would need to bail before spawning projectiles
+                if (!mainScript.bosses0.IsValidID(unitIDForLimb))
                 {
-                    // limbs could be all cut off, would need to bail before spawning projectiles
-                    if (!mainScript.bosses0.IsValidID(unitIDForLimb))
-                    {
-                        continue;
-                    }
-                    ref Boss0Entity boss = ref mainScript.bosses0[unitIDForLimb.index];
+                    return;
+                }
+                ref Boss0Entity boss = ref mainScript.bosses0[unitIDForLimb.index];
 
-                    ID? findLimbID = null;
+                ID? findLimbID = null;
 
-                    // cycle once
-                    if (unit.attack.limbShotI < 0)
-                        unit.attack.limbShotI = 0;
-                    ID limbID = boss.GetLimb(unit.attack.limbShotI % 3);
-                    unit.attack.limbShotI++;
+                // cycle once
+                if (unit.attack.limbShotI < 0)
+                    unit.attack.limbShotI = 0;
+                ID limbID = boss.GetLimb(unit.attack.limbShotI % 3);
+                unit.attack.limbShotI++;
 
-                    if (mainScript.limbs.IsValidID(limbID))
-                    {
-                        findLimbID = limbID;
-                    }
+                if (mainScript.limbs.IsValidID(limbID))
+                {
+                    findLimbID = limbID;
+                }
 
-                    if (findLimbID.HasValue)
-                    {
-                        ref LimbEntity limb = ref mainScript.limbs[findLimbID.Value.index];
-                        position = limb.shootOrigin.position;
-                        rotation = Quaternion.LookRotation(Vector3.forward, mainScript.player.transform.position - position);
-                    }
-                    else
-                        continue;
+                if (findLimbID.HasValue)
+                {
+                    ref LimbEntity limb = ref mainScript.limbs[findLimbID.Value.index];
+                    position = limb.shootOrigin.position;
+                    rotation = Quaternion.LookRotation(Vector3.forward, mainScript.player.transform.position - position);
                 }
                 else
+                    return;
+            }
+
+            for (int i = 0; i < numberOfShots; i++)
+            {
+                if (!attackPreset.isLimbed)
                 {
                     position = unit.transform.position;
                     rotation = Quaternion.Euler(0f, 0f, unit.rotationDegrees - startSpreadAngle + attackPreset.spreadAngle * i);
@@ -325,9 +326,9 @@ public struct AttackSystem
                     rotation);
                 projectile.gameObject.GetComponent<Rigidbody2D>().velocity = forward * attackPreset.projectileSpeed;
                 projectile.lastPosition = projectile.gameObject.transform.position;
-
-                mainScript.audioSystem.PlayAttackSound(unitType, position);
             }
+            //play once per shotgun eff
+            mainScript.audioSystem.PlayAttackSound(unitType, position);
         }
     }
 

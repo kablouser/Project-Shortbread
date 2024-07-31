@@ -69,8 +69,6 @@ public class MainScript : MonoBehaviour
     public ParticleSystem lightCrystalDamagedVFX;
     public ParticleSystem playerDamagedVFX;
 
-    public bool playerHealthCanRegen = true;
-
     public void Awake()
     {
         playerControls = new PlayerControls();
@@ -177,18 +175,6 @@ public class MainScript : MonoBehaviour
                 SetGameState(GameState.Win);
             }
 
-            // Health regen
-            if(playerHealthCanRegen && gameTimer.currentTime >= gameTimer.healthRegenTime)
-            {
-                gameTimer.healthRegenTime = gameTimer.currentTime + 60;
-                player.health.current += player.statModifiers.healthRegenPerMinute;
-                if(player.health.current > player.health.max)
-                {
-                    player.health.current = player.health.max;
-                }
-                healthBar.UpdateHealthBar(player.health);
-            }
-
             gameTimer.timerText.SetText(gameTimer.GetTimeLeftString());
         }
 
@@ -200,6 +186,24 @@ public class MainScript : MonoBehaviour
             craftingSystem.Update(this);
 
             ReplenishCrystalsNumber();
+
+            // Health regen
+            {
+                gameTimer.healthRegenAccum += Time.deltaTime * player.statModifiers.healthRegenPerMinute / 60f;
+
+                if (0f < gameTimer.healthRegenAccum)
+                {
+                    int gain = Mathf.FloorToInt(gameTimer.healthRegenAccum);
+                    gameTimer.healthRegenAccum -= gain;
+
+                    player.health.current += gain;
+                    if (player.health.current > player.health.max)
+                    {
+                        player.health.current = player.health.max;
+                    }
+                    healthBar.UpdateHealthBar(player.health);
+                }
+            }
         }
         else if (gameState == GameState.Survive)
         {

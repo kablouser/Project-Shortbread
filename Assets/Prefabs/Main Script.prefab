@@ -3001,7 +3001,7 @@ MonoBehaviour:
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
-  m_PointLightOuterRadius: 3
+  m_PointLightOuterRadius: 4
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1
@@ -8721,9 +8721,9 @@ MonoBehaviour:
     baseMoveSpeed: 1.6
     moveSpeed: 1.6
     health:
-      baseHealth: 10
-      current: 10
-      max: 10
+      baseHealth: 12
+      current: 12
+      max: 12
     lightPower: 0
     statModifiers:
       healthModifier: 1
@@ -8794,21 +8794,21 @@ MonoBehaviour:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.49944997
-        inSlope: 0.0006890414
-        outSlope: 0.0006890414
+        value: 0.4
+        inSlope: 0.39805523
+        outSlope: 0.39805523
         tangentMode: 0
         weightedMode: 0
         inWeight: 0
-        outWeight: 1
+        outWeight: 0.066743374
       - serializedVersion: 3
         time: 1
-        value: 1
-        inSlope: 1.1058785
-        outSlope: 1.1058785
+        value: 1.5
+        inSlope: 2.6408637
+        outSlope: 2.6408637
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.2162022
+        inWeight: 0.051181436
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -8942,7 +8942,7 @@ MonoBehaviour:
         type: 0
         index: 0
         version: 0
-    spawnTimeLeft: 0
+    spawnTimeLeft: 30
     timeBetweenSpawns: 30
     minDistanceToPlayer: 11
     dropResources: 5
@@ -8952,7 +8952,7 @@ MonoBehaviour:
     water: 1
   playerLight:
     light: {fileID: 7127101083637915000}
-    baseLightRange: 3
+    baseLightRange: 4
   centreLight:
     light: {fileID: 4480302817564232865}
     collider: {fileID: 584863892776297943}
@@ -9011,7 +9011,7 @@ MonoBehaviour:
     timerText: {fileID: 3446914976120063876}
     timeToSurvive: 900
     currentTime: 0
-    healthRegenTime: 0
+    healthRegenAccum: 0
   gameOverScreen:
     gameOverScreen: {fileID: 245037710274572785}
     gameOverText: {fileID: 3476229942539148145}
@@ -9105,9 +9105,9 @@ MonoBehaviour:
         water: 0
       description: 'Damage
 
-        +50%'
+        +100%'
       upgradeType: 0
-      upgradeValue: 0.5
+      upgradeValue: 1
     - isCrafted: 0
       icon: {fileID: 2800000, guid: c5ca171c06936a948aaca3401fb0fd1d, type: 3}
       costs:
@@ -9141,9 +9141,9 @@ MonoBehaviour:
         water: 1
       description: 'Damage
 
-        +20%'
+        +50%'
       upgradeType: 0
-      upgradeValue: 0.2
+      upgradeValue: 0.5
     - isCrafted: 0
       icon: {fileID: 2800000, guid: 286fe02cdb85ed4498fba0c7b4a5cb64, type: 3}
       costs:
@@ -9189,9 +9189,9 @@ MonoBehaviour:
         water: 1
       description: 'Health Regen
 
-        +2'
+        +5 per min'
       upgradeType: 8
-      upgradeValue: 2
+      upgradeValue: 5
     - isCrafted: 0
       icon: {fileID: 2800000, guid: c8b69470b6ce5e14fb30c79156d59b90, type: 3}
       costs:
@@ -9237,7 +9237,7 @@ MonoBehaviour:
         water: 1
       description: 'Reload Speed
 
-        +25%'
+        +50%'
       upgradeType: 1
       upgradeValue: 0.5
     - isCrafted: 0
@@ -9261,9 +9261,9 @@ MonoBehaviour:
         water: 2
       description: 'Damage
 
-        +10%'
+        +50%'
       upgradeType: 0
-      upgradeValue: 0.1
+      upgradeValue: 0.5
     - isCrafted: 0
       icon: {fileID: 2800000, guid: 7320a074b98cef84ba51f6f40bc3aee1, type: 3}
       costs:
@@ -9273,33 +9273,33 @@ MonoBehaviour:
         water: 2
       description: 'Health Regen
 
-        +2'
+        +5 per min'
       upgradeType: 8
-      upgradeValue: 2
+      upgradeValue: 5
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: 1985a2fbf3404de4facaf83cf08bf93d, type: 3}
+      icon: {fileID: 2800000, guid: 97afdce7f309e274290a9f152a446eeb, type: 3}
       costs:
         fire: 0
         earth: 0
         air: 1
         water: 2
-      description: 'Reload Speed
+      description: 'Move Speed
 
         +50%'
-      upgradeType: 1
+      upgradeType: 3
       upgradeValue: 0.5
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: 97afdce7f309e274290a9f152a446eeb, type: 3}
+      icon: {fileID: 2800000, guid: 0970bef3adc93cb42a11c9a6364053fc, type: 3}
       costs:
         fire: 1
         earth: 1
         air: 1
         water: 0
-      description: 'Move Speed
+      description: 'Light Radius
 
-        +10%'
-      upgradeType: 3
-      upgradeValue: 0.1
+        +50%'
+      upgradeType: 4
+      upgradeValue: 0.5
     - isCrafted: 0
       icon: {fileID: 2800000, guid: 97afdce7f309e274290a9f152a446eeb, type: 3}
       costs:
@@ -9309,33 +9309,33 @@ MonoBehaviour:
         water: 1
       description: 'Move Speed
 
-        +10%'
+        +20%'
       upgradeType: 3
-      upgradeValue: 0.1
+      upgradeValue: 0.2
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: 97afdce7f309e274290a9f152a446eeb, type: 3}
+      icon: {fileID: 2800000, guid: 1985a2fbf3404de4facaf83cf08bf93d, type: 3}
       costs:
         fire: 1
         earth: 0
         air: 1
         water: 1
-      description: 'Move Speed
+      description: 'Reload Speed
 
-        +10%'
-      upgradeType: 3
-      upgradeValue: 0.1
+        +50%'
+      upgradeType: 1
+      upgradeValue: 0.5
     - isCrafted: 0
-      icon: {fileID: 2800000, guid: 97afdce7f309e274290a9f152a446eeb, type: 3}
+      icon: {fileID: 2800000, guid: 286fe02cdb85ed4498fba0c7b4a5cb64, type: 3}
       costs:
         fire: 0
         earth: 1
         air: 1
         water: 1
-      description: 'Move Speed
+      description: 'Health
 
-        +10%'
-      upgradeType: 3
-      upgradeValue: 0.1
+        +50%'
+      upgradeType: 2
+      upgradeValue: 0.5
     craftingPanel: {fileID: 5433697135985032409}
     upgradeIconUIPrefab: {fileID: 6489552767344459860, guid: 28a8a6f756f7d4a48a0418ee8e819f83, type: 3}
     upgradeIconUIs: []
@@ -9423,7 +9423,6 @@ MonoBehaviour:
   boss0DamagedVFX: {fileID: 8911251432671140686, guid: 738c02d79d2453545be34eca75b9bf61, type: 3}
   lightCrystalDamagedVFX: {fileID: 8911251432671140686, guid: 06ca204e72f8a5b4e99aacb5d43c09a2, type: 3}
   playerDamagedVFX: {fileID: 8911251432671140686, guid: d02e00ebf66503d4985b62060fdd8b66, type: 3}
-  playerHealthCanRegen: 1
 --- !u!1 &8974552201042103813
 GameObject:
   m_ObjectHideFlags: 0

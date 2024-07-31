@@ -75,11 +75,6 @@ public struct UpgradeSystem
                 break;
             case UpgradeType.HealthRegenPerMinute:
                 unit.statModifiers.healthRegenPerMinute += Mathf.FloorToInt(valueChange);
-                if(unit.statModifiers.healthRegenPerMinute == 1)
-                {
-                    mainScript.gameTimer.healthRegenTime = mainScript.gameTimer.currentTime + 60;
-                    mainScript.playerHealthCanRegen = true;
-                }
                 break;
         }
 

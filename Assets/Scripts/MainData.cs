@@ -504,7 +504,7 @@ public struct GameTimer
     public float timeToSurvive;
     public float currentTime;
 
-    public float healthRegenTime;
+    public float healthRegenAccum;
 
     public string GetTimeLeftString()
     {
