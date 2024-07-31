@@ -100,6 +100,9 @@ public struct AttackComponent
     public float chargeDistanceLeft;
     public bool hasHit;
 
+    // limbs
+    public int limbShotI;
+
     public bool Reload(in ProjectileAttackPreset preset, StatsModifierComponent stats)
     {
         if (0 < ammoShot)
@@ -185,6 +188,7 @@ public struct Boss0SpawnData
 {
     public GameObject prefab;
     public Boss0Entity presetUnit;
+    public Boss0Entity limbsBossPreset;
 
     public float spawnTimeLeft;
     public float timeBetweenSpawns;
@@ -363,33 +367,37 @@ public struct Boss0Entity
 {
     public UnitEntity unit;
     public bool hasAgro;
-    // other components here
-    // e.g. limbs system
 
     public PickupType pickupType;
 
     public IndicatorAndLocation bossIndicator;
 
+    public ID limb0, limb1, limb2;
+
     public Boss0Entity(
         GameObject go,
         in Boss0Entity template,
         ID id,
-        IndicatorAndLocation bossIndicator)
+        IndicatorAndLocation bossIndicator,
+        int variant)
     {
         this = template;
         unit = new UnitEntity(go, template.unit, id);
         this.bossIndicator = bossIndicator;
+        unit.attack.variant = variant;
     }
 
     public Boss0Entity(
         GameObject go,
         in Boss0Entity template,
         ID id,
-        IndicatorUI Indicator)
+        IndicatorUI Indicator,
+        int variant)
     {
         this = template;
         unit = new UnitEntity(go, template.unit, id);
         bossIndicator = new IndicatorAndLocation(Indicator);
+        unit.attack.variant = variant;
     }
 
     public void UpdatePickupType(PickupType pickupType, MainScript mainScript)
@@ -399,6 +407,34 @@ public struct Boss0Entity
         Color bossColor = mainScript.pickupColor.GetColor(pickupType);
         bossIndicator.indicatorImage.color = bossColor;
         unit.spriteRenderer.color = bossColor;
+    }
+
+    public readonly ID GetLimb(int i)
+    {
+        switch (i)
+        {
+            default:
+            case 0:
+                return limb0;
+            case 1:
+                return limb1;
+            case 2:
+                return limb2;
+        }
+    }
+
+    public void SetLimb(int i, in ID id)
+    {
+        switch (i)
+        {
+            default:
+            case 0:
+                limb0 = id; break;
+            case 1:
+                limb1 = id; break;
+            case 2:
+                limb2 = id; break;
+        }
     }
 }
 
@@ -476,3 +512,47 @@ public struct GameTimer
 }
 
 public enum GameState { TutorialBlast, TutorialBarrierPower, Survive, Win, Death, NoPower };
+
+[System.Serializable]
+public struct LimbEntity
+{
+    public ID parent;
+    public GameObject go;
+    public Transform shootOrigin;
+    public int health;
+
+    public LimbEntity(ID limbID, ID parent, GameObject go, int maxHealth, Color parentColor, MainScript main, int i)
+    {
+        this.parent = parent;
+        this.go = go;
+        go.GetComponent<IDComponent>().id = limbID;
+        shootOrigin = go.transform.GetChild(0);
+        health = maxHealth;
+
+        go.GetComponent<SpriteRenderer>().color = parentColor;
+
+        if (!main.bosses0.IsValidID(parent))
+            return;
+        ref Boss0Entity boss = ref main.bosses0[parent.index];
+
+        go.transform.SetParent(boss.unit.transform, false);
+        RotateAround(main, i);
+    }
+
+    public bool IsValid()
+    {
+        return go != null;
+    }
+
+    public void RotateAround(MainScript main, int i)
+    {
+        if (!main.bosses0.IsValidID(parent))
+            return;
+
+        ref Boss0Entity boss = ref main.bosses0[parent.index];
+        float myRotation = boss.unit.rotationDegrees + i * 120f + 60f;
+        Quaternion rotation = Quaternion.Euler(0f, 0f, myRotation);
+        Vector3 limbPos = rotation * Vector3.up * 3.24f;
+        go.transform.SetLocalPositionAndRotation(limbPos, rotation);
+    }
+}

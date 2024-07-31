@@ -52,6 +52,8 @@ public struct ProjectileAttackPreset
     public int piercingNumber;
     public int extraProjectiles;
     public int spreadAngle;
+
+    public bool isLimbed;
 }
 
 [System.Serializable]
@@ -75,6 +77,7 @@ public struct AttackSystem
     public ProjectileAttackPreset enemyRanged;
     public ChargerAttackPreset charger;
     public ProjectileAttackPreset boss0;
+    public ProjectileAttackPreset bossLimbAttack;
 
     public void Update(MainScript mainScript)
     {
@@ -105,7 +108,9 @@ public struct AttackSystem
 
         foreach (int i in mainScript.bosses0)
         {
-            UpdateAttackProjectile(ref mainScript.bosses0[i].unit, IDType.Boss0, boss0, defaultProjectile, mainScript);
+            UpdateAttackProjectile(ref mainScript.bosses0[i].unit, IDType.Boss0,
+                mainScript.bosses0[i].unit.attack.variant == 0 ? boss0 : bossLimbAttack,
+                defaultProjectile, mainScript, mainScript.bosses0.GetCurrentID(i));
         }
     }
 
@@ -179,7 +184,8 @@ public struct AttackSystem
         IDType unitType,
         in ProjectileAttackPreset attackPreset,
         in ProjectileGroup group,
-        MainScript mainScript)
+        MainScript mainScript,
+        in ID unitIDForLimb = new ID())
     {
         if (!unit.transform.gameObject.activeInHierarchy)
             return;
@@ -235,6 +241,45 @@ public struct AttackSystem
 
             for (int i = 0; i < numberOfShots; i++)
             {
+                Quaternion rotation;
+                Vector3 position;
+                if (attackPreset.isLimbed)
+                {
+                    // limbs could be all cut off, would need to bail before spawning projectiles
+                    if (!mainScript.bosses0.IsValidID(unitIDForLimb))
+                    {
+                        continue;
+                    }
+                    ref Boss0Entity boss = ref mainScript.bosses0[unitIDForLimb.index];
+
+                    ID? findLimbID = null;
+                    for (int limbI = 0; limbI < 3; limbI++)
+                    {
+                        ID limbID = boss.GetLimb(unit.attack.limbShotI);
+                        unit.attack.limbShotI++;
+
+                        if (mainScript.limbs.IsValidID(limbID))
+                        {
+                            findLimbID = limbID;
+                            break;
+                        }
+                    }
+
+                    if (findLimbID.HasValue)
+                    {
+                        ref LimbEntity limb = ref mainScript.limbs[findLimbID.Value.index];
+                        position = limb.shootOrigin.position;
+                        rotation = Quaternion.identity; //Quaternion.LookRotation(mainScript.player.transform.position - position, Vector3.forward);
+                    }
+                    else
+                        continue;
+                }
+                else
+                {
+                    position = unit.transform.position;
+                    rotation = Quaternion.Euler(0f, 0f, unit.rotationDegrees - startSpreadAngle + attackPreset.spreadAngle * i);
+                }
+
                 ID projectileID = group.pool.Spawn();
                 ref ProjectileEntity projectile = ref group.pool[projectileID.index];
 
@@ -270,16 +315,14 @@ public struct AttackSystem
                         SwitchColor(projectile.gameObject, unit.spriteRenderer.color); break;
                 }
 
-                // shoot at unit's forward direction
-                Quaternion rotation = Quaternion.Euler(0f, 0f, unit.rotationDegrees - startSpreadAngle + attackPreset.spreadAngle * i);
                 Vector3 forward = rotation * Vector2.up;
                 projectile.gameObject.transform.SetPositionAndRotation(
-                    unit.transform.position + forward * attackPreset.projectileOffset,
+                    position + forward * attackPreset.projectileOffset,
                     rotation);
                 projectile.gameObject.GetComponent<Rigidbody2D>().velocity = forward * attackPreset.projectileSpeed;
                 projectile.lastPosition = projectile.gameObject.transform.position;
 
-                mainScript.audioSystem.PlayAttackSound(unitType, unit.transform.position);
+                mainScript.audioSystem.PlayAttackSound(unitType, position);
             }
         }
     }
@@ -553,9 +596,65 @@ public struct AttackSystem
 
                         mainScript.shakeSystem.Shake(0.7f);
                         mainScript.numberBossesDefeated++;
+
+                        // remove limbs
+                        for (int limbI = 0; limbI < 3; limbI++)
+                        {
+                            if (!mainScript.limbs.TryDespawn(boss.GetLimb(limbI), out LimbEntity despawned))
+                            {
+                                despawned.go.transform.SetParent(null, false);
+                                despawned.go.SetActive(false);
+                                boss.SetLimb(limbI, new ID());
+                            }
+                        }
                     }
                     return true;
                 }
+                break;
+
+            case IDType.Limb:
+                if (mainScript.limbs.IsValidID(id))
+                {
+                    ref LimbEntity limb = ref mainScript.limbs[id.index];
+
+                    if (!mainScript.bosses0.IsValidID(limb.parent))
+                        break;
+
+                    ref Boss0Entity parent = ref mainScript.bosses0[limb.parent.index];
+
+                    bool isDead = true;
+                    do
+                    {
+                        if (limb.health <= 0)
+                            break;
+
+                        limb.health -= damage;
+                        if (limb.health <= 0)
+                        {
+                            limb.go.SetActive(false);
+                            limb.go.transform.SetParent(null, false);
+                            isDead = true;
+                            mainScript.limbs.TryDespawn(id.index);
+                        }
+                    }
+                    while (false);
+
+                    if (isDead)
+                    {
+                        for (int limbI = 0; limbI < 3; limbI++)
+                        {
+                            if (!mainScript.limbs.IsValidID(parent.GetLimb(limbI)))
+                            {
+                                parent.SetLimb(limbI, new ID());
+                            }
+                        }
+                    }
+
+                    Damage(limb.parent, damage, mainScript);
+
+                    return true;
+                }
+
                 break;
         }
 

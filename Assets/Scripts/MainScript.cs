@@ -41,13 +41,13 @@ public class MainScript : MonoBehaviour
     public AudioSystem audioSystem;
     public ShakeSystem shakeSystem;
 
+    public VersionedPool<LimbEntity> limbs;
+    public GameObject limbPrefab;
+
     [Header("Game Settings")]
     public Vector2 mapBoundsMax = Vector2.zero;
     public Vector2 mapBoundsMin = Vector2.zero;
     public float centreRadius = 1f;
-
-    // This is temporary
-    public Transform[] bossSpawnPositions;
 
     public PlayerControls playerControls;
     public UnityEngine.EventSystems.EventSystem eventSystem;
@@ -120,6 +120,7 @@ public class MainScript : MonoBehaviour
     {
         enemies.type = IDType.Enemy;
         bosses0.type = IDType.Boss0;
+        limbs.type = IDType.Limb;
         attackSystem.defaultProjectile.pool.type = IDType.ProjectileDefault;
         if (player.transform)
         {
@@ -268,16 +269,13 @@ public class MainScript : MonoBehaviour
 
                 boss0SpawnData.spawnTimeLeft = boss0SpawnData.timeBetweenSpawns;
 
-                //List<Transform> tempbossSpawnPosition = bossSpawnPositions.ToList<Transform>();
-                List<int> elementTypeList = new List<int>{ 1, 2, 3, 4};
+                List<int> elementTypeList = new() { 1, 2, 3, 4};
+                List<Vector2> spawnedPositions = new();
                 for(int i = 0; i < 3; i++)
                 {
-                    if (!RandomPositionAwayFromPlayer(boss0SpawnData.minDistanceToPlayer, out Vector2 randomPosition))
+                    if (!RandomPositionAwayFromPlayer(boss0SpawnData.minDistanceToPlayer, out Vector2 randomPosition, 10, -1, spawnedPositions))
                         continue;
-
-                    int randomIndex = Random.Range(0, elementTypeList.Count);
-                    //Vector2 randomPosition = tempbossSpawnPosition[randomIndex].position;
-                    //tempbossSpawnPosition.RemoveAt(randomIndex);
+                    spawnedPositions.Add(randomPosition);
 
                     int randomElementIndex = Random.Range(0, elementTypeList.Count);
                     PickupType elementType = (PickupType)elementTypeList[randomElementIndex];
@@ -286,9 +284,18 @@ public class MainScript : MonoBehaviour
                     ID id = bosses0.Spawn();
                     ref Boss0Entity boss = ref bosses0[id.index];
 
+                    //if (0 < numberBossesDefeated)
+                        // limbed boss
+                    //    boss.unit.attack.variant = Random.value < 0.6f ? 0 : 1;
+                    //else
+                        boss.unit.attack.variant = 0;
+                    // TODO Test
+                    int saveVariant = boss.unit.attack.variant;
+                    Boss0Entity presetUnit = (boss.unit.attack.variant == 0) ? (boss0SpawnData.presetUnit) : (boss0SpawnData.limbsBossPreset);
+
                     if (boss.unit.IsValid())
                     {
-                        boss = new Boss0Entity(boss.unit.transform.gameObject, boss0SpawnData.presetUnit, id, boss.bossIndicator);
+                        boss = new Boss0Entity(boss.unit.transform.gameObject, presetUnit, id, boss.bossIndicator, saveVariant);
                         boss.unit.transform.position = randomPosition;
                         boss.unit.transform.gameObject.SetActive(true);
                     }
@@ -296,12 +303,34 @@ public class MainScript : MonoBehaviour
                     {
                         boss = new Boss0Entity(
                             Instantiate(boss0SpawnData.prefab, randomPosition, Quaternion.identity),
-                            boss0SpawnData.presetUnit,
+                            presetUnit,
                             id,
-                            Instantiate(bossIndicatorUIPrefab, IndicatorHolder.transform));
+                            Instantiate(bossIndicatorUIPrefab, IndicatorHolder.transform), saveVariant);
                     }
 
                     boss.UpdatePickupType(elementType, this);
+
+                    if (boss.unit.attack.variant == 1)
+                    {
+                        // spawn limbs
+                        for (int limbI = 0; limbI < 3; limbI++)
+                        {
+                            ID limbID = limbs.Spawn();
+
+                            ref LimbEntity limb = ref limbs[limbID.index];
+                            if (limb.IsValid())
+                            {
+                                limb = new LimbEntity(limbID, id, limb.go, 10, pickupColor.GetColor(elementType), this, limbI);
+                                limb.go.SetActive(true);
+                            }
+                            else
+                            {
+                                limb = new LimbEntity(limbID, id, Instantiate(limbPrefab), 10, pickupColor.GetColor(elementType), this, limbI);
+                            }
+                            boss.SetLimb(limbI, limbID);
+                        }
+                        
+                    }
                 }
 
                 // despawn all crystals
@@ -451,6 +480,7 @@ public class MainScript : MonoBehaviour
 
             case IDType.Enemy:
             case IDType.Boss0:
+            case IDType.Limb:
                 return Team.Enemy;
         }
     }
@@ -460,7 +490,9 @@ public class MainScript : MonoBehaviour
         return GetTeam(a) != GetTeam(b);
     }
 
-    public bool RandomPositionAwayFromPlayer(float minDistanceToPlayer, out Vector2 randomPosition, int maxAttempts = 5, float maxDistanceAway = -1f)
+    public bool RandomPositionAwayFromPlayer(
+        float minDistanceToPlayer, out Vector2 randomPosition,
+        int maxAttempts = 5, float maxDistanceAway = -1f, List<Vector2> dontInclude = null)
     {
         int attempts = 0;
         Vector2 playerPos = player.transform.position;
@@ -470,6 +502,11 @@ public class MainScript : MonoBehaviour
                 Random.Range(mapBoundsMin.x, mapBoundsMax.x),
                 Random.Range(mapBoundsMin.y, mapBoundsMax.y));
             float distanceAway = Vector2.Distance(randomPosition, playerPos);
+            if (dontInclude != null)
+                foreach (ref Vector2 dontIncludeV in dontInclude.AsSpan())
+                {
+                    distanceAway = Mathf.Min(distanceAway, Vector2.Distance(randomPosition, dontIncludeV));
+                }
 
             if (minDistanceToPlayer < distanceAway)
             {

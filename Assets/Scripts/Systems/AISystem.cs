@@ -95,6 +95,21 @@ public struct AISystem
                     boss.unit.rigidbody.velocity = toPlayer / distanceToPlayer * boss.unit.moveSpeed;
                 }
                 boss.unit.attack.isAttacking = true;
+
+                if (boss.unit.attack.variant == 1)
+                {
+                    // limbs
+                    boss.unit.rotationDegrees += Time.fixedDeltaTime * 30f;
+                    for (int limbI = 0; limbI < 3; limbI++)
+                    {
+                        if (!mainScript.limbs.IsValidID(boss.GetLimb(limbI)))
+                            continue;
+
+                        mainScript.limbs[boss.GetLimb(limbI).index].RotateAround(mainScript, i);
+                    }
+                    continue;
+                }
+
                 boss.unit.SetRotationDegrees(toPlayer);
             }
         }

@@ -13,6 +13,8 @@ public enum IDType
 
     // 1 IDType per ProjectileType
     ProjectileDefault,
+
+    Limb,
 }
 
 [Serializable]
