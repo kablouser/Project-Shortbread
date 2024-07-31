@@ -302,10 +302,10 @@ public class MainScript : MonoBehaviour
                     ID id = bosses0.Spawn();
                     ref Boss0Entity boss = ref bosses0[id.index];
 
-                    //if (0 < numberBossesDefeated)
+                    if (0 < numberBossesDefeated)
                         // limbed boss
-                    //    boss.unit.attack.variant = Random.value < 0.6f ? 0 : 1;
-                    //else
+                        boss.unit.attack.variant = Random.value < 0.6f ? 0 : 1;
+                    else
                         boss.unit.attack.variant = 0;
                     // TODO Test
                     int saveVariant = boss.unit.attack.variant;
@@ -338,12 +338,12 @@ public class MainScript : MonoBehaviour
                             ref LimbEntity limb = ref limbs[limbID.index];
                             if (limb.IsValid())
                             {
-                                limb = new LimbEntity(limbID, id, limb.go, 10, pickupColor.GetColor(elementType), this, limbI);
+                                limb = new LimbEntity(limbID, id, limb.go, 9, pickupColor.GetColor(elementType), this, limbI);
                                 limb.go.SetActive(true);
                             }
                             else
                             {
-                                limb = new LimbEntity(limbID, id, Instantiate(limbPrefab), 10, pickupColor.GetColor(elementType), this, limbI);
+                                limb = new LimbEntity(limbID, id, Instantiate(limbPrefab), 9, pickupColor.GetColor(elementType), this, limbI);
                             }
                             boss.SetLimb(limbI, limbID);
                         }
@@ -654,6 +654,7 @@ public class MainScript : MonoBehaviour
             case IDType.Enemy:
                 Instantiate(enemyDamagedVFX, position, Quaternion.identity);
                 break;
+            case IDType.Limb:
             case IDType.Boss0:
                 Instantiate(boss0DamagedVFX, position, Quaternion.identity);
                 break;

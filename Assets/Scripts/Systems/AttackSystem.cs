@@ -257,23 +257,23 @@ public struct AttackSystem
                     ref Boss0Entity boss = ref mainScript.bosses0[unitIDForLimb.index];
 
                     ID? findLimbID = null;
-                    for (int limbI = 0; limbI < 3; limbI++)
-                    {
-                        ID limbID = boss.GetLimb(unit.attack.limbShotI);
-                        unit.attack.limbShotI++;
 
-                        if (mainScript.limbs.IsValidID(limbID))
-                        {
-                            findLimbID = limbID;
-                            break;
-                        }
+                    // cycle once
+                    if (unit.attack.limbShotI < 0)
+                        unit.attack.limbShotI = 0;
+                    ID limbID = boss.GetLimb(unit.attack.limbShotI % 3);
+                    unit.attack.limbShotI++;
+
+                    if (mainScript.limbs.IsValidID(limbID))
+                    {
+                        findLimbID = limbID;
                     }
 
                     if (findLimbID.HasValue)
                     {
                         ref LimbEntity limb = ref mainScript.limbs[findLimbID.Value.index];
                         position = limb.shootOrigin.position;
-                        rotation = Quaternion.identity; //Quaternion.LookRotation(mainScript.player.transform.position - position, Vector3.forward);
+                        rotation = Quaternion.LookRotation(Vector3.forward, mainScript.player.transform.position - position);
                     }
                     else
                         continue;

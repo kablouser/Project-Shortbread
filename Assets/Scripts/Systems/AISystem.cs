@@ -105,7 +105,7 @@ public struct AISystem
                         if (!mainScript.limbs.IsValidID(boss.GetLimb(limbI)))
                             continue;
 
-                        mainScript.limbs[boss.GetLimb(limbI).index].RotateAround(mainScript, i);
+                        mainScript.limbs[boss.GetLimb(limbI).index].RotateAround(mainScript, limbI);
                     }
                     continue;
                 }
