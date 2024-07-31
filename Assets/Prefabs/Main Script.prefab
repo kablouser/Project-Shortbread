@@ -853,7 +853,7 @@ Camera:
   far clip plane: 10
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 5.4
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -9181,6 +9181,10 @@ MonoBehaviour:
   enemyMeele: {fileID: 21300000, guid: 76616bcc0336f614f8cf7890892fdf74, type: 3}
   enemyRange: {fileID: 21300000, guid: ebfdff326b3bd134d890f72abfe63583, type: 3}
   enemyCharger: {fileID: 0}
+  enemyDamagedVFX: {fileID: 8911251432671140686, guid: 40827e34116858a43bebe2a1ac6418e1, type: 3}
+  boss0DamagedVFX: {fileID: 8911251432671140686, guid: 738c02d79d2453545be34eca75b9bf61, type: 3}
+  lightCrystalDamagedVFX: {fileID: 8911251432671140686, guid: 06ca204e72f8a5b4e99aacb5d43c09a2, type: 3}
+  playerDamagedVFX: {fileID: 8911251432671140686, guid: d02e00ebf66503d4985b62060fdd8b66, type: 3}
 --- !u!1 &8974552201042103813
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 [System.Serializable]
 public struct ProjectileEntity
@@ -171,6 +172,8 @@ public struct AttackSystem
             unit.rigidbody.constraints |= RigidbodyConstraints2D.FreezePosition;
 
             Damage(unit.attack.singleTarget, attackPreset.damage, mainScript);
+
+            mainScript.SpawnHitVFX(unit.attack.singleTarget.type, targetUnit.transform.position);
         }
     }
 
@@ -385,6 +388,8 @@ public struct AttackSystem
                 {
                     mainScript.audioSystem.PlayVFXAtLocation(mainScript.audioSystem.playerGunHitVFX, collider.transform.position);
                 }
+
+                mainScript.SpawnHitVFX(idComp.id.type, collider.transform.position);
             }
         }
     }
