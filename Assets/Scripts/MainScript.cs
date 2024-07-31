@@ -186,6 +186,7 @@ public class MainScript : MonoBehaviour
                 {
                     player.health.current = player.health.max;
                 }
+                healthBar.UpdateHealthBar(player.health);
             }
 
             gameTimer.timerText.SetText(gameTimer.GetTimeLeftString());

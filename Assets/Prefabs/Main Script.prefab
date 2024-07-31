@@ -9380,12 +9380,6 @@ MonoBehaviour:
     - clip: {fileID: 8300000, guid: d9423cc19f1de784eaf4937ea1e0874a, type: 3}
       weight: 1
       volume: 1.5
-    - clip: {fileID: 8300000, guid: 5a3c9f4ed5d03e94888664d01c6fb0dd, type: 3}
-      weight: 0.1
-      volume: 1.5
-    - clip: {fileID: 8300000, guid: bfccee8b1322b1e4ea27dea3824244fa, type: 3}
-      weight: 0.01
-      volume: 1.5
     enemyHitVFX: {fileID: 0}
     boss0HitVFX: {fileID: 0}
     LightCrystalHitVFX: {fileID: 8300000, guid: bebc9306a46e09e44bd303e8c0d98112, type: 3}
