@@ -596,6 +596,17 @@ public struct AttackSystem
                         // Remove other bosses
                         foreach (int i in mainScript.bosses0)
                         {
+                            // remove limbs
+                            for (int limbI = 0; limbI < 3; limbI++)
+                            {
+                                if (mainScript.limbs.TryDespawn(mainScript.bosses0[i].GetLimb(limbI), out LimbEntity despawned))
+                                {
+                                    despawned.go.transform.SetParent(null, false);
+                                    despawned.go.SetActive(false);
+                                    mainScript.bosses0[i].SetLimb(limbI, new ID());
+                                }
+                            }
+
                             mainScript.bosses0[i].unit.transform.gameObject.SetActive(false);
                             mainScript.bosses0[i].bossIndicator.indicatorHolder.gameObject.SetActive(false);
                             mainScript.bosses0.TryDespawn(i);

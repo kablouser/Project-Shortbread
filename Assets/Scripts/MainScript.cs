@@ -316,7 +316,7 @@ public class MainScript : MonoBehaviour
                         boss.unit.attack.variant = Random.value < 0.6f ? 0 : 1;
                     else
                         boss.unit.attack.variant = 0;
-                    // TODO Test
+
                     int saveVariant = boss.unit.attack.variant;
                     Boss0Entity presetUnit = (boss.unit.attack.variant == 0) ? (boss0SpawnData.presetUnit) : (boss0SpawnData.limbsBossPreset);
 
