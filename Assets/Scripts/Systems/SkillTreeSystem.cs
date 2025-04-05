@@ -93,7 +93,7 @@ public class SkillTreeSystem : MonoBehaviour
             {
                 int minConnections = previousRow.Count - 1 <= prevI ? randomWidth - connectIndex : 1;
                 int maxConnections = Mathf.Max(minConnections, Mathf.Min(/*stop branching*/2, randomWidth - connectIndex));
-                int connections = averageConnectionsPerNode + Random.Range(-1,2/*exclusive range*/);
+                int connections = averageConnectionsPerNode + Random.Range(-1, 2/*exclusive range*/);
                 connections = Mathf.Clamp(connections, minConnections, maxConnections);
 
                 for (int c = 0; c < connections; c++)
@@ -102,18 +102,11 @@ public class SkillTreeSystem : MonoBehaviour
                     nodes[rowBeginIndex + connectIndex + c].upwardNeighbours.Add(node);
                 }
                 connectIndex += connections;
-                if (prevI == randomWidth - 1)
-                {
-                    connectIndex--;
-                }
-                else
-                {
-                    if (Random.value < 0.05f)
-                    {
-                        connectIndex--;
-                    }
-                }
                 prevI++;
+
+                //if (Random.value < 0.05f) { Debug.Log("Boom");  connectIndex--; }
+                // clamp end index
+                if (nodes.Count <= rowBeginIndex + connectIndex) { connectIndex = nodes.Count - 1 - rowBeginIndex; }
             }
 
             previousRow.Clear();
