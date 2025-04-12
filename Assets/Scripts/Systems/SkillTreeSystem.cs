@@ -72,19 +72,27 @@ public class SkillTreeSystem : MonoBehaviour
         List<int> currentRow = new List<int>();
         for (int y = 1; y < height - 1; y++)
         {
-            int randomWidth = Random.Range(3, maxWidth + 1 /*exclusive*/);
+            const int LEVEL_WIDTH = 4;
 
             int rowBeginIndex = nodes.Count;
-            for (int x = 0; x < randomWidth; x++)
+            for (int x = 0; x < LEVEL_WIDTH; x++)
             {
                 currentRow.Add(nodes.Count);
                 nodes.Add(new SkillTreeNode()
                 {
-                    position = GetNodePosition(x, y, randomWidth),
+                    position = GetNodePosition(x, y, LEVEL_WIDTH),
                     upwardNeighbours = new List<int>(),
                     downwardNeighbours = new List<int>(),
                 });
             }
+
+            int prevLevelWidth = previousRow.Count;
+            int currentLevelWidth = LEVEL_WIDTH;
+            int sharedConnections = Random.Range(Mathf.Max(0, prevLevelWidth - currentLevelWidth), prevLevelWidth - 1 + 1 /*exclusive*/);
+            int uniqueConnections = currentLevelWidth - sharedConnections;
+
+            // first assume all prev row nodes, how many nodes left to allocate now?
+            int nodesToAllocate = currentLevelWidth - 
 
             int connectIndex = 0;
             int prevI = 0;
@@ -134,7 +142,6 @@ public class SkillTreeSystem : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        
         // verify connections
         int i = 0;
         foreach (var node in nodes)
