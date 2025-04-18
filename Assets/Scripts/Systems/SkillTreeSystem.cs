@@ -14,53 +14,14 @@ public struct SkillTreeNode
 public class SkillTreeSystem : MonoBehaviour
 {
     public List<SkillTreeNode> nodes;
-    public List<int> rowStartIndices;
 
     public void GenerateTree(
         int maxLinearLength,
         int maxConvergesPerRow,
         int maxWidth,
-        int nodesCount)
-    {
-        nodes.Add(new SkillTreeNode() {
-            position = GetNodePosition(0, 0, 1),
-            upwardNeighbours = new List<int>(),
-            downwardNeighbours = new List<int>() {1, 2, 3},
-        });
-
-        List<int> setUpwardNodeNeighbour = new List<int>() { 0, 0, 0 };
-
-        for (int y = 1; y < 4; y++)
-        {
-            for (int x = 0; x < 3; x++)
-            {
-                int addIndex = nodes.Count;
-                nodes.Add(new SkillTreeNode()
-                {
-                    position = GetNodePosition(x, y, 3),
-                    upwardNeighbours = new List<int>() { setUpwardNodeNeighbour[x] },
-                    downwardNeighbours = new List<int>() { y + 1 < 4 ? addIndex + 3 : 1 + 3 * 3 },
-                });
-
-                setUpwardNodeNeighbour[x] = addIndex;
-            }
-        }
-
-        int lastIndex = nodes.Count;
-        nodes.Add(new SkillTreeNode()
-        {
-            position = GetNodePosition(0, 4, 1),
-            upwardNeighbours = new List<int>() { lastIndex - 3, lastIndex - 2, lastIndex - 1 },
-            downwardNeighbours = new List<int>() {},
-        });
-    }
-
-    public void GenerateTree2(
-        int maxLinearLength,
-        int maxConvergesPerRow,
-        int maxWidth,
         int height)
     {
+        nodes.Clear();
         nodes.Add(new SkillTreeNode()
         {
             position = GetNodePosition(0, 0, 1),
@@ -70,51 +31,88 @@ public class SkillTreeSystem : MonoBehaviour
 
         List<int> previousRow = new List<int>() { 0 };
         List<int> currentRow = new List<int>();
+        // is node i and i + 1 sharing a connection
+        // Count = previousRow.Count - 1, because its only connections between nodes
+        List<bool> isNodeConnectionShared = new List<bool>();
+        // degree of each node in prev row
+        List<int> previousRowDegrees = new List<int>();
         for (int y = 1; y < height - 1; y++)
         {
-            const int LEVEL_WIDTH = 4;
+            int previousRowWidth = previousRow.Count;
+            const int currentRowWidth = 4;
+            int sharedConnections = Random.Range(Mathf.Max(0, previousRowWidth - currentRowWidth), previousRowWidth - 1 + 1 /*+1 because exclusive*/);
+            int uniqueConnections = previousRowWidth - sharedConnections - 1;
 
+            // spread connection types randomly
+            isNodeConnectionShared.Clear();
+            for (int connectionI = 0; connectionI < previousRowWidth - 1; connectionI++)
+            {
+                if (Random.Range(0, sharedConnections + uniqueConnections) < sharedConnections)
+                {
+                    sharedConnections--;
+                    isNodeConnectionShared.Add(true);
+                }
+                else
+                {
+                    uniqueConnections--;
+                    isNodeConnectionShared.Add(false);
+                }
+            }
+
+            // assume all prev row nodes are allocated the minimum degree
+            int nodesMinAllocate = 1;
+            foreach (bool isShared in isNodeConnectionShared)
+            {
+                nodesMinAllocate += isShared ? 0 : 1;
+            }
+
+            // degree allocation
+            previousRowDegrees.Clear();
+            for (int i = 0; i < previousRowWidth; i++)
+            {
+                previousRowDegrees.Add(1);
+            }
+
+            // how many currentRow nodes left to allocate now?
+            int nodesToAllocate = currentRowWidth - nodesMinAllocate;
+            for (int nodeToAllocateI = 0; nodeToAllocateI < nodesToAllocate; nodeToAllocateI++)
+            {
+                // TODO debug if this works
+                previousRowDegrees[Random.Range(0, previousRowWidth)]++;
+            }
+
+            // map degrees to real indices
             int rowBeginIndex = nodes.Count;
-            for (int x = 0; x < LEVEL_WIDTH; x++)
+            for (int x = 0; x < currentRowWidth; x++)
             {
                 currentRow.Add(nodes.Count);
                 nodes.Add(new SkillTreeNode()
                 {
-                    position = GetNodePosition(x, y, LEVEL_WIDTH),
+                    position = GetNodePosition(x, y, currentRowWidth),
                     upwardNeighbours = new List<int>(),
                     downwardNeighbours = new List<int>(),
                 });
+
             }
 
-            int prevLevelWidth = previousRow.Count;
-            int currentLevelWidth = LEVEL_WIDTH;
-            int sharedConnections = Random.Range(Mathf.Max(0, prevLevelWidth - currentLevelWidth), prevLevelWidth - 1 + 1 /*exclusive*/);
-            int uniqueConnections = currentLevelWidth - sharedConnections;
-
-            // first assume all prev row nodes, how many nodes left to allocate now?
-            int nodesToAllocate = currentLevelWidth - 
-
-            int connectIndex = 0;
-            int prevI = 0;
-            int averageConnectionsPerNode = Mathf.RoundToInt(randomWidth / Mathf.Max(1f,(float)previousRow.Count));
-            foreach (var node in previousRow)
+            int previousRowI = 0;
+            int currentRowI = 0;
+            foreach (int previousRowNode in previousRow)
             {
-                int minConnections = previousRow.Count - 1 <= prevI ? randomWidth - connectIndex : 1;
-                int maxConnections = Mathf.Max(minConnections, Mathf.Min(/*stop branching*/2, randomWidth - connectIndex));
-                int connections = averageConnectionsPerNode + Random.Range(-1, 2/*exclusive range*/);
-                connections = Mathf.Clamp(connections, minConnections, maxConnections);
-
-                for (int c = 0; c < connections; c++)
+                if (0 < previousRowI && isNodeConnectionShared[previousRowI - 1])
                 {
-                    nodes[node].downwardNeighbours.Add(rowBeginIndex + connectIndex + c);
-                    nodes[rowBeginIndex + connectIndex + c].upwardNeighbours.Add(node);
+                    // share last node
+                    currentRowI--;
                 }
-                connectIndex += connections;
-                prevI++;
 
-                //if (Random.value < 0.05f) { Debug.Log("Boom");  connectIndex--; }
-                // clamp end index
-                if (nodes.Count <= rowBeginIndex + connectIndex) { connectIndex = nodes.Count - 1 - rowBeginIndex; }
+                for (int degreeI = 0; degreeI < previousRowDegrees[previousRowI]; degreeI++)
+                {
+                    int currentRowNode = currentRow[currentRowI];
+                    nodes[previousRowNode].downwardNeighbours.Add(currentRowNode);
+                    nodes[currentRowNode].upwardNeighbours.Add(previousRowNode);
+                    currentRowI++;
+                }
+                previousRowI++;
             }
 
             previousRow.Clear();
@@ -135,9 +133,13 @@ public class SkillTreeSystem : MonoBehaviour
         });
     }
 
-    private void Awake()
+    [Range(0f, 2f)]
+    public float bias;
+
+    public void OnValidate()
     {
-        GenerateTree2(1, 1, 5, 10);
+        //GenerateTree(1, 1, 5, 10);
+        VisualiseDistribution.WithLineRenderer(() => BiasedRandom.Range(0f, 1f, bias), GetComponent<LineRenderer>());
     }
 
     void OnDrawGizmos()
