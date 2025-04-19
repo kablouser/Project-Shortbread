@@ -40,7 +40,8 @@ public class SkillTreeSystem : MonoBehaviour
         {
             int previousRowWidth = previousRow.Count;
             const int currentRowWidth = 4;
-            int sharedConnections = Random.Range(Mathf.Max(0, previousRowWidth - currentRowWidth), previousRowWidth - 1 + 1 /*+1 because exclusive*/);
+            int sharedConnections = //Random.Range(Mathf.Max(0, previousRowWidth - currentRowWidth), previousRowWidth - 1 + 1 /*+1 because exclusive*/);
+                NormalRandom.Range(Mathf.Max(0, previousRowWidth - currentRowWidth), previousRowWidth - 1 + 1 /*+1 because exclusive*/, 1f, 0.8f);
             int uniqueConnections = previousRowWidth - sharedConnections - 1;
 
             // spread connection types randomly
@@ -92,7 +93,6 @@ public class SkillTreeSystem : MonoBehaviour
                     upwardNeighbours = new List<int>(),
                     downwardNeighbours = new List<int>(),
                 });
-
             }
 
             int previousRowI = 0;
@@ -133,10 +133,10 @@ public class SkillTreeSystem : MonoBehaviour
         });
     }
 
-    //public void Awake()
-    //{
-    //    GenerateTree(1, 1, 5, 10);
-    //}
+    public void Awake()
+    {
+        GenerateTree(1, 1, 5, 10);
+    }
 
     void OnDrawGizmos()
     {
@@ -181,16 +181,21 @@ public class SkillTreeSystem : MonoBehaviour
             -y, 10f);
     }
 
-    public float bias = 0f;
+
+    [Range(0, 2)]
+    public float dist = 1f;
+    [Range(0,1.1f)]
+    public float bias = 0.5f;
 
     private void OnValidate()
     {
         if (Application.isPlaying)
         {
-            System.Diagnostics.Debugger.Break();
+ 
+            //System.Diagnostics.Debugger.Break();
 
             VisualiseDistribution.WithLineRendererInt(
-                () => BiasedRandom.Range(1, 21, bias),
+                () => NormalRandom.Range(1, 21, dist, bias),
                 GetComponent<LineRenderer>(),
                 1, 21,
                 1000000);

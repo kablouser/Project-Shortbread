@@ -392,7 +392,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nodes: []
-  bias: 2
+  dist: 1
+  bias: 1
 --- !u!120 &961739755
 LineRenderer:
   serializedVersion: 2
