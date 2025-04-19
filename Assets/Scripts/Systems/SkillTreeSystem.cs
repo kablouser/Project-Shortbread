@@ -4,7 +4,10 @@ using UnityEngine;
 [System.Serializable]
 public struct SkillTreeNode
 {
-    public Vector3 position;
+    // column and row in the skill tree
+    public int treeX, treeY;
+    // world space position
+    public Vector3 worldPosition;
     public List<int>
         upwardNeighbours,
         downwardNeighbours;
@@ -14,17 +17,23 @@ public struct SkillTreeNode
 public class SkillTreeSystem : MonoBehaviour
 {
     public List<SkillTreeNode> nodes;
+    // node index for every row beginning. Nodes in a row are continous
+    public List<int> rowBegins;
+    public Bounds2D bounds;
 
     public void GenerateTree(
-        int maxLinearLength,
-        int maxConvergesPerRow,
-        int maxWidth,
-        int height)
+        int maxWidth = 4,
+        int height = 4)
     {
         nodes.Clear();
+        rowBegins.Clear();
+        bounds = new();
+
+        rowBegins.Add(0);
         nodes.Add(new SkillTreeNode()
         {
-            position = GetNodePosition(0, 0, 1),
+            treeX = 0, treeY = 0,
+            worldPosition = new()/*GetNodePosition(0, 0, 1)*/,
             upwardNeighbours = new List<int>(),
             downwardNeighbours = new List<int>(),
         });
@@ -39,7 +48,7 @@ public class SkillTreeSystem : MonoBehaviour
         for (int y = 1; y < height - 1; y++)
         {
             int previousRowWidth = previousRow.Count;
-            const int currentRowWidth = 4;
+            int currentRowWidth = maxWidth;
             int sharedConnections = //Random.Range(Mathf.Max(0, previousRowWidth - currentRowWidth), previousRowWidth - 1 + 1 /*+1 because exclusive*/);
                 NormalRandom.Range(Mathf.Max(0, previousRowWidth - currentRowWidth), previousRowWidth - 1 + 1 /*+1 because exclusive*/, 1f, 0.8f);
             int uniqueConnections = previousRowWidth - sharedConnections - 1;
@@ -84,12 +93,14 @@ public class SkillTreeSystem : MonoBehaviour
 
             // map degrees to real indices
             int rowBeginIndex = nodes.Count;
+            rowBegins.Add(rowBeginIndex);
             for (int x = 0; x < currentRowWidth; x++)
             {
                 currentRow.Add(nodes.Count);
                 nodes.Add(new SkillTreeNode()
                 {
-                    position = GetNodePosition(x, y, currentRowWidth),
+                    treeX = x, treeY = y,
+                    worldPosition = new()/*GetNodePosition(x, y, currentRowWidth)*/,
                     upwardNeighbours = new List<int>(),
                     downwardNeighbours = new List<int>(),
                 });
@@ -125,17 +136,58 @@ public class SkillTreeSystem : MonoBehaviour
             nodes[node].downwardNeighbours.Add(lastIndex);
         }
 
+        rowBegins.Add(nodes.Count);
         nodes.Add(new SkillTreeNode()
         {
-            position = GetNodePosition(0, height - 1, 1),
+            treeX = 0, treeY = height - 1,
+            worldPosition = new()/*GetNodePosition(0, height - 1, 1)*/,
             upwardNeighbours = new List<int>(previousRow),
             downwardNeighbours = new List<int>(),
         });
+
+        for (int y = 0; y < rowBegins.Count; y++)
+        {
+            int rowLength = GetRowLength(y);
+
+            int sumDegrees = 0;
+            for (int x = 0; x < rowLength; x++)
+            {
+                ref var node = ref nodes.AsSpan()[rowBegins[y] + x];
+                sumDegrees += node.upwardNeighbours.Count + node.downwardNeighbours.Count;
+            }
+
+            int degreeI = 0;
+            for (int x = 0; x < rowLength; x++)
+            {
+                ref var node = ref nodes.AsSpan()[rowBegins[y] + x];
+                int degree = node.upwardNeighbours.Count + node.downwardNeighbours.Count;
+
+                const float WORLD_WIDTH = 6.0f;
+                node.worldPosition = new Vector3(
+                    rowLength <= 1 ? WORLD_WIDTH * 0.5f :
+                    (degreeI + degree * 0.5f) / (sumDegrees) * WORLD_WIDTH,
+                    -y, 10f);
+
+                degreeI += degree;
+            }
+        }
+    }
+
+    public int GetRowLength(int y)
+    {
+        if (0 <= y && y < rowBegins.Count)
+        {
+            if (y + 1 < rowBegins.Count)
+                return rowBegins[y + 1] - rowBegins[y];
+            else
+                return 1;
+        }
+        return 0;
     }
 
     public void Awake()
     {
-        GenerateTree(1, 1, 5, 10);
+        GenerateTree(5, 10);
     }
 
     void OnDrawGizmos()
@@ -158,7 +210,7 @@ public class SkillTreeSystem : MonoBehaviour
 
         foreach (var node in nodes)
         {
-            Gizmos.DrawSphere(node.position, 0.2f);
+            Gizmos.DrawSphere(node.worldPosition, 0.2f);
 
             //foreach (int upwardNeighbour in node.upwardNeighbours)
             //{
@@ -167,38 +219,9 @@ public class SkillTreeSystem : MonoBehaviour
 
             foreach (int downwardNeighbour in node.downwardNeighbours)
             {
-                Gizmos.DrawLine(node.position, nodes[downwardNeighbour].position);
+                Gizmos.DrawLine(node.worldPosition, nodes[downwardNeighbour].worldPosition);
             }
         }
 
-    }
-
-    public static Vector3 GetNodePosition(int x, int y, int rowLength)
-    {
-        return new Vector3(
-            rowLength <= 1 ? 0f :
-            (x / (float)(rowLength - 1f) - 0.5f) * 3f,
-            -y, 10f);
-    }
-
-
-    [Range(0, 2)]
-    public float dist = 1f;
-    [Range(0,1.1f)]
-    public float bias = 0.5f;
-
-    private void OnValidate()
-    {
-        if (Application.isPlaying)
-        {
- 
-            //System.Diagnostics.Debugger.Break();
-
-            VisualiseDistribution.WithLineRendererInt(
-                () => NormalRandom.Range(1, 21, dist, bias),
-                GetComponent<LineRenderer>(),
-                1, 21,
-                1000000);
-        }
     }
 }
