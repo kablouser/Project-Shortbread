@@ -133,14 +133,10 @@ public class SkillTreeSystem : MonoBehaviour
         });
     }
 
-    [Range(0f, 2f)]
-    public float bias;
-
-    public void OnValidate()
-    {
-        //GenerateTree(1, 1, 5, 10);
-        VisualiseDistribution.WithLineRenderer(() => BiasedRandom.Range(0f, 1f, bias), GetComponent<LineRenderer>());
-    }
+    //public void Awake()
+    //{
+    //    GenerateTree(1, 1, 5, 10);
+    //}
 
     void OnDrawGizmos()
     {
@@ -183,5 +179,21 @@ public class SkillTreeSystem : MonoBehaviour
             rowLength <= 1 ? 0f :
             (x / (float)(rowLength - 1f) - 0.5f) * 3f,
             -y, 10f);
+    }
+
+    public float bias = 0f;
+
+    private void OnValidate()
+    {
+        if (Application.isPlaying)
+        {
+            System.Diagnostics.Debugger.Break();
+
+            VisualiseDistribution.WithLineRendererInt(
+                () => BiasedRandom.Range(1, 21, bias),
+                GetComponent<LineRenderer>(),
+                1, 21,
+                1000000);
+        }
     }
 }
