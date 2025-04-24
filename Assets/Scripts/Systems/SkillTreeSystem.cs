@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [System.Serializable]
 public struct SkillTreeNode
 {
     // column and row in the skill tree
     public int treeX, treeY;
-    // world space position
-    public Vector3 worldPosition;
+    // in range [0,1] x width weighted using node's degree
+    public float weightedPositionX;
     public List<int>
         upwardNeighbours,
         downwardNeighbours;
@@ -19,7 +20,18 @@ public class SkillTreeSystem : MonoBehaviour
     public List<SkillTreeNode> nodes;
     // node index for every row beginning. Nodes in a row are continous
     public List<int> rowBegins;
-    public Bounds2D bounds;
+
+    [Header("UI Spacing")]
+    public float rowUIHeight = 100f;
+    public float horizontalPadding = 100f;
+    public float verticalPadding = 20f;
+
+    [Header("References")]
+    public GameObject rootUI;
+    public RectTransform scrollableContentUI;
+    public LineRendererUI lineRendererUI;
+    public GameObject nodeUIPrefab;
+    public List<GameObject> spawnedNodeUIs;
 
     public void GenerateTree(
         int maxWidth = 4,
@@ -27,13 +39,12 @@ public class SkillTreeSystem : MonoBehaviour
     {
         nodes.Clear();
         rowBegins.Clear();
-        bounds = new();
 
+        // first node
         rowBegins.Add(0);
         nodes.Add(new SkillTreeNode()
         {
             treeX = 0, treeY = 0,
-            worldPosition = new()/*GetNodePosition(0, 0, 1)*/,
             upwardNeighbours = new List<int>(),
             downwardNeighbours = new List<int>(),
         });
@@ -100,7 +111,6 @@ public class SkillTreeSystem : MonoBehaviour
                 nodes.Add(new SkillTreeNode()
                 {
                     treeX = x, treeY = y,
-                    worldPosition = new()/*GetNodePosition(x, y, currentRowWidth)*/,
                     upwardNeighbours = new List<int>(),
                     downwardNeighbours = new List<int>(),
                 });
@@ -136,15 +146,16 @@ public class SkillTreeSystem : MonoBehaviour
             nodes[node].downwardNeighbours.Add(lastIndex);
         }
 
+        // last node
         rowBegins.Add(nodes.Count);
         nodes.Add(new SkillTreeNode()
         {
             treeX = 0, treeY = height - 1,
-            worldPosition = new()/*GetNodePosition(0, height - 1, 1)*/,
             upwardNeighbours = new List<int>(previousRow),
             downwardNeighbours = new List<int>(),
         });
 
+        // position nodes
         for (int y = 0; y < rowBegins.Count; y++)
         {
             int rowLength = GetRowLength(y);
@@ -162,11 +173,8 @@ public class SkillTreeSystem : MonoBehaviour
                 ref var node = ref nodes.AsSpan()[rowBegins[y] + x];
                 int degree = node.upwardNeighbours.Count + node.downwardNeighbours.Count;
 
-                const float WORLD_WIDTH = 6.0f;
-                node.worldPosition = new Vector3(
-                    rowLength <= 1 ? WORLD_WIDTH * 0.5f :
-                    (degreeI + degree * 0.5f) / (sumDegrees) * WORLD_WIDTH,
-                    -y, 10f);
+                node.weightedPositionX = rowLength <= 1 ? 0.5f :
+                    (degreeI + degree * 0.5f) / sumDegrees;
 
                 degreeI += degree;
             }
@@ -185,13 +193,52 @@ public class SkillTreeSystem : MonoBehaviour
         return 0;
     }
 
-    public void Awake()
+    public void Start()
     {
         GenerateTree(5, 10);
+
+        foreach (var nodeUI in spawnedNodeUIs)
+        {
+            Destroy(nodeUI);
+        }
+        spawnedNodeUIs.Clear();
+
+        scrollableContentUI.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,
+            (rowBegins.Count - 1) * rowUIHeight + 2 * verticalPadding);
+        float contentWidth = scrollableContentUI.rect.width;
+        float contentWidthMinusPadding = contentWidth - 2f * horizontalPadding;
+
+        List<Vector2> uiNodePositions = new(nodes.Count);
+
+        foreach (ref SkillTreeNode node in nodes.AsSpan())
+        {
+            // re-use exist old nodes
+            GameObject nodeUI = Instantiate(nodeUIPrefab, scrollableContentUI);
+            spawnedNodeUIs.Add(nodeUI);
+
+            uiNodePositions.Add(new Vector2(
+                horizontalPadding + contentWidthMinusPadding * node.weightedPositionX,
+                -(verticalPadding + rowUIHeight * node.treeY)));
+            nodeUI.GetComponent<RectTransform>().anchoredPosition = uiNodePositions[^1];
+        }
+
+        lineRendererUI.points.Clear();
+        lineRendererUI.type = LineRendererUI.LineType.Segments;
+        int nodeI = 0;
+        foreach (ref SkillTreeNode node in nodes.AsSpan())
+        {
+            foreach (int downwardNeighbour in node.downwardNeighbours)
+            {
+                lineRendererUI.points.Add(uiNodePositions[nodeI]);
+                lineRendererUI.points.Add(uiNodePositions[downwardNeighbour]);
+            }
+            nodeI++;
+        }
     }
 
     void OnDrawGizmos()
     {
+        return;
         // verify connections
         int i = 0;
         foreach (var node in nodes)
@@ -208,9 +255,14 @@ public class SkillTreeSystem : MonoBehaviour
             i++;
         }
 
+        Vector3 GetNodePosition(in SkillTreeNode node)
+        {
+            return new Vector3(node.weightedPositionX * 6.0f, node.treeY);
+        }
+
         foreach (var node in nodes)
         {
-            Gizmos.DrawSphere(node.worldPosition, 0.2f);
+            Gizmos.DrawSphere(GetNodePosition(node), 0.2f);
 
             //foreach (int upwardNeighbour in node.upwardNeighbours)
             //{
@@ -219,9 +271,8 @@ public class SkillTreeSystem : MonoBehaviour
 
             foreach (int downwardNeighbour in node.downwardNeighbours)
             {
-                Gizmos.DrawLine(node.worldPosition, nodes[downwardNeighbour].worldPosition);
+                Gizmos.DrawLine(GetNodePosition(node), GetNodePosition(nodes[downwardNeighbour]));
             }
         }
-
     }
 }

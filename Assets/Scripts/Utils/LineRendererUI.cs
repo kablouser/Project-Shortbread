@@ -3,102 +3,73 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(CanvasRenderer))]
-public class LineRendererUI : Graphic
+public class LineRendererUI : MaskableGraphic
 {
     public enum LineType
     {
-        // each pair of points forms a line
-        Segments,
         // all points form a line with 2 ends
         OneLine,
         // all points loop
-        Loop
+        Loop,
+        // each pair of points forms a line
+        Segments,
     }
     public LineType type;
     public float thickness;
+    // origin is the RectTransform's pivot, distances are in pixels with scaling
+    // please call SetVerticesDirty() whenever this changes
     public List<Vector2> points;
-
-    float width;
-    float height;
-    float unitWidth;
-    float unitHeight;
 
     protected override void OnPopulateMesh(VertexHelper vh)
     {
         vh.Clear();
-        if (points.Count < 2) return;
+        if (points == null || points.Count < 2) return;
 
-        /*        width = rectTransform.rect.width;
-                height = rectTransform.rect.height;*/
-
+        UIVertex vertex = UIVertex.simpleVert;
         UIVertex[] quad = new UIVertex[4];
-        //public void AddUIVertexQuad(UIVertex[] verts)
 
-        for (int i = 0; i < points.Count - 1; i++)
+        switch (type)
         {
+            default:
+            case LineType.OneLine:
+            case LineType.Loop:
+                for (int i = 0; i + 1 < points.Count; i++)
+                {
+                    AddLineBetween2Points(vh, quad, points[i], points[i + 1], ref vertex);
+                }
+                if (type == LineType.Loop)
+                {
+                    AddLineBetween2Points(vh, quad, points[0], points[points.Count - 1], ref vertex);
+                }
+                break;
 
-
-
-            Vector2 point = points[i];
-
-            Vector2 point2 = points[i + 1];
-
-
-
-            if (i < points.Count - 1)
-            {
-
-                angle = GetAngle(points[i], points[i + 1]) + 90f;
-
-            }
-
-
-
-            UIVertex vertex = UIVertex.simpleVert;
-
-            vertex.color = color;
-
-
-
-            vertex.position = Quaternion.Euler(0, 0, angle) * new Vector3(-thickness / 2, 0);
-
-            vertex.position += new Vector3(unitWidth * point.x, unitHeight * point.y);
-
-            vh.AddVert(vertex);
-
-
-
-            vertex.position = Quaternion.Euler(0, 0, angle) * new Vector3(thickness / 2, 0);
-
-            vertex.position += new Vector3(unitWidth * point.x, unitHeight * point.y);
-
-            vh.AddVert(vertex);
-
-
-
-            vertex.position = Quaternion.Euler(0, 0, angle) * new Vector3(-thickness / 2, 0);
-
-            vertex.position += new Vector3(unitWidth * point2.x, unitHeight * point2.y);
-
-            vh.AddVert(vertex);
-
-
-
-            vertex.position = Quaternion.Euler(0, 0, angle) * new Vector3(thickness / 2, 0);
-
-            vertex.position += new Vector3(unitWidth * point2.x, unitHeight * point2.y);
-
-            vh.AddVert(vertex);
+            case LineType.Segments:
+                for (int i = 0; i + 1 < points.Count; i += 2)
+                {
+                    AddLineBetween2Points(vh, quad, points[i], points[i + 1], ref vertex);
+                }
+                break;
         }
 
-
-
-        for (int i = 0; i < points.Count - 1; i++)
+        void AddLineBetween2Points(VertexHelper vh, UIVertex[] quad, in Vector2 point, in Vector2 point2, ref UIVertex vertex)
         {
+            vertex.color = color;
 
-            int index = i * 4;
-            vh.AddTriangle(index + 0, index + 1, index + 2);
-            vh.AddTriangle(index + 1, index + 2, index + 3);
+            Vector3 lineNormal = thickness * 0.5f * Vector2.Perpendicular(point2 - point).normalized;
+
+            vertex.position = (Vector3)point + lineNormal;
+            quad[0] = vertex;
+
+            vertex.position = (Vector3)point - lineNormal;
+            quad[1] = vertex;
+
+            vertex.position = (Vector3)point2 - lineNormal;
+            quad[2] = vertex;
+
+            vertex.position = (Vector3)point2 + lineNormal;
+            quad[3] = vertex;
+
+            vh.AddUIVertexQuad(quad);
         }
     }
 }
