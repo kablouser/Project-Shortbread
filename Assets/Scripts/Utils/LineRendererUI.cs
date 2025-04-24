@@ -53,7 +53,11 @@ public class LineRendererUI : MaskableGraphic
 
         void AddLineBetween2Points(VertexHelper vh, UIVertex[] quad, in Vector2 point, in Vector2 point2, ref UIVertex vertex)
         {
-            vertex.color = color;
+            //vertex.color = color;
+            vertex.color = new Color(
+                ((int)point.x % 100) / 100.0f,
+                ((int)point.y % 100) / 100.0f,
+                0.2f);
 
             Vector3 lineNormal = thickness * 0.5f * Vector2.Perpendicular(point2 - point).normalized;
 

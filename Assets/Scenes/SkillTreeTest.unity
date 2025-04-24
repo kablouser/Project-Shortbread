@@ -778,6 +778,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodes: []
   rowBegins: 
+  unlockedColors:
+    m_NormalColor: {r: 0.7058824, g: 1, b: 0.7058824, a: 1}
+    m_HighlightedColor: {r: 0.6666667, g: 0.9607843, b: 0.6666667, a: 1}
+    m_PressedColor: {r: 0.5882353, g: 0.78431374, b: 0.5882353, a: 1}
+    m_SelectedColor: {r: 0.9019608, g: 0.9607843, b: 0.9019608, a: 1}
+    m_DisabledColor: {r: 0.627451, g: 0.78431374, b: 0.627451, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
   rowUIHeight: 300
   horizontalPadding: 100
   verticalPadding: 70

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Pool;
 using UnityEngine.UI;
 
 [System.Serializable]
@@ -12,6 +14,9 @@ public struct SkillTreeNode
     public List<int>
         upwardNeighbours,
         downwardNeighbours;
+
+    public bool unlocked;
+    public bool canBeUnlocked;
 }
 
 //[Serializable]
@@ -20,6 +25,8 @@ public class SkillTreeSystem : MonoBehaviour
     public List<SkillTreeNode> nodes;
     // node index for every row beginning. Nodes in a row are continous
     public List<int> rowBegins;
+
+    public ColorBlock unlockedColors = ColorBlock.defaultColorBlock;
 
     [Header("UI Spacing")]
     public float rowUIHeight = 100f;
@@ -47,6 +54,7 @@ public class SkillTreeSystem : MonoBehaviour
             treeX = 0, treeY = 0,
             upwardNeighbours = new List<int>(),
             downwardNeighbours = new List<int>(),
+            canBeUnlocked = true,
         });
 
         List<int> previousRow = new List<int>() { 0 };
@@ -193,16 +201,8 @@ public class SkillTreeSystem : MonoBehaviour
         return 0;
     }
 
-    public void Start()
+    public void GenerateUI()
     {
-        GenerateTree(5, 10);
-
-        foreach (var nodeUI in spawnedNodeUIs)
-        {
-            Destroy(nodeUI);
-        }
-        spawnedNodeUIs.Clear();
-
         scrollableContentUI.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,
             (rowBegins.Count - 1) * rowUIHeight + 2 * verticalPadding);
         float contentWidth = scrollableContentUI.rect.width;
@@ -210,21 +210,43 @@ public class SkillTreeSystem : MonoBehaviour
 
         List<Vector2> uiNodePositions = new(nodes.Count);
 
+        int nodeI = 0;
         foreach (ref SkillTreeNode node in nodes.AsSpan())
         {
             // re-use exist old nodes
-            GameObject nodeUI = Instantiate(nodeUIPrefab, scrollableContentUI);
-            spawnedNodeUIs.Add(nodeUI);
+            GameObject nodeUI;
+            if (nodeI < spawnedNodeUIs.Count)
+                nodeUI = spawnedNodeUIs[nodeI];
+            else
+            {
+                nodeUI = Instantiate(nodeUIPrefab, scrollableContentUI);
+                spawnedNodeUIs.Add(nodeUI);
+            }
 
             uiNodePositions.Add(new Vector2(
                 horizontalPadding + contentWidthMinusPadding * node.weightedPositionX,
                 -(verticalPadding + rowUIHeight * node.treeY)));
             nodeUI.GetComponent<RectTransform>().anchoredPosition = uiNodePositions[^1];
+
+            Button button = nodeUI.GetComponent<Button>();
+            button.interactable = node.canBeUnlocked;
+            button.onClick.RemoveAllListeners();
+            int localNodeI = nodeI;
+            button.onClick.AddListener(() => { OnTreeNodeClicked(localNodeI); });
+
+            nodeI++;
         }
+
+        // delete extra spawnNodeUIs
+        for (; nodeI < spawnedNodeUIs.Count; nodeI++)
+        {
+            Destroy(spawnedNodeUIs[nodeI]);
+        }
+        spawnedNodeUIs.RemoveRange(nodes.Count, spawnedNodeUIs.Count - nodes.Count);
 
         lineRendererUI.points.Clear();
         lineRendererUI.type = LineRendererUI.LineType.Segments;
-        int nodeI = 0;
+        nodeI = 0;
         foreach (ref SkillTreeNode node in nodes.AsSpan())
         {
             foreach (int downwardNeighbour in node.downwardNeighbours)
@@ -233,6 +255,46 @@ public class SkillTreeSystem : MonoBehaviour
                 lineRendererUI.points.Add(uiNodePositions[downwardNeighbour]);
             }
             nodeI++;
+        }
+    }
+
+    public void OnTreeNodeClicked(int nodeI)
+    {
+        if (0 <= nodeI && nodeI < nodes.Count)
+        {
+            ref SkillTreeNode node = ref nodes.AsSpan()[nodeI];
+            node.unlocked = true;
+            spawnedNodeUIs[nodeI].GetComponent<Button>().colors = unlockedColors;
+
+            foreach (int neighbour in node.downwardNeighbours)
+            {
+                nodes.AsSpan()[neighbour].canBeUnlocked = true;
+                spawnedNodeUIs[neighbour].GetComponent<Button>().interactable = true;
+            }
+            foreach (int neighbour in node.upwardNeighbours)
+            {
+                nodes.AsSpan()[neighbour].canBeUnlocked = true;
+                spawnedNodeUIs[neighbour].GetComponent<Button>().interactable = true;
+            }
+        }
+    }
+
+    public void Start()
+    {
+        GenerateTree(5, 10);
+        GenerateUI();
+    }
+
+    public void OnDestroy()
+    {
+        foreach (GameObject nodeUI in spawnedNodeUIs)
+        {
+            Button button;
+            if (null != nodeUI &&
+                null != (button = nodeUI.GetComponent<Button>()))
+            {
+                button.onClick.RemoveAllListeners();
+            }
         }
     }
 
