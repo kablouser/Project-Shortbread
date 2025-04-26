@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Pool;
 using UnityEngine.UI;
 
 [System.Serializable]
@@ -19,25 +17,33 @@ public struct SkillTreeNode
     public bool canBeUnlocked;
 }
 
-//[Serializable]
 public class SkillTreeSystem : MonoBehaviour
 {
-    public List<SkillTreeNode> nodes;
-    // node index for every row beginning. Nodes in a row are continous
-    public List<int> rowBegins;
-
-    public ColorBlock unlockedColors = ColorBlock.defaultColorBlock;
-
-    [Header("UI Spacing")]
-    public float rowUIHeight = 100f;
-    public float horizontalPadding = 100f;
-    public float verticalPadding = 20f;
-
     [Header("References")]
     public GameObject rootUI;
     public RectTransform scrollableContentUI;
     public LineRendererUI lineRendererUI;
     public GameObject nodeUIPrefab;
+
+    //[Header("Settings")]
+    [Indent(1, "unlockedColors")]
+    public ColorBlock unlockedColors = ColorBlock.defaultColorBlock;
+    public Color unlockedLineColor = Color.green;
+    public Color canBeUnlockedLineColor = Color.white;
+    public Color cannotBeUnlockedLineColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+
+    public float rowUIHeight = 100f;
+    public float horizontalPadding = 100f;
+    public float verticalPadding = 20f;
+
+    public bool canUnlockUpwards = false;
+
+    [Header("Private vars")]
+    public List<SkillTreeNode> nodes;
+    // node index for every row beginning. Nodes in a row are continous
+    public List<int> rowBegins;
+    // mapping downward connection (fromNodeI, toNodeI) to lineRenderer.points[i]
+    public Dictionary<(int, int), int> connectionToLineRendererPointI;
     public List<GameObject> spawnedNodeUIs;
 
     public void GenerateTree(
@@ -247,15 +253,24 @@ public class SkillTreeSystem : MonoBehaviour
         lineRendererUI.points.Clear();
         lineRendererUI.type = LineRendererUI.LineType.Segments;
         nodeI = 0;
+        if (connectionToLineRendererPointI == null)
+            connectionToLineRendererPointI = new(nodes.Count);
+        else
+            connectionToLineRendererPointI.Clear();
         foreach (ref SkillTreeNode node in nodes.AsSpan())
         {
             foreach (int downwardNeighbour in node.downwardNeighbours)
             {
+                connectionToLineRendererPointI.Add((nodeI, downwardNeighbour), lineRendererUI.points.Count);
+
                 lineRendererUI.points.Add(uiNodePositions[nodeI]);
                 lineRendererUI.points.Add(uiNodePositions[downwardNeighbour]);
             }
             nodeI++;
         }
+
+        for (int i = 0; i < lineRendererUI.points.Count; i++)
+            lineRendererUI.pointColors.Add(cannotBeUnlockedLineColor);
     }
 
     public void OnTreeNodeClicked(int nodeI)
@@ -270,12 +285,42 @@ public class SkillTreeSystem : MonoBehaviour
             {
                 nodes.AsSpan()[neighbour].canBeUnlocked = true;
                 spawnedNodeUIs[neighbour].GetComponent<Button>().interactable = true;
+
+                if (connectionToLineRendererPointI != null &&
+                    connectionToLineRendererPointI.TryGetValue((nodeI, neighbour), out int pointI))
+                {
+                    Color lineColor = nodes[neighbour].unlocked ? unlockedLineColor : canBeUnlockedLineColor;
+
+                    lineRendererUI.pointColors[pointI] = lineColor;
+                    lineRendererUI.pointColors[pointI + 1] = lineColor;
+                }
             }
+
             foreach (int neighbour in node.upwardNeighbours)
             {
-                nodes.AsSpan()[neighbour].canBeUnlocked = true;
-                spawnedNodeUIs[neighbour].GetComponent<Button>().interactable = true;
+                if (canUnlockUpwards)
+                {
+                    nodes.AsSpan()[neighbour].canBeUnlocked = true;
+                    spawnedNodeUIs[neighbour].GetComponent<Button>().interactable = true;
+                }
+
+                if (connectionToLineRendererPointI != null &&
+                    connectionToLineRendererPointI.TryGetValue((neighbour, nodeI), out int pointI))
+                {
+                    Color lineColor;
+                    if (nodes[neighbour].unlocked)
+                        lineColor = unlockedLineColor;
+                    else if (canUnlockUpwards)
+                        lineColor = canBeUnlockedLineColor;
+                    else // cant unlock upwards, dont change line color
+                        continue;
+
+                    lineRendererUI.pointColors[pointI] = lineColor;
+                    lineRendererUI.pointColors[pointI + 1] = lineColor;
+                }
             }
+
+            lineRendererUI.SetVerticesDirty();
         }
     }
 

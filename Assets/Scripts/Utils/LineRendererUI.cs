@@ -19,6 +19,8 @@ public class LineRendererUI : MaskableGraphic
     // origin is the RectTransform's pivot, distances are in pixels with scaling
     // please call SetVerticesDirty() whenever this changes
     public List<Vector2> points;
+    // optional list corresponding to points, sets colors per point
+    public List<Color> pointColors;
 
     protected override void OnPopulateMesh(VertexHelper vh)
     {
@@ -35,37 +37,48 @@ public class LineRendererUI : MaskableGraphic
             case LineType.Loop:
                 for (int i = 0; i + 1 < points.Count; i++)
                 {
-                    AddLineBetween2Points(vh, quad, points[i], points[i + 1], ref vertex);
+                    AddLineBetween2Points(vh, quad, i, i + 1, ref vertex);
                 }
                 if (type == LineType.Loop)
                 {
-                    AddLineBetween2Points(vh, quad, points[0], points[points.Count - 1], ref vertex);
+                    AddLineBetween2Points(vh, quad, points.Count - 1, 0, ref vertex);
                 }
                 break;
 
             case LineType.Segments:
                 for (int i = 0; i + 1 < points.Count; i += 2)
                 {
-                    AddLineBetween2Points(vh, quad, points[i], points[i + 1], ref vertex);
+                    AddLineBetween2Points(vh, quad, i, i + 1, ref vertex);
                 }
                 break;
         }
 
-        void AddLineBetween2Points(VertexHelper vh, UIVertex[] quad, in Vector2 point, in Vector2 point2, ref UIVertex vertex)
+        void AddLineBetween2Points(VertexHelper vh, UIVertex[] quad, int index0, int index1, ref UIVertex vertex)
         {
-            //vertex.color = color;
-            vertex.color = new Color(
-                ((int)point.x % 100) / 100.0f,
-                ((int)point.y % 100) / 100.0f,
-                0.2f);
+            ref Vector2 point0 = ref points.AsSpan()[index0];
+            ref Vector2 point2 = ref points.AsSpan()[index1];
 
-            Vector3 lineNormal = thickness * 0.5f * Vector2.Perpendicular(point2 - point).normalized;
+            if (index0 < pointColors.Count)
+            {
+                vertex.color = pointColors[index0];
+            }
+            else
+            {
+                vertex.color = color;
+            }
 
-            vertex.position = (Vector3)point + lineNormal;
+            Vector3 lineNormal = thickness * 0.5f * Vector2.Perpendicular(point2 - point0).normalized;
+
+            vertex.position = (Vector3)point0 + lineNormal;
             quad[0] = vertex;
 
-            vertex.position = (Vector3)point - lineNormal;
+            vertex.position = (Vector3)point0 - lineNormal;
             quad[1] = vertex;
+
+            if (index1 < pointColors.Count)
+            {
+                vertex.color = pointColors[index1];
+            }
 
             vertex.position = (Vector3)point2 - lineNormal;
             quad[2] = vertex;

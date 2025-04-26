@@ -402,6 +402,7 @@ MonoBehaviour:
   type: 2
   thickness: 3
   points: []
+  pointColors: []
 --- !u!222 &250031569
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -776,23 +777,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 884e648d7c9ef0e4d84068fdb4a5a144, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodes: []
-  rowBegins: 
-  unlockedColors:
-    m_NormalColor: {r: 0.7058824, g: 1, b: 0.7058824, a: 1}
-    m_HighlightedColor: {r: 0.6666667, g: 0.9607843, b: 0.6666667, a: 1}
-    m_PressedColor: {r: 0.5882353, g: 0.78431374, b: 0.5882353, a: 1}
-    m_SelectedColor: {r: 0.9019608, g: 0.9607843, b: 0.9019608, a: 1}
-    m_DisabledColor: {r: 0.627451, g: 0.78431374, b: 0.627451, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  rowUIHeight: 300
-  horizontalPadding: 100
-  verticalPadding: 70
   rootUI: {fileID: 1653739180}
   scrollableContentUI: {fileID: 2127940459}
   lineRendererUI: {fileID: 250031568}
   nodeUIPrefab: {fileID: 2023692443406924620, guid: f5c2930aad61a8b4eb00f6f7abbc2174, type: 3}
+  unlockedColors:
+    m_NormalColor: {r: 0.7058824, g: 1, b: 0.7058824, a: 1}
+    m_HighlightedColor: {r: 0.7058824, g: 1, b: 0.7058824, a: 1}
+    m_PressedColor: {r: 0.5882353, g: 0.78431374, b: 0.5882353, a: 1}
+    m_SelectedColor: {r: 0.7058824, g: 1, b: 0.7058824, a: 1}
+    m_DisabledColor: {r: 0.627451, g: 0.78431374, b: 0.627451, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  unlockedLineColor: {r: 0, g: 1, b: 0, a: 1}
+  canBeUnlockedLineColor: {r: 1, g: 1, b: 1, a: 1}
+  cannotBeUnlockedLineColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
+  rowUIHeight: 300
+  horizontalPadding: 100
+  verticalPadding: 70
+  canUnlockUpwards: 0
+  nodes: []
+  rowBegins: 
   spawnedNodeUIs: []
 --- !u!1 &977909169
 GameObject:
@@ -1028,11 +1033,11 @@ MonoBehaviour:
   m_Content: {fileID: 2127940459}
   m_Horizontal: 0
   m_Vertical: 1
-  m_MovementType: 1
+  m_MovementType: 2
   m_Elasticity: 0.1
-  m_Inertia: 1
+  m_Inertia: 0
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 50
   m_Viewport: {fileID: 631581480}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 493997035}
