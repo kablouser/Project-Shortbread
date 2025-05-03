@@ -796,9 +796,24 @@ MonoBehaviour:
   horizontalPadding: 100
   verticalPadding: 70
   canUnlockUpwards: 0
-  nodes: []
+  nodes:
+  - treeX: 0
+    treeY: 0
+    weightedPositionX: 0
+    upwardNeighbours: 
+    downwardNeighbours: 
+    unlocked: 0
+    canBeUnlocked: 0
+  - treeX: 0
+    treeY: 0
+    weightedPositionX: 0
+    upwardNeighbours: 
+    downwardNeighbours: 
+    unlocked: 0
+    canBeUnlocked: 0
   rowBegins: 
   spawnedNodeUIs: []
+  TestHidden: 0
 --- !u!1 &977909169
 GameObject:
   m_ObjectHideFlags: 0

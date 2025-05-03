@@ -46,6 +46,10 @@ public class SkillTreeSystem : MonoBehaviour
     public Dictionary<(int, int), int> connectionToLineRendererPointI;
     public List<GameObject> spawnedNodeUIs;
 
+    [HideInInspector]
+    [SerializeField]
+    public float TestHidden;
+
     public void GenerateTree(
         int maxWidth = 4,
         int height = 4)
