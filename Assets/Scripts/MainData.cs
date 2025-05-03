@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
 using TMPro;
+using UnityEngine.Serialization;
 
 public enum Team { Neutral, Player, Enemy };
 
@@ -103,7 +104,7 @@ public struct AttackComponent
     // limbs
     public int limbShotI;
 
-    public bool Reload(in ProjectileAttackPreset preset, StatsModifierComponent stats)
+    public bool Reload(in ProjectileAttackPreset preset, in StatsModifierComponent stats)
     {
         if (0 < ammoShot)
         {
@@ -123,6 +124,8 @@ public struct HealthComponent
     public int baseHealth;
     public int current;
     public int max;
+
+    public ModifiableStat maxHealth;
 }
 
 [System.Serializable]
@@ -136,9 +139,9 @@ public struct UnitEntity
     public AttackComponent attack;
     public float baseMoveSpeed;
     public float moveSpeed;
+    public ModifiableStat moveSpeed;
     public HealthComponent health;
     public float lightPower;
-    public StatsModifierComponent statModifiers;
 
     public UnitEntity(
         GameObject go,

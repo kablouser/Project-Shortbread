@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public enum UpgradeType
+public enum StatType
 {
     Damage,
     ReloadSpeed,
@@ -15,17 +15,36 @@ public enum UpgradeType
 };
 
 [Serializable]
-public struct StatsModifierComponent
+public struct ModifiableStat
 {
-    public float healthModifier;
-    public float moveSpeedModifier;
-    public float damageModifier;
-    public float reloadSpeedModifier;
-    public float visionRangeModifier;
-    public float fireRateModifier;
-    public int piercingNumber;
-    public int extraProjectiles;
-    public int healthRegenPerMinute;
+    public float baseValue;
+    public float add;
+    public float multiply;
+
+    public float Calculate()
+    {
+        return (baseValue + add) * multiply;
+    }
+
+    public void Modify(in ModifyStat modifyStat)
+    {
+        add += modifyStat.add;
+        multiply += modifyStat.multiply;
+    }
+
+    public void Revert(in ModifyStat modifyStat)
+    {
+        add -= modifyStat.add;
+        multiply -= modifyStat.multiply;
+    }
+}
+
+[Serializable]
+public struct ModifyStat
+{
+    public StatType type;
+    public float add;
+    public float multiply;
 }
 
 [Serializable]
@@ -34,11 +53,11 @@ public struct UpgradeSystem
     // Should probably be a limit on the actual reload speed not the modifier
     public float reloadSpeedModifierLimit;
 
-    public void ApplyUpgrade(MainScript mainScript, ref UnitEntity unit, UpgradeType type, float valueChange)
+    public void ApplyUpgrade(MainScript mainScript, ref UnitEntity unit, in ModifyStat modifyStat)
     {
-        switch (type)
+        switch (modifyStat.type)
         {
-            case UpgradeType.Health:
+            case StatType.Health:
                 unit.statModifiers.healthModifier += valueChange;
                 int newMaxHealth = Mathf.FloorToInt(unit.health.baseHealth * unit.statModifiers.healthModifier);
                 int healthAdded = newMaxHealth - unit.health.max;
@@ -46,34 +65,34 @@ public struct UpgradeSystem
                 unit.health.current += healthAdded;
                 mainScript.healthBar.UpdateHealthBar(mainScript.player.health);
                 break;
-            case UpgradeType.MoveSpeed:
+            case StatType.MoveSpeed:
                 unit.statModifiers.moveSpeedModifier += valueChange;
                 unit.moveSpeed = unit.baseMoveSpeed * unit.statModifiers.moveSpeedModifier;
                 break;
-            case UpgradeType.Damage:
+            case StatType.Damage:
                 unit.statModifiers.damageModifier += valueChange;
                 break;
-            case UpgradeType.ReloadSpeed:
+            case StatType.ReloadSpeed:
                 unit.statModifiers.reloadSpeedModifier += valueChange;
                 if(unit.statModifiers.reloadSpeedModifier < reloadSpeedModifierLimit)
                 {
                     unit.statModifiers.reloadSpeedModifier = reloadSpeedModifierLimit;
                 }
                 break;
-            case UpgradeType.VisionRange:
+            case StatType.VisionRange:
                 unit.statModifiers.visionRangeModifier += valueChange;
                 mainScript.playerLight.light.pointLightOuterRadius = mainScript.playerLight.baseLightRange * unit.statModifiers.visionRangeModifier;
                 break;
-            case UpgradeType.FireRate:
+            case StatType.FireRate:
                 unit.statModifiers.fireRateModifier += valueChange;
                 break;
-            case UpgradeType.Piercing:
+            case StatType.Piercing:
                 unit.statModifiers.piercingNumber += Mathf.FloorToInt(valueChange);
                 break;
-            case UpgradeType.ExtraProjectile:
+            case StatType.ExtraProjectile:
                 unit.statModifiers.extraProjectiles += Mathf.FloorToInt(valueChange);
                 break;
-            case UpgradeType.HealthRegenPerMinute:
+            case StatType.HealthRegenPerMinute:
                 unit.statModifiers.healthRegenPerMinute += Mathf.FloorToInt(valueChange);
                 break;
         }

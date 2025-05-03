@@ -81,7 +81,7 @@ public struct CraftItem
     public ForEachElement<int> costs;
     [TextArea(1,3)]
     public string description;
-    public UpgradeType upgradeType;
+    public StatType upgradeType;
     public float upgradeValue;
 }
 
