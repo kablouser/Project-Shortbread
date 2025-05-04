@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 
 [System.Serializable]
 public struct ProjectileEntity
@@ -25,7 +24,7 @@ public struct ProjectileGroup
 [System.Serializable]
 public struct MeleeAttackPreset
 {
-    public float attackCooldown;
+    public float fireRate;
     public int damage;
     // distance to begin attack
     public float attackRange;
@@ -38,13 +37,13 @@ public struct MeleeAttackPreset
 [System.Serializable]
 public struct ProjectileAttackPreset
 {
-    public float attackCooldown;
+    public float fireRate;
 
     public float projectileOffset;
     public float projectileSpeed;
 
     public bool usesAmmo;
-    public float reloadCooldown;
+    public ModifiableStat reloadSpeed;
     public int fullMagazineAmmo;
 
     public int damage;
@@ -71,6 +70,9 @@ public struct ChargerAttackPreset
 [System.Serializable]
 public struct AttackSystem
 {
+    public const float minFireRate = 0.1f;
+    public const float maxFireRate = 10f;
+
     public ProjectileGroup defaultProjectile;
 
     public ProjectileAttackPreset player;
@@ -172,7 +174,7 @@ public struct AttackSystem
                 return;
             }
 
-            unit.attack.attackCooldown = attackPreset.attackCooldown;
+            unit.attack.attackCooldown = attackPreset.fireRate;
             unit.attack.meleeAttackTime = attackPreset.attackTime;
             unit.rigidbody.constraints |= RigidbodyConstraints2D.FreezePosition;
 
@@ -212,16 +214,11 @@ public struct AttackSystem
             }
         }
 
-        if (0f < unit.attack.attackCooldown || unit.statModifiers.fireRateModifier <= 0f)
-        {
-            return;
-        }
-
         if (unit.attack.isAttacking)
         {
-            int numberOfShots = 1 + attackPreset.extraProjectiles + unit.statModifiers.extraProjectiles;
+            int numberOfShots = Mathf.FloorToInt(1f + unit.statSheet.extraProjectile.CalculateWithBaseValue(attackPreset.extraProjectiles));
 
-            unit.attack.attackCooldown = attackPreset.attackCooldown / unit.statModifiers.fireRateModifier;
+            unit.attack.attackCooldown = 1f / Mathf.Clamp(unit.statSheet.fireRate.CalculateWithBaseValue(attackPreset.fireRate), minFireRate, maxFireRate);
             if (attackPreset.usesAmmo)
             {
                 unit.attack.ammoShot += numberOfShots;
@@ -232,7 +229,7 @@ public struct AttackSystem
 
                 if (attackPreset.fullMagazineAmmo <= unit.attack.ammoShot)
                 {
-                    unit.attack.Reload(attackPreset, unit.statModifiers);
+                    unit.attack.Reload(attackPreset);
                 }
             }
 
@@ -296,10 +293,10 @@ public struct AttackSystem
                 {
                     projectile.gameObject.SetActive(true);
                 }
-                projectile.damage = Mathf.FloorToInt(attackPreset.damage * unit.statModifiers.damageModifier);
+                projectile.damage = Mathf.FloorToInt(unit.statSheet.damage.CalculateWithBaseValue(attackPreset.damage));
                 projectile.source = unitType;
                 projectile.rangeLeft = attackPreset.projectileRange;
-                projectile.piercingNumber = attackPreset.piercingNumber + unit.statModifiers.piercingNumber;
+                projectile.piercingNumber = Mathf.FloorToInt(unit.statSheet.piercing.CalculateWithBaseValue(attackPreset.piercingNumber));
                 IDTriggerEnter idTriggerEnter = projectile.gameObject.GetComponent<IDTriggerEnter>();
                 idTriggerEnter.id = projectileID;
                 idTriggerEnter.mainScript = mainScript;
@@ -358,12 +355,12 @@ public struct AttackSystem
                 unit.attack.hasHit = true;
             }
 
-            unit.attack.chargeDistanceLeft -= Time.deltaTime * unit.moveSpeed * charger.chargeSpeedBuff;
+            unit.attack.chargeDistanceLeft -= Time.deltaTime * unit.statSheet.moveSpeed.Calculate() * charger.chargeSpeedBuff;
             if (unit.attack.chargeDistanceLeft <= 0f)
                 unit.rigidbody.velocity = Vector2.zero;
             else
             {
-                unit.rigidbody.velocity = charger.chargeSpeedBuff * unit.moveSpeed * unit.attack.chargeDirection;
+                unit.rigidbody.velocity = charger.chargeSpeedBuff * unit.statSheet.moveSpeed.Calculate() * unit.attack.chargeDirection;
                 unit.attack.attackCooldown = charger.attackCooldown;
                 return;
             }
@@ -395,7 +392,7 @@ public struct AttackSystem
             unit.attack.chargeDistanceLeft = charger.chargeDistance;
             unit.attack.hasHit = false;
 
-            unit.rigidbody.velocity = charger.chargeSpeedBuff * unit.moveSpeed * unit.attack.chargeDirection;
+            unit.rigidbody.velocity = charger.chargeSpeedBuff * unit.statSheet.moveSpeed.Calculate() * unit.attack.chargeDirection;
         }
     }
 
@@ -496,7 +493,7 @@ public struct AttackSystem
                     // player's listener is disabled.
                     mainScript.audioSystem.audioListener.transform.SetParent(null, true);
                 }
-                mainScript.healthBar.UpdateHealthBar(mainScript.player.health);
+                mainScript.healthBar.UpdateHealthBar(mainScript.player);
 
                 if (0 < damage)
                 {

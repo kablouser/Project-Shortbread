@@ -20,7 +20,7 @@ public struct AISystem
         foreach (int enemyID in mainScript.enemies)
         {
             ref UnitEntity enemy = ref mainScript.enemies[enemyID];
-            Vector2 velocity = (playerPosition - (Vector2)enemy.transform.position).normalized * enemy.moveSpeed;
+            Vector2 velocity = (playerPosition - (Vector2)enemy.transform.position).normalized * enemy.statSheet.moveSpeed.Calculate();
 
             enemy.attack.isAttacking = true;
 
@@ -92,7 +92,7 @@ public struct AISystem
                 }
                 else
                 {
-                    boss.unit.rigidbody.velocity = toPlayer / distanceToPlayer * boss.unit.moveSpeed;
+                    boss.unit.rigidbody.velocity = toPlayer / distanceToPlayer * boss.unit.statSheet.moveSpeed.Calculate();
                 }
                 boss.unit.attack.isAttacking = true;
 

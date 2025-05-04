@@ -346,44 +346,4 @@ public class SkillTreeSystem : MonoBehaviour
             }
         }
     }
-
-    void OnDrawGizmos()
-    {
-        return;
-        // verify connections
-        int i = 0;
-        foreach (var node in nodes)
-        {
-            foreach (int upwardNeighbour in node.upwardNeighbours)
-            {
-                Debug.Assert(nodes[upwardNeighbour].downwardNeighbours.Contains(i));
-            }
-
-            foreach (int downwardNeighbour in node.downwardNeighbours)
-            {
-                Debug.Assert(nodes[downwardNeighbour].upwardNeighbours.Contains(i));
-            }
-            i++;
-        }
-
-        Vector3 GetNodePosition(in SkillTreeNode node)
-        {
-            return new Vector3(node.weightedPositionX * 6.0f, node.treeY);
-        }
-
-        foreach (var node in nodes)
-        {
-            Gizmos.DrawSphere(GetNodePosition(node), 0.2f);
-
-            //foreach (int upwardNeighbour in node.upwardNeighbours)
-            //{
-            //    Gizmos.DrawLine(node.position, nodes[upwardNeighbour].position);
-            //}
-
-            foreach (int downwardNeighbour in node.downwardNeighbours)
-            {
-                Gizmos.DrawLine(GetNodePosition(node), GetNodePosition(nodes[downwardNeighbour]));
-            }
-        }
-    }
 }

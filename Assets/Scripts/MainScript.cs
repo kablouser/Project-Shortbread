@@ -89,7 +89,7 @@ public class MainScript : MonoBehaviour
         centreLight.uiPowerBar.maxValue = centreLight.maxPower;
         centreLight.uiPowerBar.value = centreLight.currentPower;
 
-        healthBar.UpdateHealthBar(player.health);
+        healthBar.UpdateHealthBar(player);
         ammoBar.UpdateAmmoBar(player.attack.ammoShot, attackSystem.player.fullMagazineAmmo);
 
         craftingSystem.Start(this);
@@ -188,7 +188,7 @@ public class MainScript : MonoBehaviour
 
             // Health regen
             {
-                gameTimer.healthRegenAccum += Time.deltaTime * player.statModifiers.healthRegenPerMinute / 60f;
+                gameTimer.healthRegenAccum += Time.deltaTime * player.statSheet.healthRegenPerMinute.Calculate() / 60f;
 
                 if (0f < gameTimer.healthRegenAccum)
                 {
@@ -196,11 +196,11 @@ public class MainScript : MonoBehaviour
                     gameTimer.healthRegenAccum -= gain;
 
                     player.health.current += gain;
-                    if (player.health.current > player.health.max)
+                    if (player.health.current > player.statSheet.maxHealth.Calculate())
                     {
-                        player.health.current = player.health.max;
+                        player.health.current = player.statSheet.maxHealth.Calculate();
                     }
-                    healthBar.UpdateHealthBar(player.health);
+                    healthBar.UpdateHealthBar(player);
                 }
             }
         }

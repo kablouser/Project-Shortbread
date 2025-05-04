@@ -104,11 +104,11 @@ public struct AttackComponent
     // limbs
     public int limbShotI;
 
-    public bool Reload(in ProjectileAttackPreset preset, in StatsModifierComponent stats)
+    public bool Reload(in ProjectileAttackPreset preset)
     {
         if (0 < ammoShot)
         {
-            reloadCooldown = preset.reloadCooldown * stats.reloadSpeedModifier;
+            reloadCooldown = 1f /* / preset.reloadSpeed.Calculate()*/;
             return true;
         }
         return false;
@@ -121,11 +121,7 @@ public enum BossVariants { Ranged };
 [System.Serializable]
 public struct HealthComponent
 {
-    public int baseHealth;
-    public int current;
-    public int max;
-
-    public ModifiableStat maxHealth;
+    public float current;
 }
 
 [System.Serializable]
@@ -137,11 +133,9 @@ public struct UnitEntity
     public float rotationDegrees;
     public AnimationComponent animation;
     public AttackComponent attack;
-    public float baseMoveSpeed;
-    public float moveSpeed;
-    public ModifiableStat moveSpeed;
     public HealthComponent health;
     public float lightPower;
+    public StatSheet statSheet;
 
     public UnitEntity(
         GameObject go,
@@ -157,9 +151,7 @@ public struct UnitEntity
         rigidbody.constraints &= ~RigidbodyConstraints2D.FreezePosition;
 
         // Set stats
-        health.max = Mathf.FloorToInt(health.baseHealth * statModifiers.healthModifier);
-        health.current = health.max;
-        moveSpeed = baseMoveSpeed * statModifiers.moveSpeedModifier;
+        health.current = statSheet.maxHealth.Calculate();
     }
 
     public bool IsValid()
@@ -287,9 +279,9 @@ public struct TextAndSlider
     public TextMeshProUGUI text;
     public Slider slider;
 
-    public void UpdateHealthBar(in HealthComponent health)
+    public void UpdateHealthBar(in UnitEntity entity)
     {
-        UpdateBar("Health:", health.current, health.max);
+        UpdateBar("Health:", entity.health.current, entity.statSheet.maxHealth.Calculate());
     }
 
     public void UpdateAmmoBar(int ammoShot, int ammoCapacity)
@@ -297,10 +289,10 @@ public struct TextAndSlider
         UpdateBar("Blasts:", ammoCapacity - ammoShot, ammoCapacity);
     }
 
-    public void UpdateBar(string labelPrefix, int currentValue, int maxValue)
+    public void UpdateBar(string labelPrefix, float currentValue, float maxValue)
     {
-        slider.value = currentValue / (float)maxValue;
-        text.text = $"{labelPrefix}{currentValue}/{maxValue}";
+        slider.value = currentValue / maxValue;
+        text.text = $"{labelPrefix}{currentValue:0.##}/{maxValue:0.##}";
     }
 }
 

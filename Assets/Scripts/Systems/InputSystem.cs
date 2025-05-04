@@ -30,7 +30,7 @@ public struct InputSystem
 
         if (main.playerControls.ActionMap.Reload.WasPressedThisFrame())
         {
-            main.player.attack.Reload(main.attackSystem.player, main.player.statModifiers);
+            main.player.attack.Reload(main.attackSystem.player);
         }
 
         // dynamically updated button prompts:
@@ -113,6 +113,6 @@ public struct InputSystem
         Vector2 moveDirection = main.playerControls.ActionMap.Move.ReadValue<Vector2>();
         if (1f < moveDirection.sqrMagnitude)
             moveDirection.Normalize();
-        main.player.rigidbody.velocity = moveDirection * main.player.moveSpeed;
+        main.player.rigidbody.velocity = moveDirection * main.player.statSheet.moveSpeed.Calculate();
     }
 }

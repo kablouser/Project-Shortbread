@@ -140,7 +140,7 @@ public class MainEditorWindow : EditorWindow
             {
                 if (GUILayout.Button("Respawn player"))
                 {
-                    mainScript.player.health.current = mainScript.player.health.max;
+                    mainScript.player.health.current = mainScript.player.statSheet.maxHealth.Calculate();
                     playerGO.transform.position = Vector3.zero;
                     playerGO.SetActive(true);
                 }

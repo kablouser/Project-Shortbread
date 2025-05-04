@@ -5,7 +5,7 @@ public enum StatType
 {
     Damage,
     ReloadSpeed,
-    Health,
+    MaxHealth,
     MoveSpeed,
     VisionRange,
     FireRate,
@@ -26,6 +26,11 @@ public struct ModifiableStat
         return (baseValue + add) * multiply;
     }
 
+    public float CalculateWithBaseValue(float overrideBaseValue)
+    {
+        return (overrideBaseValue + add) * multiply;
+    }
+
     public void Modify(in ModifyStat modifyStat)
     {
         add += modifyStat.add;
@@ -36,6 +41,54 @@ public struct ModifiableStat
     {
         add -= modifyStat.add;
         multiply -= modifyStat.multiply;
+    }
+}
+
+public struct StatSheet
+{
+    public ModifiableStat
+        // Please ignore base value. Gotten from weapon/projectile
+        damage,
+        reloadSpeed,
+        maxHealth,
+        moveSpeed,
+        visionRange,
+        // Please ignore base value. Gotten from weapon/projectile
+        fireRate,
+        // Please ignore base value. Gotten from weapon/projectile
+        piercing,
+        // Please ignore base value. Gotten from weapon/projectile
+        extraProjectile,
+        healthRegenPerMinute;
+}
+
+static class StatSheetExtension
+{
+    public static ref ModifiableStat Get(this ref StatSheet statSheet, StatType type)
+    {
+        switch (type)
+        {
+            case StatType.Damage:
+                return ref statSheet.damage;
+            case StatType.ReloadSpeed:
+                return ref statSheet.reloadSpeed;
+            case StatType.MaxHealth:
+                return ref statSheet.maxHealth;
+            case StatType.MoveSpeed:
+                return ref statSheet.moveSpeed;
+            case StatType.VisionRange:
+                return ref statSheet.visionRange;
+            case StatType.FireRate:
+                return ref statSheet.fireRate;
+            case StatType.Piercing:
+                return ref statSheet.piercing;
+            case StatType.ExtraProjectile:
+                return ref statSheet.extraProjectile;
+            case StatType.HealthRegenPerMinute:
+                return ref statSheet.healthRegenPerMinute;
+            default:
+                throw new NotImplementedException();
+        }
     }
 }
 
@@ -50,50 +103,33 @@ public struct ModifyStat
 [Serializable]
 public struct UpgradeSystem
 {
-    // Should probably be a limit on the actual reload speed not the modifier
-    public float reloadSpeedModifierLimit;
-
     public void ApplyUpgrade(MainScript mainScript, ref UnitEntity unit, in ModifyStat modifyStat)
     {
         switch (modifyStat.type)
         {
-            case StatType.Health:
-                unit.statModifiers.healthModifier += valueChange;
-                int newMaxHealth = Mathf.FloorToInt(unit.health.baseHealth * unit.statModifiers.healthModifier);
-                int healthAdded = newMaxHealth - unit.health.max;
-                unit.health.max = newMaxHealth;
-                unit.health.current += healthAdded;
-                mainScript.healthBar.UpdateHealthBar(mainScript.player.health);
+            default:
+                unit.statSheet.Get(modifyStat.type).Modify(modifyStat);
                 break;
-            case StatType.MoveSpeed:
-                unit.statModifiers.moveSpeedModifier += valueChange;
-                unit.moveSpeed = unit.baseMoveSpeed * unit.statModifiers.moveSpeedModifier;
-                break;
-            case StatType.Damage:
-                unit.statModifiers.damageModifier += valueChange;
-                break;
-            case StatType.ReloadSpeed:
-                unit.statModifiers.reloadSpeedModifier += valueChange;
-                if(unit.statModifiers.reloadSpeedModifier < reloadSpeedModifierLimit)
+
+            case StatType.MaxHealth:
+                float oldMaxHealth = unit.statSheet.maxHealth.Calculate();
+                unit.statSheet.maxHealth.Modify(modifyStat);
+                float newMaxHealth = unit.statSheet.maxHealth.Calculate();
+
+                if (oldMaxHealth < newMaxHealth)
                 {
-                    unit.statModifiers.reloadSpeedModifier = reloadSpeedModifierLimit;
+                    unit.health.current += newMaxHealth - oldMaxHealth;
                 }
+                mainScript.healthBar.UpdateHealthBar(mainScript.player);
                 break;
+        }
+
+        // post processing
+        switch (modifyStat.type)
+        {
+            default: break;
             case StatType.VisionRange:
-                unit.statModifiers.visionRangeModifier += valueChange;
-                mainScript.playerLight.light.pointLightOuterRadius = mainScript.playerLight.baseLightRange * unit.statModifiers.visionRangeModifier;
-                break;
-            case StatType.FireRate:
-                unit.statModifiers.fireRateModifier += valueChange;
-                break;
-            case StatType.Piercing:
-                unit.statModifiers.piercingNumber += Mathf.FloorToInt(valueChange);
-                break;
-            case StatType.ExtraProjectile:
-                unit.statModifiers.extraProjectiles += Mathf.FloorToInt(valueChange);
-                break;
-            case StatType.HealthRegenPerMinute:
-                unit.statModifiers.healthRegenPerMinute += Mathf.FloorToInt(valueChange);
+                mainScript.playerLight.light.pointLightOuterRadius = mainScript.playerLight.baseLightRange * unit.statSheet.visionRange.Calculate();
                 break;
         }
 

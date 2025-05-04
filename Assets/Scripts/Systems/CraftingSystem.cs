@@ -1,8 +1,6 @@
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 using System.Collections.Generic;
-using Unity.VisualScripting.FullSerializer;
 
 [System.Serializable]
 public struct ForEachElement<T>
@@ -81,8 +79,7 @@ public struct CraftItem
     public ForEachElement<int> costs;
     [TextArea(1,3)]
     public string description;
-    public StatType upgradeType;
-    public float upgradeValue;
+    public ModifyStat upgrade;
 }
 
 [System.Serializable]
@@ -287,7 +284,7 @@ public struct CraftingSystem
         }
 
         // CRAFT ITEM AND RESET ALL SELECTORS 
-        mainScript.upgradeSystem.ApplyUpgrade(mainScript, ref mainScript.player, craftItem.upgradeType, craftItem.upgradeValue);
+        mainScript.upgradeSystem.ApplyUpgrade(mainScript, ref mainScript.player, craftItem.upgrade);
         mainScript.audioSystem.PlayVFX(mainScript.audioSystem.craftingCompleteVFX);
 
         craftItem.isCrafted = true;
